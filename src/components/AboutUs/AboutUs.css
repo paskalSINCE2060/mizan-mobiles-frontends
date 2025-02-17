@@ -1,66 +1,82 @@
 .aboutUs-container {
-    max-width: 900px;
+    width: 100%;
+    max-width: 1200px;
     margin: auto;
     padding: 20px;
     text-align: center;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 1.5s ease-in-out;
 }
 
-.aboutUs-header h1 {
-    font-size: 2.5em;
-    color: #333;
-    margin-bottom: 10px;
+.aboutUs-image {
+    width: 100%;
+    max-width: 800px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
+
 
 .aboutUs-content, 
 .aboutUs-vision, 
 .aboutUs-mission, 
 .aboutUs-values, 
+.aboutUs-team, 
 .aboutUs-contact {
-    margin-bottom: 30px;
+    width: 100%;
     padding: 20px;
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
 }
 
-.aboutUs-content p, 
-.aboutUs-vision p, 
-.aboutUs-mission p, 
-.aboutUs-contact p {
-    font-size: 1.2em;
-    color: #555;
-    line-height: 1.6;
+.aboutUs-content:hover, 
+.aboutUs-vision:hover, 
+.aboutUs-mission:hover, 
+.aboutUs-values:hover, 
+.aboutUs-team:hover, 
+.aboutUs-contact:hover {
+    transform: scale(1.05);
 }
 
-.aboutUs-values h2 {
-    margin-bottom: 15px;
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .aboutUs-container {
+        padding: 15px;
+    }
+
+
+    .aboutUs-content, 
+    .aboutUs-vision, 
+    .aboutUs-mission, 
+    .aboutUs-values, 
+    .aboutUs-team, 
+    .aboutUs-contact {
+        padding: 15px;
+    }
+
+    .aboutUs-image {
+        max-width: 100%;
+    }
 }
 
-.aboutUs-values ul {
-    list-style-type: none;
-    padding: 0;
-}
+@media screen and (max-width: 480px) {
 
-.aboutUs-values li {
-    font-size: 1.1em;
-    color: #444;
-    margin-bottom: 8px;
-}
+    .aboutUs-content, 
+    .aboutUs-vision, 
+    .aboutUs-mission, 
+    .aboutUs-values, 
+    .aboutUs-team, 
+    .aboutUs-contact {
+        padding: 10px;
+    }
 
-.aboutUs-values li strong {
-    color: #222;
-}
-
-.aboutUs-contact a {
-    color: #007BFF;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.aboutUs-contact a:hover {
-    text-decoration: underline;
+    .aboutUs-values li {
+        font-size: 1em;
+    }
 }
