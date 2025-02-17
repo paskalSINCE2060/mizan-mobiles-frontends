@@ -1,0 +1,66 @@
+.aboutUs-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.aboutUs-header h1 {
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.aboutUs-content, 
+.aboutUs-vision, 
+.aboutUs-mission, 
+.aboutUs-values, 
+.aboutUs-contact {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.aboutUs-content p, 
+.aboutUs-vision p, 
+.aboutUs-mission p, 
+.aboutUs-contact p {
+    font-size: 1.2em;
+    color: #555;
+    line-height: 1.6;
+}
+
+.aboutUs-values h2 {
+    margin-bottom: 15px;
+}
+
+.aboutUs-values ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.aboutUs-values li {
+    font-size: 1.1em;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+.aboutUs-values li strong {
+    color: #222;
+}
+
+.aboutUs-contact a {
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.aboutUs-contact a:hover {
+    text-decoration: underline;
+}

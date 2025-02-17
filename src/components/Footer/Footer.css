@@ -1,0 +1,89 @@
+/* Footer Styles */
+.mizan-footer {
+    background-color: #222;
+    color: #fff;
+    padding: 40px 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.mizan-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.mizan-footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.mizan-footer-col {
+    flex: 1;
+    min-width: 220px;
+    margin-bottom: 20px;
+}
+
+.mizan-footer-col h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.mizan-footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.mizan-footer-col ul li {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.mizan-footer-col ul li a {
+    color: #bbb;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.mizan-footer-col ul li a:hover {
+    color: #f8b400;
+}
+
+.mizan-footer-col ul li i {
+    margin-right: 10px;
+    color: #f8b400;
+}
+
+.mizan-social-icons a {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 20px;
+    color: #f8b400;
+    transition: 0.3s;
+}
+
+.mizan-social-icons a:hover {
+    color: #fff;
+}
+
+.mizan-footer-bottom {
+    border-top: 1px solid #444;
+    margin-top: 20px;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #bbb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .mizan-footer-row {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .mizan-footer-col {
+        margin-bottom: 20px;
+    }
+}
