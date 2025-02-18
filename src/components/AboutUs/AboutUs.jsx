@@ -1,5 +1,6 @@
 import React from 'react';
 import mizan from '../../assets/mizan-banner.png';
+import team from '../../assets/team.png'
 import './AboutUs.css';
 
 const AboutUs = () => {
@@ -36,7 +37,7 @@ const AboutUs = () => {
       </div>
       <div className="aboutUs-team">
         <h2>Meet Our Team</h2>
-        <img src="/images/team.jpg" alt="Our Team" className="aboutUs-image" />
+        <img src={team} alt="Our Team" className="aboutUs-image" />
         <p>
           A passionate team of tech enthusiasts dedicated to bringing you the best products and services.
         </p>
