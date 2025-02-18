@@ -195,8 +195,9 @@ function HomePage() {
         </div>
     </header>
 
-    <section className="banner-content-services">
+    <section className="banner-content-services" id="services">
         <h2>Our Services</h2>
+
         <div className="banner-content-services-container">
             <div className="banner-content-service">
                 <img src={sellPhone} alt="Sell Phone"/>
@@ -235,7 +236,7 @@ function HomePage() {
                 <p>Recycle</p>
             </div>
         </div>
-    </section>
+      </section>
 
     </div>
   );

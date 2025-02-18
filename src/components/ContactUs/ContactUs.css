@@ -1,0 +1,152 @@
+/* General Reset */
+.Contact-us {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    background-color: rgb(219, 216, 216);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+
+}
+
+/* Contact Page Layout */
+.Contact-us-contact-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* Left Side: Contact Info */
+.Contact-us-contact-info {
+    width: 40%;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.Contact-us-contact-info h2 {
+    margin-bottom: 15px;
+}
+
+.Contact-us-contact-info p {
+    margin: 15px 0;
+}
+
+.Contact-us-contact-info a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Social Icons */
+.Contact-us-social-icons {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.Contact-us-social-icons img {
+    width: 25px;
+    height: 25px;
+}
+
+/* Right Side: Contact Form */
+.Contact-us-contact-form {
+    width: 55%;
+    background-color: #151515;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    margin-left: 20px;
+}
+
+.Contact-us-contact-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.Contact-us-form-group {
+    display: flex;
+    gap: 10px;
+}
+
+.Contact-us-form-group input {
+    width: 50%;
+}
+
+/* Input & Textarea Styling */
+.Contact-us input, .Contact-us textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #333;
+    background: #222;
+    color: #fff;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.Contact-us textarea {
+    height: 100px;
+    resize: none;
+}
+
+/* Checkbox */
+.Contact-us-checkbox {
+    font-size: 13px;
+}
+
+.Contact-us-checkbox input {
+    margin-right: 5px;
+}
+
+/* Submit Button */
+.Contact-us button {
+    width: 100%;
+    padding: 12px;
+    background: #2a5298;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.Contact-us button:hover {
+    background: #1e3c72;
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 1024px) {
+    .Contact-us-contact-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 250px;
+    }
+
+    .Contact-us-contact-info, .Contact-us-contact-form {
+        width: 90%;
+    }
+}
+
+@media (max-width: 600px) {
+    .Contact-us-form-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .Contact-us-form-group input {
+        width: 100%;
+    }
+}

@@ -54,7 +54,18 @@
   .navbar .nav-links a {
     color: white;
     text-decoration: none;
+    cursor: pointer;
   }
+
+  .nav-button{
+    background-color:#333 ;
+    border: none;
+    color: white;
+    font-size: 15px;
+    font-weight: lighter;
+    cursor: pointer;
+  }
+
   
   .navbar .right-icons {
     display: flex;

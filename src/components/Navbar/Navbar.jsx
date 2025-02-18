@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { FaSearch, FaUser, FaShoppingCart } from "react-icons/fa";
-import { Link } from "react-router-dom";  // Import Link
+import { Link } from "react-scroll";  // Import Link from react-scroll
+import { Link as RouterLink } from "react-router-dom";  // Import Link for routing
+import { useNavigate } from "react-router-dom";
+
 import "./Navbar.css";
 
 function Navbar() {
@@ -11,6 +14,19 @@ function Navbar() {
     setIsOpen(!isOpen);
   };
 
+  const navigate = useNavigate();
+
+const handleServicesClick = () => {
+  navigate("/"); // Navigate to homepage
+  setTimeout(() => {
+    const serviceSection = document.getElementById("services");
+    if (serviceSection) {
+      serviceSection.scrollIntoView({ behavior: "smooth" });
+    }
+  }, 100); // Delay ensures homepage loads first
+};
+
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -18,7 +34,6 @@ function Navbar() {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     alert("Searching for: " + searchQuery);
-    // You can replace the alert with actual search logic or redirect
   };
 
   return (
@@ -30,7 +45,6 @@ function Navbar() {
         <span className="bar"></span>
       </div>
 
-   
       <form onSubmit={handleSearchSubmit} className="search-form">
         <input
           type="text"
@@ -44,21 +58,20 @@ function Navbar() {
         </button>
       </form>
 
-     
       <ul className={`nav-links ${isOpen ? "active" : ""}`}>
-        <li><Link to="/">Home</Link></li>  
-        <li><Link to="/categories">Categories</Link></li>  
-        <li><Link to="/about">About</Link></li>  
-        <li><Link to="/contact">Contact</Link></li> 
-        <li><Link to="/services">Services</Link></li>  
+        <li><RouterLink to="/">Home</RouterLink></li>  
+        <li><RouterLink to="/categories">Categories</RouterLink></li>  
+        <li><RouterLink to="/about">About</RouterLink></li>  
+        <li><RouterLink to="/contact">Contact</RouterLink></li> 
+        <li><button onClick={handleServicesClick} className="nav-button">Services</button></li>
+
       </ul>
 
-      
       <div className="right-icons">
         <FaUser />
         <FaShoppingCart />
         <div className="auth-links">
-          <Link to="#login">Login</Link> | <Link to="#signup">Signup</Link>
+          <RouterLink to="#login">Login</RouterLink> | <RouterLink to="#signup">Signup</RouterLink>
         </div>
       </div>
     </nav>
