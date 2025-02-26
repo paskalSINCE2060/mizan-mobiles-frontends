@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { FaSearch, FaUser, FaShoppingCart } from "react-icons/fa";
-import { Link } from "react-scroll";  // Import Link from react-scroll
 import { Link as RouterLink } from "react-router-dom";  // Import Link for routing
 import { useNavigate } from "react-router-dom";
 
@@ -71,7 +70,7 @@ const handleServicesClick = () => {
         <FaUser />
         <FaShoppingCart />
         <div className="auth-links">
-          <RouterLink to="#login">Login</RouterLink> | <RouterLink to="#signup">Signup</RouterLink>
+          <RouterLink to="/login">Login</RouterLink> | <RouterLink to="/signup">Signup</RouterLink>
         </div>
       </div>
     </nav>

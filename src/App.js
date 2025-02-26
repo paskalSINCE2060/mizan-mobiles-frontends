@@ -6,6 +6,8 @@ import Homepage from "./components/HomePage/Homepage";
 import CategoryPage from "./components/Category/Category";
 import AboutUs from "./components/AboutUs/AboutUs";
 import ContactUs from "./components/ContactUs/ContactUs";
+import Login from "./components/Login/Login";
+import Signup from "./components/signup/Signup";
 
 // import ContactPage from "./components/ContactPage/Contact";
 // import ServicesPage from "./components/ServicesPage/Services";
@@ -20,7 +22,8 @@ function App() {
           <Route path="/categories" element={<CategoryPage />} />
           <Route path="/about" element={<AboutUs/>} />
            <Route path="/contact" element={<ContactUs />} />
-          {/* <Route path="/services" element={<ServicesPage />} /> */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </div>
       <Footer />
