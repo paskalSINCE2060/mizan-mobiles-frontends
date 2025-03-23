@@ -67,8 +67,8 @@ const handleServicesClick = () => {
       </ul>
 
       <div className="right-icons">
-        <FaUser />
-        <FaShoppingCart />
+        <a href="/profile"><FaUser /></a>
+        <a href="/cart"><FaShoppingCart /></a>
         <div className="auth-links">
           <RouterLink to="/login">Login</RouterLink> | <RouterLink to="/signup">Signup</RouterLink>
         </div>

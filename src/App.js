@@ -9,6 +9,9 @@ import ContactUs from "./components/ContactUs/ContactUs";
 import Login from "./components/Login/Login";
 import Signup from "./components/signup/Signup";
 import ForgetPassword from "./components/ForgetPassword/ForgetPassword";
+import Profile from "./components/Profile/Profile";
+import Cart from "./components/Cart/Cart";
+import Checkout from "./components/Checkout/Checkout";
 
 // import ContactPage from "./components/ContactPage/Contact";
 // import ServicesPage from "./components/ServicesPage/Services";
@@ -26,6 +29,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgetpassword" element={<ForgetPassword />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+
         </Routes>
       </div>
       <Footer />
