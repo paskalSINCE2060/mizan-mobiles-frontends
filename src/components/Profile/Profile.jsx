@@ -10,22 +10,11 @@ const Profile = () => {
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
     if (!loggedInUser) {
-      navigate("/login"); // Redirect to login if no user
+      navigate("/login");
     } else {
       setUserData(loggedInUser);
     }
   }, [navigate]);
-
-  const handleLogout = () => {
-    // Remove logged-in user from localStorage
-    localStorage.removeItem("loggedInUser");
-    
-    // Optional: Clear other related local storage items if needed
-    // localStorage.removeItem("userData");
-
-    // Redirect to login page
-    navigate("/login");
-  };
 
   return userData ? (
     <div className="profile-details-container">
@@ -44,19 +33,11 @@ const Profile = () => {
               </tr>
               <tr>
                 <td><strong>Phone:</strong></td>
-                <td>{userData.phone}</td>
+                <td>{userData.phone || userData.number}</td>
               </tr>
             </tbody>
           </table>
         </div>
-        
-        {/* Logout Button */}
-        <button 
-          onClick={handleLogout} 
-          className="logout-button"
-        >
-          Logout
-        </button>
       </div>
     </div>
   ) : null;

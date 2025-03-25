@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaUser, FaShoppingCart, FaSignOutAlt } from "react-icons/fa";
+import { FaSearch, FaUser, FaShoppingCart } from "react-icons/fa";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
-function Navbar() {
+function Navbar({ userData, setUserData }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
-
-  // Check login status when component mounts
-  useEffect(() => {
-    // Check if user is logged in (example using localStorage)
-    const token = localStorage.getItem('authToken');
-    setIsLoggedIn(!!token);
-  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -41,33 +33,9 @@ function Navbar() {
   };
 
   const handleLogout = () => {
-    // Clear authentication token
-    localStorage.removeItem('authToken');
-    
-    // Clear other user-related data
-    localStorage.clear();
-    sessionStorage.clear();
-    
-    // Clear cookies
-    document.cookie.split(";").forEach((c) => {
-      document.cookie = c
-        .replace(/^ +/, "")
-        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-    });
-
-    // Update login state
-    setIsLoggedIn(false);
-
-    // Redirect to login page
+    localStorage.removeItem("loggedInUser");
+    setUserData(null);
     navigate("/login");
-  };
-
-  // Simulated login function (you would typically call this after successful authentication)
-  const handleLogin = () => {
-    // Simulate setting an auth token
-    localStorage.setItem('authToken', 'your-auth-token');
-    setIsLoggedIn(true);
-    navigate("/");
   };
 
   return (
@@ -101,12 +69,12 @@ function Navbar() {
       </ul>
       
       <div className="right-icons">
-        {isLoggedIn ? (
+        {userData ? (
           <>
-            <a href="/profile"><FaUser /></a>
-            <a href="/cart"><FaShoppingCart /></a>
+            <RouterLink to="/profile"><FaUser /></RouterLink>
+            <RouterLink to="/cart"><FaShoppingCart /></RouterLink>
             <button onClick={handleLogout} className="logout-btn">
-              <FaSignOutAlt /> Logout
+              Logout
             </button>
           </>
         ) : (
@@ -115,13 +83,6 @@ function Navbar() {
           </div>
         )}
       </div>
-
-      {/* Optional: For testing login state (remove in production) */}
-      {!isLoggedIn && (
-        <button onClick={handleLogin} style={{position: 'absolute', bottom: '10px', right: '10px'}}>
-          Test Login
-        </button>
-      )}
     </nav>
   );
 }

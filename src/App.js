@@ -25,7 +25,7 @@ function App() {
 
   return (
     <Router>
-      <Navbar />
+      <Navbar userData={userData} setUserData={setUserData} />
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/categories" element={<CategoryPage />} />
@@ -33,9 +33,12 @@ function App() {
         <Route path="/contact" element={<ContactUs />} />
         <Route
           path="/login"
-          element={!userData ? <Login setUserData={setUserData} /> : <Navigate to="/profile" />}
+          element={!userData ? <Login setUserData={setUserData} /> : <Navigate to="/" />}
         />
-        <Route path="/signup" element={<Signup />} />
+        <Route 
+          path="/signup" 
+          element={!userData ? <Signup /> : <Navigate to="/" />} 
+        />
         <Route path="/forgetpassword" element={<ForgetPassword />} />
         <Route
           path="/profile"

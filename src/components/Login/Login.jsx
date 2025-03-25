@@ -89,8 +89,8 @@ const Login = ({ setUserData }) => {
     setUserData(storedUser);
     localStorage.setItem('loggedInUser', JSON.stringify(storedUser));
 
-    // Navigate to profile
-    navigate('/profile');
+    // Navigate to homepage
+    navigate('/');
   };
 
   const handleSignup = () => {
