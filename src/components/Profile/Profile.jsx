@@ -1,25 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Profile.css';
-import mizan from '../../assets/mizan.jpg';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Profile.css";
+import mizan from "../../assets/mizan.jpg";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
     if (!loggedInUser) {
-      navigate('/login'); // Redirect if not logged in
+      navigate("/login"); // Redirect to login if no user
     } else {
       setUserData(loggedInUser);
     }
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('loggedInUser');
-    setUserData(null);
-    navigate('/login');
+    // Remove logged-in user from localStorage
+    localStorage.removeItem("loggedInUser");
+    
+    // Optional: Clear other related local storage items if needed
+    // localStorage.removeItem("userData");
+
+    // Redirect to login page
+    navigate("/login");
   };
 
   return userData ? (
@@ -27,7 +32,9 @@ const Profile = () => {
       <div className="profile-details-card">
         <img src={mizan} alt="profile" className="profile-details-avatar" />
         <h2 className="profile-details-full-name">{userData.fullName}</h2>
-        <p className="profile-details-username">@{userData.fullName.replace(" ", "_").toLowerCase()}</p>
+        <p className="profile-details-username">
+          @{userData.fullName.replace(" ", "_").toLowerCase()}
+        </p>
         <div className="profile-details-info">
           <table>
             <tbody>
@@ -42,18 +49,17 @@ const Profile = () => {
             </tbody>
           </table>
         </div>
+        
+        {/* Logout Button */}
+        <button 
+          onClick={handleLogout} 
+          className="logout-button"
+        >
+          Logout
+        </button>
       </div>
     </div>
   ) : null;
 };
 
 export default Profile;
-
-
-
-
-
-
-
-
-    

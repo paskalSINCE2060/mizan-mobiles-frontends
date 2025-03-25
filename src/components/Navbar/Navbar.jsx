@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaUser, FaShoppingCart } from "react-icons/fa";
+import { FaSearch, FaUser, FaShoppingCart, FaSignOutAlt } from "react-icons/fa";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
@@ -10,10 +10,11 @@ function Navbar() {
 
   const navigate = useNavigate();
 
+  // Check login status when component mounts
   useEffect(() => {
-    // Check if user is logged in (exists in localStorage)
-    const userData = localStorage.getItem("userData");
-    setIsLoggedIn(!!userData);
+    // Check if user is logged in (example using localStorage)
+    const token = localStorage.getItem('authToken');
+    setIsLoggedIn(!!token);
   }, []);
 
   const toggleMenu = () => {
@@ -40,9 +41,33 @@ function Navbar() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("userData");
+    // Clear authentication token
+    localStorage.removeItem('authToken');
+    
+    // Clear other user-related data
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    // Clear cookies
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c
+        .replace(/^ +/, "")
+        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+
+    // Update login state
     setIsLoggedIn(false);
+
+    // Redirect to login page
     navigate("/login");
+  };
+
+  // Simulated login function (you would typically call this after successful authentication)
+  const handleLogin = () => {
+    // Simulate setting an auth token
+    localStorage.setItem('authToken', 'your-auth-token');
+    setIsLoggedIn(true);
+    navigate("/");
   };
 
   return (
@@ -53,7 +78,7 @@ function Navbar() {
         <span className="bar"></span>
         <span className="bar"></span>
       </div>
-
+      
       <form onSubmit={handleSearchSubmit} className="search-form">
         <input
           type="text"
@@ -66,21 +91,23 @@ function Navbar() {
           <FaSearch />
         </button>
       </form>
-
+      
       <ul className={`nav-links ${isOpen ? "active" : ""}`}>
-        <li><RouterLink to="/">Home</RouterLink></li>  
-        <li><RouterLink to="/categories">Categories</RouterLink></li>  
-        <li><RouterLink to="/about">About</RouterLink></li>  
-        <li><RouterLink to="/contact">Contact</RouterLink></li> 
+        <li><RouterLink to="/">Home</RouterLink></li>
+        <li><RouterLink to="/categories">Categories</RouterLink></li>
+        <li><RouterLink to="/about">About</RouterLink></li>
+        <li><RouterLink to="/contact">Contact</RouterLink></li>
         <li><button onClick={handleServicesClick} className="nav-button">Services</button></li>
       </ul>
-
+      
       <div className="right-icons">
         {isLoggedIn ? (
           <>
-            <RouterLink to="/profile"><FaUser /></RouterLink>
-            <RouterLink to="/cart"><FaShoppingCart /></RouterLink>
-            <button onClick={handleLogout} className="logout-button">Logout</button>
+            <a href="/profile"><FaUser /></a>
+            <a href="/cart"><FaShoppingCart /></a>
+            <button onClick={handleLogout} className="logout-btn">
+              <FaSignOutAlt /> Logout
+            </button>
           </>
         ) : (
           <div className="auth-links">
@@ -88,6 +115,13 @@ function Navbar() {
           </div>
         )}
       </div>
+
+      {/* Optional: For testing login state (remove in production) */}
+      {!isLoggedIn && (
+        <button onClick={handleLogin} style={{position: 'absolute', bottom: '10px', right: '10px'}}>
+          Test Login
+        </button>
+      )}
     </nav>
   );
 }
