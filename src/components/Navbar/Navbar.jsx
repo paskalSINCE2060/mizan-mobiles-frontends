@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+// src/components/Navbar.js
+import React, { useState } from "react";
 import { FaSearch, FaUser, FaShoppingCart } from "react-icons/fa";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useCart } from '../../context/cartContext';
 import "./Navbar.css";
 
 function Navbar({ userData, setUserData }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const { cartCount } = useCart();
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -72,7 +74,10 @@ function Navbar({ userData, setUserData }) {
         {userData ? (
           <>
             <RouterLink to="/profile"><FaUser /></RouterLink>
-            <RouterLink to="/cart"><FaShoppingCart /></RouterLink>
+            <RouterLink to="/cart" className="cart-icon">
+              <FaShoppingCart />
+              {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+            </RouterLink>
             <button onClick={handleLogout} className="logout-btn">
               Logout
             </button>

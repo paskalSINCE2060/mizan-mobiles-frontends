@@ -1,4 +1,3 @@
-// src/pages/HomePage.js
 import React from "react";
 import iphone11promax from '../../assets/iphone11promax.jpeg'
 import iphone13pro from '../../assets/iphone13pro.jpg'
@@ -18,9 +17,44 @@ import recycle from '../../assets/Recycle.webp'
 import repairphone from '../../assets/RepairPhone.webp'
 import repairLaptop from '../../assets/RepairLaptop.webp'
 import sellPhone from '../../assets/sellPhone.webp'
+import { useCart } from "../../context/cartContext";
 import './Homepage.css';
 
 function HomePage() {
+    const { addToCart } = useCart();
+
+
+    const products = [
+        {
+          id: 'iphone14-256gb',
+          image: iphone14,
+          name: 'Apple iPhone 14 Pro Max [256GB]',
+          originalPrice: 192000.00,
+          discountedPrice: 111500.00
+        },
+        {
+          id: 'iphone13pro-256gb',
+          image: iphone13pro,
+          name: 'Apple iPhone 13 Pro Max [256GB]',
+          originalPrice: 131900.00,
+          discountedPrice: 91500.00
+        },
+        {
+          id: 'iphone13promax-128gb',
+          image: iphone13promax,
+          name: 'Apple iPhone 13 Pro Max [128GB]',
+          originalPrice: 131900.00,
+          discountedPrice: 85500.00
+        },
+        {
+          id: 'iphone11promax-512gb',
+          image: iphone11promax,
+          name: 'Apple iPhone 11 Pro Max [512GB]',
+          originalPrice: 186000.00,
+          discountedPrice: 53500.00
+        }
+      ];
+    
   return (
     <div>
 
@@ -32,35 +66,30 @@ function HomePage() {
       </section>
 
 
-    <section className="carts-item container">
+      <section className="carts-item container">
         <h2 className="carts-item">Premium PreLoved Smartphones</h2>
         <div className="carts-item product-grid">
-            <div className="carts-item product">
-                <img src={iphone14} alt="iPhone 14 Pro Max" className="carts-item"/>
-                <h3 className="carts-item">Apple iPhone 14 Pro Max [256GB]</h3>
-                <p className="carts-item price"><del>NPR 192,000.00</del> NPR 111,500.00</p>
-                <button className="carts-item">Add to Cart</button>
+          {products.map((product) => (
+            <div key={product.id} className="carts-item product">
+              <img src={product.image} alt={product.name} className="carts-item"/>
+              <h3 className="carts-item">{product.name}</h3>
+              <p className="carts-item price">
+                <del>NPR {product.originalPrice.toLocaleString()}</del> 
+                NPR {product.discountedPrice.toLocaleString()}
+              </p>
+              <button 
+                className="carts-item" 
+                onClick={() => addToCart({
+                  ...product,
+                  price: product.discountedPrice
+                })}
+              >
+                Add to Cart
+              </button>
             </div>
-            <div className="carts-item product">
-                <img src={iphone13pro} alt="iPhone 13 Pro Max" className="carts-item"/>
-                <h3 className="carts-item">Apple iPhone 13 Pro Max [256GB]</h3>
-                <p className="carts-item price"><del>NPR 131,900.00</del> NPR 91,500.00</p>
-                <button className="carts-item">Add to Cart</button>
-            </div>
-            <div className="carts-item product">
-                <img src={iphone13promax} alt="iPhone 13 Pro Max 128GB" className="carts-item"/>
-                <h3 className="carts-item">Apple iPhone 13 Pro Max [128GB]</h3>
-                <p className="carts-item price"><del>NPR 131,900.00</del> NPR 85,500.00</p>
-                <button className="carts-item">Add to Cart</button>
-            </div>
-            <div className="carts-item product">
-                <img src={iphone11promax} alt="iPhone 11 Pro Max" className="carts-item"/>
-                <h3 className="carts-item">Apple iPhone 11 Pro Max [512GB]</h3>
-                <p className="carts-item price"><del>NPR 186,000.00</del> NPR 53,500.00</p>
-                <button className="carts-item">Add to Cart</button>
-            </div>
+          ))}
         </div>
-    </section>
+      </section>
 
 
 
