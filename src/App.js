@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Homepage from "./components/HomePage/Homepage";
@@ -13,28 +13,37 @@ import Profile from "./components/Profile/Profile";
 import Cart from "./components/Cart/Cart";
 import Checkout from "./components/Checkout/Checkout";
 
-// import ContactPage from "./components/ContactPage/Contact";
-// import ServicesPage from "./components/ServicesPage/Services";
-
 function App() {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (storedUser) {
+      setUserData(storedUser);
+    }
+  }, []);
+
   return (
     <Router>
       <Navbar />
-      <div>
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/categories" element={<CategoryPage />} />
-          <Route path="/about" element={<AboutUs/>} />
-           <Route path="/contact" element={<ContactUs />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgetpassword" element={<ForgetPassword />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/categories" element={<CategoryPage />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact" element={<ContactUs />} />
+        <Route
+          path="/login"
+          element={!userData ? <Login setUserData={setUserData} /> : <Navigate to="/profile" />}
+        />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/forgetpassword" element={<ForgetPassword />} />
+        <Route
+          path="/profile"
+          element={userData ? <Profile /> : <Navigate to="/login" />}
+        />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+      </Routes>
       <Footer />
     </Router>
   );

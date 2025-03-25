@@ -1,30 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaSearch, FaUser, FaShoppingCart } from "react-icons/fa";
-import { Link as RouterLink } from "react-router-dom";  // Import Link for routing
-import { useNavigate } from "react-router-dom";
-
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is logged in (exists in localStorage)
+    const userData = localStorage.getItem("userData");
+    setIsLoggedIn(!!userData);
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  const navigate = useNavigate();
-
-const handleServicesClick = () => {
-  navigate("/"); // Navigate to homepage
-  setTimeout(() => {
-    const serviceSection = document.getElementById("services");
-    if (serviceSection) {
-      serviceSection.scrollIntoView({ behavior: "smooth" });
-    }
-  }, 100); // Delay ensures homepage loads first
-};
-
+  const handleServicesClick = () => {
+    navigate("/");
+    setTimeout(() => {
+      const serviceSection = document.getElementById("services");
+      if (serviceSection) {
+        serviceSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+  };
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -33,6 +37,12 @@ const handleServicesClick = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     alert("Searching for: " + searchQuery);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("userData");
+    setIsLoggedIn(false);
+    navigate("/login");
   };
 
   return (
@@ -63,15 +73,20 @@ const handleServicesClick = () => {
         <li><RouterLink to="/about">About</RouterLink></li>  
         <li><RouterLink to="/contact">Contact</RouterLink></li> 
         <li><button onClick={handleServicesClick} className="nav-button">Services</button></li>
-
       </ul>
 
       <div className="right-icons">
-        <a href="/profile"><FaUser /></a>
-        <a href="/cart"><FaShoppingCart /></a>
-        <div className="auth-links">
-          <RouterLink to="/login">Login</RouterLink> | <RouterLink to="/signup">Signup</RouterLink>
-        </div>
+        {isLoggedIn ? (
+          <>
+            <RouterLink to="/profile"><FaUser /></RouterLink>
+            <RouterLink to="/cart"><FaShoppingCart /></RouterLink>
+            <button onClick={handleLogout} className="logout-button">Logout</button>
+          </>
+        ) : (
+          <div className="auth-links">
+            <RouterLink to="/login">Login</RouterLink> | <RouterLink to="/signup">Signup</RouterLink>
+          </div>
+        )}
       </div>
     </nav>
   );

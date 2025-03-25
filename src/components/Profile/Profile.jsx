@@ -1,53 +1,59 @@
-import React from 'react'
-import './Profile.css'
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Profile.css';
 import mizan from '../../assets/mizan.jpg';
 
-
 const Profile = () => {
+  const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
 
-  return (
+  useEffect(() => {
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    if (!loggedInUser) {
+      navigate('/login'); // Redirect if not logged in
+    } else {
+      setUserData(loggedInUser);
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('loggedInUser');
+    setUserData(null);
+    navigate('/login');
+  };
+
+  return userData ? (
     <div className="profile-details-container">
-    <div className="profile-details-card">
-      <img
-        src={mizan}
-        alt='profile'
-        className="profile-details-avatar"
-      />
-      <h2 className="profile-details-full-name">
-        Paskal Khadka
-      </h2>
-      <p className="profile-details-username">
-        @paskal_khadka
-      </p>
-      <div className="profile-details-info">
-        <table>
-          <tbody>
-            <tr>
-              <td><strong>Email:</strong></td>
-              <td>@gmail.com</td>
-            </tr>
-            <tr>
-              <td><strong>Location:</strong></td>
-              <td>sivapuri dada</td>
-            </tr>
-            <tr>
-              <td><strong>DOB:</strong></td>
-              <td>2003-05-18</td>
-            </tr>
-            <tr>
-              <td><strong>Gender:</strong></td>
-              <td>Male</td>
-            </tr>
-            <tr>
-              <td><strong>Phone:</strong></td>
-              <td>9863982722</td>
-            </tr>
-          </tbody>
-        </table>
+      <div className="profile-details-card">
+        <img src={mizan} alt="profile" className="profile-details-avatar" />
+        <h2 className="profile-details-full-name">{userData.fullName}</h2>
+        <p className="profile-details-username">@{userData.fullName.replace(" ", "_").toLowerCase()}</p>
+        <div className="profile-details-info">
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Email:</strong></td>
+                <td>{userData.email}</td>
+              </tr>
+              <tr>
+                <td><strong>Phone:</strong></td>
+                <td>{userData.phone}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
-  )
-}
+  ) : null;
+};
 
-export default Profile
+export default Profile;
+
+
+
+
+
+
+
+
+    
