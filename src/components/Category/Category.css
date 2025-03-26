@@ -1,25 +1,96 @@
-
-
-.categories {
+.product-categories-container {
+    background-color: #f4f6f9;
+    padding: 40px 20px;
+  }
+  
+  .categories {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .category {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    transform-origin: center;
+    border: 1px solid #e9ecef;
+    position: relative;
+  }
+  
+  .category:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  }
+  
+  .category-image-wrapper {
+    height: 250px; /* Fixed height for all images */
+    width: 100%; 
+    overflow: hidden;
+  }
+  
+  .category-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures image covers entire container */
+    transition: transform 0.3s ease;
+  }
+  
+  .category:hover .category-image {
+    transform: scale(1.1); /* Consistent zoom effect */
+  }
+  
+  .category-content {
     padding: 20px;
-}
-
-.category {
-    background: #f8f8f8;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.category img {
-    max-width: 100%;
-    height: 200px;
-    border-radius: 5px;
-}
-
-.category h2 {
-    margin-top: 10px;
-}
+    text-align: center;
+  }
+  
+  .category-content h2 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  
+  .category-content p {
+    color: #7f8c8d;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+  }
+  
+  .category-link {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .category-link:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Specific color accents */
+  .category-smartphone { border-top: 4px solid #3498db; }
+  .category-accessories { border-top: 4px solid #2ecc71; }
+  .category-tablets { border-top: 4px solid #e74c3c; }
+  .category-earphones { border-top: 4px solid #9b59b6; }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .categories {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    
+    .category-image-wrapper {
+      height: 200px;
+    }
+  }
