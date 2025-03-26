@@ -29,13 +29,15 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ 
-      cartItems, 
-      addToCart, 
-      removeFromCart, 
-      clearCart,
-      cartCount: cartItems.reduce((total, item) => total + item.quantity, 0)
-    }}>
+    <CartContext.Provider 
+      value={{
+        cartItems,
+        addToCart,
+        removeFromCart,
+        clearCart,
+        cartCount: cartItems.reduce((total, item) => total + item.quantity, 0)
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
