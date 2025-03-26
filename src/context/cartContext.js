@@ -24,6 +24,23 @@ export const CartProvider = ({ children }) => {
     setCartItems(cartItems.filter(item => item.id !== productId));
   };
 
+  const updateQuantity = (productId, newQuantity) => {
+    // If new quantity is 0 or less, remove the item
+    if (newQuantity <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+
+    // Update the quantity of the specific item
+    const updatedCart = cartItems.map(item => 
+      item.id === productId 
+        ? { ...item, quantity: newQuantity } 
+        : item
+    );
+
+    setCartItems(updatedCart);
+  };
+
   const clearCart = () => {
     setCartItems([]);
   };
@@ -34,6 +51,7 @@ export const CartProvider = ({ children }) => {
         cartItems,
         addToCart,
         removeFromCart,
+        updateQuantity,
         clearCart,
         cartCount: cartItems.reduce((total, item) => total + item.quantity, 0)
       }}

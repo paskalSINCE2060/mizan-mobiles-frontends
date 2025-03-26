@@ -56,6 +56,41 @@ function HomePage() {
           discountedPrice: 53500.00
         }
       ];
+
+      const galaxyProducts = [
+        {
+          id: 'galaxy-watch-ultra',
+          image: galaxywatchultra,
+          name: 'Galaxy Watch Ultra (LTE, 47mm)',
+          originalPrice: 988.00,
+          discountedPrice: 691.60,
+          color: 'Titanium Silver'
+        },
+        {
+          id: 'galaxy-buds-3-pro',
+          image: galaxybuds3pro,
+          name: 'Galaxy Buds3 Pro',
+          originalPrice: 358.00,
+          discountedPrice: 250.60,
+          color: 'Silver'
+        },
+        {
+          id: 'galaxy-buds-3',
+          image: galaxybuds3,
+          name: 'Galaxy Buds3',
+          originalPrice: 258.00,
+          discountedPrice: 180.60,
+          color: 'White'
+        },
+        {
+          id: 'galaxy-watch-7',
+          image: galaxywatch7,
+          name: 'Galaxy Watch7 (Bluetooth, 44mm)',
+          originalPrice: 498.00,
+          discountedPrice: 348.60,
+          color: 'Green'
+        }
+    ];
     
   return (
     <div>
@@ -149,65 +184,44 @@ function HomePage() {
 
 
 
-    <section className="different-equipment container">
+            <section className="different-equipment container">
         <h2 className="different-equipment">Multi Buy Offer</h2>
         <p className="different-equipment offer-text">Get up to 30% off selected Galaxy products on selected Watches, Tablets, Buds and more</p>
         <div className="different-equipment product-grid">
-          
-            <div className="different-equipment product">
-                <img src={galaxywatchultra} alt="Galaxy Watch Ultra" className="different-equipment"/>
-                <h3 className="different-equipment">Galaxy Watch Ultra (LTE, 47mm)</h3>
-                <p className="different-equipment color"><strong>Color :</strong> Titanium Silver</p>
-                <div className="different-equipment color-options">
-                    <span className="different-equipment color-circle black"></span>
-                    <span className="different-equipment color-circle blue selected"></span>
-                    <span className="different-equipment color-circle gray"></span>
-                </div>
-                <p className="different-equipment price">$691.60</p>
-                <p className="different-equipment discount"><del>$988.00</del> <span className="different-equipment save">Save $296.40</span></p>
-                <button className="different-equipment add-button">Add</button>
+          {galaxyProducts.map((product) => (
+            <div key={product.id} className="different-equipment product">
+              <img src={product.image} alt={product.name} className="different-equipment"/>
+              <h3 className="different-equipment">{product.name}</h3>
+              <p className="different-equipment color">
+                <strong>Color :</strong> {product.color}
+              </p>
+              <div className="different-equipment color-options">
+                <span className="different-equipment color-circle blue selected"></span>
+                <span className="different-equipment color-circle gray"></span>
+              </div>
+              <p className="different-equipment price">
+                NPR {product.discountedPrice.toLocaleString()}
+              </p>
+              <p className="different-equipment discount">
+                <del>NPR {product.originalPrice.toLocaleString()}</del> 
+                <span className="different-equipment save">
+                  Save NPR {(product.originalPrice - product.discountedPrice).toLocaleString()}
+                </span>
+              </p>
+              <button 
+                className="different-equipment add-button"
+                onClick={() => addToCart({
+                  ...product,
+                  price: product.discountedPrice,
+                  image: product.image
+                })}
+              >
+                Add to Cart
+              </button>
             </div>
-
-            <div className="different-equipment product">
-                <img src={galaxybuds3pro} alt="Galaxy Buds3 Pro" className="different-equipment"/>
-                <h3 className="different-equipment">Galaxy Buds3 Pro</h3>
-                <p className="different-equipment color"><strong>Color :</strong> Silver</p>
-                <div className="different-equipment color-options">
-                    <span className="different-equipment color-circle blue selected"></span>
-                    <span className="different-equipment color-circle gray"></span>
-                </div>
-                <p className="different-equipment price">$250.60</p>
-                <p className="different-equipment discount"><del>$358.00</del> <span className="different-equipment save">Save $107.40</span></p>
-                <button className="different-equipment add-button">Add</button>
-            </div>
-
-            <div className="different-equipment product">
-                <img src={galaxybuds3} alt="Galaxy Buds3" className="different-equipment"/>
-                <h3 className="different-equipment">Galaxy Buds3</h3>
-                <p className="different-equipment color"><strong>Color :</strong> White</p>
-                <div className="different-equipment color-options">
-                    <span className="different-equipment color-circle gray"></span>
-                    <span className="different-equipment color-circle blue selected"></span>
-                </div>
-                <p className="different-equipment price">$180.60</p>
-                <p className="different-equipment discount"><del>$258.00</del> <span className="different-equipment save">Save $77.40</span></p>
-                <button className="different-equipment add-button">Add</button>
-            </div>
-
-            <div className="different-equipment product">
-                <img src={galaxywatch7} alt="Galaxy Watch7" className="different-equipment"/>
-                <h3 className="different-equipment">Galaxy Watch7 (Bluetooth, 44mm)</h3>
-                <p className="different-equipment color"><strong>Color :</strong> Green</p>
-                <div className="different-equipment color-options">
-                    <span className="different-equipment color-circle blue selected"></span>
-                    <span className="different-equipment color-circle gray"></span>
-                </div>
-                <p className="different-equipment price">$348.60</p>
-                <p className="different-equipment discount"><del>$498.00</del> <span className="different-equipment save">Save $149.40</span></p>
-                <button className="different-equipment add-button">Add</button>
-            </div>
+          ))}
         </div>
-    </section>
+      </section>
 
 
 
