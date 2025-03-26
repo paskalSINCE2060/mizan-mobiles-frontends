@@ -12,6 +12,7 @@ import ForgetPassword from "./components/ForgetPassword/ForgetPassword";
 import Profile from "./components/Profile/Profile";
 import Cart from "./components/Cart/Cart";
 import Checkout from "./components/Checkout/Checkout";
+import { CartProvider } from "./context/cartContext";
 
 function App() {
   const [userData, setUserData] = useState(null);
@@ -24,6 +25,7 @@ function App() {
   }, []);
 
   return (
+    <CartProvider>
     <Router>
       <Navbar userData={userData} setUserData={setUserData} />
       <Routes>
@@ -49,6 +51,7 @@ function App() {
       </Routes>
       <Footer />
     </Router>
+    </CartProvider>
   );
 }
 

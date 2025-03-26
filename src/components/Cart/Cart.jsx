@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCart } from "../../context/cartContext";
+import { useCart } from '../../context/cartContext';
 import './Cart.css';
 
 const Cart = () => {
@@ -7,18 +7,10 @@ const Cart = () => {
     cartItems, 
     removeFromCart, 
     updateQuantity, 
-    clearCart 
+    clearCart,
+    calculateSubtotal,
+    calculateTotal
   } = useCart();
-
-  const shippingCharge = 15.00;
-
-  const calculateSubtotal = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
-
-  const calculateTotal = () => {
-    return calculateSubtotal() + shippingCharge;
-  };
 
   const proceedToCheckout = () => {
     window.location.href = '/checkout';
@@ -110,7 +102,11 @@ const Cart = () => {
           </div>
           <div className="summary-row">
             <span>Shipping</span>
-            <span>NPR {shippingCharge.toLocaleString()}</span>
+            <span>NPR 15.00</span>
+          </div>
+          <div className="summary-row">
+            <span>Tax</span>
+            <span>NPR {(calculateSubtotal() * 0.08).toLocaleString()}</span>
           </div>
           <div className="summary-row total">
             <span>Total</span>

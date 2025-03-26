@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useCart } from '../../context/cartContext';
 import './Checkout.css';
 import { CreditCard, Truck, User, CheckCircle, ChevronRight } from 'lucide-react';
 
 const Checkout = () => {
+  const { cartItems, calculateSubtotal, clearCart } = useCart();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
@@ -15,6 +17,9 @@ const Checkout = () => {
     cardCvv: ''
   });
   const [orderPlaced, setOrderPlaced] = useState(false);
+
+  const shippingCharge = 15.00;
+  const taxRate = 0.08; // 8% tax rate
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -40,13 +45,18 @@ const Checkout = () => {
   };
 
   const validateForm = () => {
-    return formData.cardNumber.trim() !== '' && formData.cardExpiry.trim() !== '' && formData.cardCvv.trim() !== '';
+    return formData.cardNumber.trim() !== '' && 
+           formData.cardExpiry.trim() !== '' && 
+           formData.cardCvv.trim() !== '' &&
+           cartItems.length > 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
+      // In a real app, you'd send order to backend here
       setOrderPlaced(true);
+      clearCart(); // Clear the cart after successful order
     }
   };
 
@@ -54,6 +64,11 @@ const Checkout = () => {
     if (currentStep === 2) return '50%';
     if (currentStep === 3) return '100%';
     return '0%';
+  };
+
+  const calculateTotal = () => {
+    const subtotal = calculateSubtotal();
+    return subtotal + shippingCharge + (subtotal * taxRate);
   };
 
   return (
@@ -90,6 +105,7 @@ const Checkout = () => {
           <div className="Checkout-page-checkout-content">
             <div className="Checkout-page-checkout-form">
               <form id="checkout-form" onSubmit={handleSubmit}>
+                {/* Contact Information Step */}
                 <div className={`Checkout-page-step-content ${currentStep === 1 ? 'active' : ''}`} data-step="1">
                   <div className="Checkout-page-step-header">
                     <div className="Checkout-page-step-icon">
@@ -133,6 +149,7 @@ const Checkout = () => {
                   </div>
                 </div>
 
+                {/* Shipping Information Step */}
                 <div className={`Checkout-page-step-content ${currentStep === 2 ? 'active' : ''}`} data-step="2">
                   <div className="Checkout-page-step-header">
                     <div className="Checkout-page-step-icon">
@@ -191,6 +208,7 @@ const Checkout = () => {
                   </div>
                 </div>
 
+                {/* Payment Information Step */}
                 <div className={`Checkout-page-step-content ${currentStep === 3 ? 'active' : ''}`} data-step="3">
                   <div className="Checkout-page-step-header">
                     <div className="Checkout-page-step-icon">
@@ -256,45 +274,33 @@ const Checkout = () => {
             <div className="Checkout-page-order-summary">
               <h2 className="Checkout-page-summary-title">Order Summary</h2>
               <div className="Checkout-page-summary-items">
-                <div className="Checkout-page-summary-item">
-                  <div>
-                    <span className="Checkout-page-item-name">Smartphone X</span>
-                    <span className="Checkout-page-item-quantity">x1</span>
+                {cartItems.map(item => (
+                  <div key={item.id} className="Checkout-page-summary-item">
+                    <div>
+                      <span className="Checkout-page-item-name">{item.name}</span>
+                      <span className="Checkout-page-item-quantity">x{item.quantity}</span>
+                    </div>
+                    <span>NPR {(item.price * item.quantity).toLocaleString()}</span>
                   </div>
-                  <span>$699.99</span>
-                </div>
-                <div className="Checkout-page-summary-item">
-                  <div>
-                    <span className="Checkout-page-item-name">Protective Case</span>
-                    <span className="Checkout-page-item-quantity">x1</span>
-                  </div>
-                  <span>$24.99</span>
-                </div>
-                <div className="Checkout-page-summary-item">
-                  <div>
-                    <span className="Checkout-page-item-name">Screen Protector</span>
-                    <span className="Checkout-page-item-quantity">x2</span>
-                  </div>
-                  <span>$25.98</span>
-                </div>
+                ))}
               </div>
 
               <div className="Checkout-page-summary-totals">
                 <div className="Checkout-page-summary-item">
                   <span className="Checkout-page-summary-item-label">Subtotal</span>
-                  <span>$750.96</span>
+                  <span>NPR {calculateSubtotal().toLocaleString()}</span>
                 </div>
                 <div className="Checkout-page-summary-item">
                   <span className="Checkout-page-summary-item-label">Shipping</span>
-                  <span>$9.99</span>
+                  <span>NPR {shippingCharge.toLocaleString()}</span>
                 </div>
                 <div className="Checkout-page-summary-item">
                   <span className="Checkout-page-summary-item-label">Tax</span>
-                  <span>$60.08</span>
+                  <span>NPR {(calculateSubtotal() * taxRate).toLocaleString()}</span>
                 </div>
-                <div className="Checkout-page-summary-item">
+                <div className="Checkout-page-summary-item total">
                   <span>Total</span>
-                  <span>$821.03</span>
+                  <span>NPR {calculateTotal().toLocaleString()}</span>
                 </div>
               </div>
             </div>
