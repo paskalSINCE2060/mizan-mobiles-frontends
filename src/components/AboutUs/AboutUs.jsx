@@ -45,7 +45,7 @@ const AboutUs = () => {
       <div className="aboutUs-contact">
         <h2>Contact Us</h2>
         <p>
-          Need assistance? Reach out at <a href="mailto:support@techstore.com">support@techstore.com</a> or follow us on social media for updates and exclusive deals!
+          Need assistance? Reach out at <a href="mailto:support@mizanmobile.com">support@mizanmobile.com</a> or follow us on social media for updates and exclusive deals!
         </p>
       </div>
     </section>
