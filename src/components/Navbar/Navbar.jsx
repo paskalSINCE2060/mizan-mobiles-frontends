@@ -38,6 +38,14 @@ function Navbar({ userData, setUserData }) {
      setIsOpen(!isOpen);
    };
 
+   const handleScrollToServices = () => {
+    navigate("/"); // Make sure you're on the homepage
+    const servicesSection = document.getElementById('services');
+    if (servicesSection) {
+      servicesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
    const handleSearchChange = (e) => {
      setSearchQuery(e.target.value);
    };
@@ -110,7 +118,7 @@ function Navbar({ userData, setUserData }) {
          <li><RouterLink to="/categories">Categories</RouterLink></li>
          <li><RouterLink to="/about">About</RouterLink></li>
          <li><RouterLink to="/contact">Contact</RouterLink></li>
-         <li><button onClick={() => navigate("/")} className="nav-button">Services</button></li>
+         <li><button onClick={handleScrollToServices} className="nav-button">Services</button></li>
        </ul>
 
        <div className="right-icons">
