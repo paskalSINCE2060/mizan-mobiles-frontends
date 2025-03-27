@@ -19,16 +19,19 @@ const ProductDetails = () => {
     }, [location.state]);
 
     // Get product from navigation state, or use a default product
-    const { product } = location.state || {
-        product: {
-            name: "Product Not Found",
-            discountedPrice: 0,
-            originalPrice: 0,
-            image: "https://via.placeholder.com/400x400",
-            description: "No description available.",
-            specs: {}
-        }
+    const product = location.state?.product || {
+        name: "Product Not Found",
+        discountedPrice: 0,
+        originalPrice: 0,
+        image: "https://via.placeholder.com/400x400",
+        description: "No description available.",
+        specs: {}
     };
+
+    // Ensure price and image are always defined
+    const productImage = product.image || "https://via.placeholder.com/400x400";
+    const productDiscountedPrice = product.discountedPrice ?? 0;
+    const productOriginalPrice = product.originalPrice ?? 0;
 
     // Related products based on the current product category
     const relatedProducts = [
@@ -64,45 +67,50 @@ const ProductDetails = () => {
 
     // Handle related product click
     const handleRelatedProductClick = (relatedProduct) => {
+        if (!relatedProduct) return;
         navigate('/productdetails', { state: { product: relatedProduct } });
     };
 
     return (
         <div className="Product-details-container">
             {/* Main Product Details */}
-            <div className="Product-details-main">
-                <div className="Product-details-image-container" style={{width: '50%', minWidth: '300px'}}>
-                    <img 
-                        src={product.image} 
-                        alt={product.name} 
-                        className="Product-details-image" 
-                        style={{
-                            width: '100%', 
-                            height: '500px', 
-                            objectFit: 'contain', 
-                            objectPosition: 'center'
-                        }}
-                    />
+            {product && product.name ? (
+                <div className="Product-details-main">
+                    <div className="Product-details-image-container" style={{ width: '50%', minWidth: '300px' }}>
+                        <img 
+                            src={productImage} 
+                            alt={product.name} 
+                            className="Product-details-image" 
+                            style={{
+                                width: '100%', 
+                                height: '500px', 
+                                objectFit: 'contain', 
+                                objectPosition: 'center'
+                            }}
+                        />
+                    </div>
+                    <div className="Product-details-info">
+                        <h2 className="Product-details-name">{product.name}</h2>
+                        <p className="Product-details-price">
+                            NPR {productDiscountedPrice.toLocaleString()} 
+                            <span className="Product-details-original-price">
+                                NPR {productOriginalPrice.toLocaleString()}
+                            </span>
+                        </p>
+                        <button 
+                            className="Product-details-add-to-cart"
+                            onClick={() => addToCart({
+                                ...product,
+                                price: productDiscountedPrice
+                            })}
+                        >
+                            Add to Cart
+                        </button>
+                    </div>
                 </div>
-                <div className="Product-details-info">
-                    <h2 className="Product-details-name">{product.name}</h2>
-                    <p className="Product-details-price">
-                        NPR {product.discountedPrice.toLocaleString()} 
-                        <span className="Product-details-original-price">
-                            NPR {product.originalPrice.toLocaleString()}
-                        </span>
-                    </p>
-                    <button 
-                        className="Product-details-add-to-cart"
-                        onClick={() => addToCart({
-                            ...product,
-                            price: product.discountedPrice
-                        })}
-                    >
-                        Add to Cart
-                    </button>
-                </div>
-            </div>
+            ) : (
+                <p>Loading product details...</p>
+            )}
 
             {/* Product Tabs */}
             <div className="Product-details-tabs">
@@ -125,9 +133,13 @@ const ProductDetails = () => {
                 {activeTab === "description" ? (
                     <p>{product.description}</p>
                 ) : (
-                    <div>
+                    <div className="Product-details-specs">
+                        <h3 className="Product-details-specs-header">Specifications</h3>
                         {Object.entries(product.specs || {}).map(([key, value]) => (
-                            <p key={key}><strong>{key}:</strong> {value}</p>
+                            <p key={key}>
+                                <strong>{key}:</strong>
+                                <span>{value}</span>
+                            </p>
                         ))}
                     </div>
                 )}
@@ -150,9 +162,9 @@ const ProductDetails = () => {
                         />
                         <h4 className="Product-details-related-name">{item.name}</h4>
                         <p className="Product-details-related-price">
-                            NPR {item.discountedPrice.toLocaleString()} 
+                            NPR {item.discountedPrice ? item.discountedPrice.toLocaleString() : "N/A"} 
                             <span className="Product-details-original-price">
-                                NPR {item.originalPrice.toLocaleString()}
+                                NPR {item.originalPrice ? item.originalPrice.toLocaleString() : "N/A"}
                             </span>
                         </p>
                         <button 
@@ -162,7 +174,7 @@ const ProductDetails = () => {
                                 addToCart({
                                     ...item,
                                     price: item.discountedPrice
-                                })
+                                });
                             }}
                         >
                             Add to Cart

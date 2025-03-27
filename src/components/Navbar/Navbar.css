@@ -19,6 +19,65 @@
     justify-content: center;
     width: 40%;
   }
+
+  .search-recommendations {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #222;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 100;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .recommendation-item {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    color: white;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.3s ease;
+  }
+  
+  .recommendation-item:hover {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .recommendation-item:last-child {
+    border-bottom: none;
+  }
+  
+  /* Scrollbar Styling */
+  .search-recommendations::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .search-recommendations::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+  }
+  
+  .search-recommendations::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .search-recommendations {
+      width: 100%;
+      left: 0;
+    }
+    .recommendation-item {
+      font-size: 0.85rem;
+      padding: 10px 12px;
+    }
+  }
+  
   
   .navbar .search-input {
     padding: 0.5rem;

@@ -12,14 +12,14 @@ function Navbar({ userData, setUserData }) {
    const navigate = useNavigate();
 
    const allProducts = [
-     { name: 'Apple iPhone 14 Pro Max [256GB]', category: 'iPhone' },
-     { name: 'Apple iPhone 13 Pro Max [256GB]', category: 'iPhone' },
-     { name: 'Apple iPhone 13 Pro Max [128GB]', category: 'iPhone' },
-     { name: 'Apple iPhone 11 Pro Max [512GB]', category: 'iPhone' },
-     { name: 'Galaxy Watch Ultra (LTE, 47mm)', category: 'Galaxy Watch' },
-     { name: 'Galaxy Buds3 Pro', category: 'Galaxy Buds' },
-     { name: 'Galaxy Buds3', category: 'Galaxy Buds' },
-     { name: 'Galaxy Watch7 (Bluetooth, 44mm)', category: 'Galaxy Watch' }
+     { id: 'iphone14-256gb', name: 'Apple iPhone 14 Pro Max [256GB]', category: 'iPhone', image: '/path/to/iphone14.jpg', discountedPrice: 111500.00 },
+     { id: 'iphone13pro-256gb', name: 'Apple iPhone 13 Pro Max [256GB]', category: 'iPhone', image: '/path/to/iphone13pro.jpg', discountedPrice: 91500.00 },
+     { id: 'iphone13promax-128gb', name: 'Apple iPhone 13 Pro Max [128GB]', category: 'iPhone', image: '/path/to/iphone13promax.jpg', discountedPrice: 85500.00 },
+     { id: 'iphone11promax-512gb', name: 'Apple iPhone 11 Pro Max [512GB]', category: 'iPhone', image: '/path/to/iphone11promax.jpg', discountedPrice: 53500.00 },
+     { id: 'galaxy-watch-ultra', name: 'Galaxy Watch Ultra (LTE, 47mm)', category: 'Galaxy Watch', image: '/path/to/galaxywatchultra.jpg', discountedPrice: 691.60 },
+     { id: 'galaxy-buds-3-pro', name: 'Galaxy Buds3 Pro', category: 'Galaxy Buds', image: '/path/to/galaxybuds3pro.jpg', discountedPrice: 250.60 },
+     { id: 'galaxy-buds-3', name: 'Galaxy Buds3', category: 'Galaxy Buds', image: '/path/to/galaxybuds3.jpg', discountedPrice: 180.60 },
+     { id: 'galaxy-watch-7', name: 'Galaxy Watch7 (Bluetooth, 44mm)', category: 'Galaxy Watch', image: '/path/to/galaxywatch7.jpg', discountedPrice: 348.60 }
    ];
 
    useEffect(() => {
@@ -38,16 +38,6 @@ function Navbar({ userData, setUserData }) {
      setIsOpen(!isOpen);
    };
 
-   const handleServicesClick = () => {
-     navigate("/");
-     setTimeout(() => {
-       const serviceSection = document.getElementById("services");
-       if (serviceSection) {
-         serviceSection.scrollIntoView({ behavior: "smooth" });
-       }
-     }, 100);
-   };
-
    const handleSearchChange = (e) => {
      setSearchQuery(e.target.value);
    };
@@ -62,9 +52,9 @@ function Navbar({ userData, setUserData }) {
    };
 
    const handleSearchRecommendationClick = (product) => {
-     navigate('/productdetails', { state: { product } });
-     setSearchRecommendations([]);
-     setSearchQuery('');
+     navigate('/productdetails', { state: { product } }); // Passing full product details
+     setSearchRecommendations([]);  // Clear recommendations after selection
+     setSearchQuery('');  // Reset the search query
    };
 
    const handleLogout = () => {
@@ -104,7 +94,11 @@ function Navbar({ userData, setUserData }) {
                  className="recommendation-item"
                  onClick={() => handleSearchRecommendationClick(product)}
                >
-                 {product.name} ({product.category})
+                 <img src={product.image} alt={product.name} className="recommendation-item-img" />
+                 <div className="recommendation-item-text">
+                   <p>{product.name}</p>
+                   <p>NPR {product.discountedPrice.toLocaleString()}</p>
+                 </div>
                </div>
              ))}
            </div>
@@ -116,7 +110,7 @@ function Navbar({ userData, setUserData }) {
          <li><RouterLink to="/categories">Categories</RouterLink></li>
          <li><RouterLink to="/about">About</RouterLink></li>
          <li><RouterLink to="/contact">Contact</RouterLink></li>
-         <li><button onClick={handleServicesClick} className="nav-button">Services</button></li>
+         <li><button onClick={() => navigate("/")} className="nav-button">Services</button></li>
        </ul>
 
        <div className="right-icons">
