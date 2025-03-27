@@ -19,10 +19,10 @@ const Footer = () => {
             <div className="mizan-footer-col">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Deals</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/">Shop</a></li>
+                    <li><a href="about">Deals</a></li>
+                    <li><a href="/contact">Contact</a></li>
                     <li><a href="#">FAQs</a></li>
                 </ul>
             </div>
