@@ -21,33 +21,55 @@ const ProductDetails = () => {
   ];
 
   return (
-    <div className="product-container">
-      <div className="product-main">
-        <img src={products} alt={product.name} className="product-image" />
-        <div className="product-info">
-          <h2 className="product-name">{product.name}</h2>
-          <p className="product-price">${product.discountPrice} <span className="original-price">${product.price}</span></p>
-          <button className="add-to-cart">Add to Cart</button>
+    <div className="Product-details-container">
+      <div className="Product-details-main">
+        <img src={products} alt={product.name} className="Product-details-image" />
+        <div className="Product-details-info">
+          <h2 className="Product-details-name">{product.name}</h2>
+          <p className="Product-details-price">
+            ${product.discountPrice} <span className="Product-details-original-price">${product.price}</span>
+          </p>
+          <button className="Product-details-add-to-cart">Add to Cart</button>
         </div>
       </div>
 
-      <div className="tabs">
-        <button onClick={() => setActiveTab("description")} className={activeTab === "description" ? "active-tab" : ""}>Description</button>
-        <button onClick={() => setActiveTab("reviews")} className={activeTab === "reviews" ? "active-tab" : ""}>Reviews</button>
+      <div className="Product-details-tabs">
+        <button 
+          onClick={() => setActiveTab("description")} 
+          className={`Product-details-tab ${activeTab === "description" ? "Product-details-active-tab" : ""}`}
+        >
+          Description
+        </button>
+        <button 
+          onClick={() => setActiveTab("reviews")} 
+          className={`Product-details-tab ${activeTab === "reviews" ? "Product-details-active-tab" : ""}`}
+        >
+          Reviews
+        </button>
       </div>
 
-      <div className="tab-content">
-        {activeTab === "description" ? <p>{product.description}</p> : <p>{product.reviews}</p>}
+      <div className="Product-details-tab-content">
+        {activeTab === "description" ? (
+          <p>{product.description}</p>
+        ) : (
+          <p>{product.reviews}</p>
+        )}
       </div>
 
-      <h3 className="related-title">Related Products</h3>
-      <div className="related-products">
+      <h3 className="Product-details-related-title">Related Products</h3>
+      <div className="Product-details-related-products">
         {relatedProducts.map((item) => (
-          <div key={item.id} className="related-item">
-            <img src={item.image} alt={item.name} className="related-image" />
-            <h4 className="related-name">{item.name}</h4>
-            <p className="related-price">${item.discountPrice} <span className="original-price">${item.price}</span></p>
-            <button className="add-to-cart">Add to Cart</button>
+          <div key={item.id} className="Product-details-related-item">
+            <img 
+              src={item.image} 
+              alt={item.name} 
+              className="Product-details-related-image" 
+            />
+            <h4 className="Product-details-related-name">{item.name}</h4>
+            <p className="Product-details-related-price">
+              ${item.discountPrice} <span className="Product-details-original-price">${item.price}</span>
+            </p>
+            <button className="Product-details-add-to-cart">Add to Cart</button>
           </div>
         ))}
       </div>

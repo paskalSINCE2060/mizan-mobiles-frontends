@@ -17,42 +17,42 @@ const Cart = () => {
   };
 
   return (
-    <div className="shopping-cart-container">
+    <div className="cart-items-shopping-cart-container">
       <h1>Your Shopping Cart</h1>
       
-      <div className="cart-content">
-        <div className="cart-items">
+      <div className="cart-items-cart-content">
+        <div className="cart-items-cart-items">
           {cartItems.length > 0 ? (
             <>
-              <div className="cart-header">
-                <div className="product-header">Product</div>
-                <div className="price-header">Price</div>
-                <div className="quantity-header">Quantity</div>
-                <div className="total-header">Total</div>
+              <div className="cart-items-cart-header">
+                <div className="cart-items-product-header">Product</div>
+                <div className="cart-items-price-header">Price</div>
+                <div className="cart-items-quantity-header">Quantity</div>
+                <div className="cart-items-total-header">Total</div>
               </div>
               
               {cartItems.map(item => (
-                <div key={item.id} className="cart-item">
-                  <div className="product-info">
-                    <div className="product-image">
+                <div key={item.id} className="cart-items-cart-item">
+                  <div className="cart-items-product-info">
+                    <div className="cart-items-product-image">
                       <img src={item.image} alt={item.name} />
                     </div>
-                    <div className="product-details">
+                    <div className="cart-items-product-details">
                       <h3>{item.name}</h3>
                       <button 
-                        className="remove-btn" 
+                        className="cart-items-remove-btn" 
                         onClick={() => removeFromCart(item.id)}
                       >
-                        <span className="remove-icon">🗑</span> Remove
+                        <span className="cart-items-remove-icon">🗑</span> Remove
                       </button>
                     </div>
                   </div>
                   
-                  <div className="price">
+                  <div className="cart-items-price">
                     NPR {item.price.toLocaleString()}
                   </div>
                   
-                  <div className="quantity-controls">
+                  <div className="cart-items-quantity-controls">
                     <button 
                       onClick={() => updateQuantity(item.id, item.quantity - 1)}
                     >
@@ -66,18 +66,18 @@ const Cart = () => {
                     </button>
                   </div>
                   
-                  <div className="item-total">
+                  <div className="cart-items-item-total">
                     NPR {(item.price * item.quantity).toLocaleString()}
                   </div>
                 </div>
               ))}
               
-              <div className="cart-actions">
-                <button className="clear-cart" onClick={clearCart}>
+              <div className="cart-items-cart-actions">
+                <button className="cart-items-clear-cart" onClick={clearCart}>
                   Clear Cart
                 </button>
                 <button 
-                  className="continue-shopping" 
+                  className="cart-items-continue-shopping" 
                   onClick={() => window.location.href = '/'}
                 >
                   Continue Shopping
@@ -85,7 +85,7 @@ const Cart = () => {
               </div>
             </>
           ) : (
-            <div className="empty-cart">
+            <div className="cart-items-empty-cart">
               <p>Your cart is empty</p>
               <button onClick={() => window.location.href = '/'}>
                 Continue Shopping
@@ -94,34 +94,34 @@ const Cart = () => {
           )}
         </div>
         
-        <div className="order-summary">
+        <div className="cart-items-order-summary">
           <h2>Order Summary</h2>
-          <div className="summary-row">
+          <div className="cart-items-summary-row">
             <span>Subtotal</span>
             <span>NPR {calculateSubtotal().toLocaleString()}</span>
           </div>
-          <div className="summary-row">
+          <div className="cart-items-summary-row">
             <span>Shipping</span>
             <span>NPR 15.00</span>
           </div>
-          <div className="summary-row">
+          <div className="cart-items-summary-row">
             <span>Tax</span>
             <span>NPR {(calculateSubtotal() * 0.08).toLocaleString()}</span>
           </div>
-          <div className="summary-row total">
+          <div className="cart-items-summary-row cart-items-total">
             <span>Total</span>
             <span>NPR {calculateTotal().toLocaleString()}</span>
           </div>
           
           <button 
-            className="checkout-btn" 
+            className="cart-items-checkout-btn" 
             onClick={proceedToCheckout}
             disabled={cartItems.length === 0}
           >
             Proceed to Checkout →
           </button>
           
-          <div className="additional-info">
+          <div className="cart-items-additional-info">
             <p>Free shipping on all orders over NPR 200</p>
             <p>30-day money-back guarantee</p>
             <p>Secure payments</p>
