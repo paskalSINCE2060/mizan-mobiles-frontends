@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/cartContext";
 import "./ProductDetails.css";
 
@@ -9,8 +9,14 @@ import iphone13promax from '../../assets/iphone13promax.png';
 
 const ProductDetails = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const { addToCart } = useCart();
     const [activeTab, setActiveTab] = useState("description");
+
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location.state]);
 
     // Get product from navigation state, or use a default product
     const { product } = location.state || {
@@ -55,6 +61,11 @@ const ProductDetails = () => {
             }
         }
     ];
+
+    // Handle related product click
+    const handleRelatedProductClick = (relatedProduct) => {
+        navigate('/productdetails', { state: { product: relatedProduct } });
+    };
 
     return (
         <div className="Product-details-container">
@@ -126,7 +137,12 @@ const ProductDetails = () => {
             <h3 className="Product-details-related-title">Related Products</h3>
             <div className="Product-details-related-products">
                 {relatedProducts.map((item) => (
-                    <div key={item.id} className="Product-details-related-item">
+                    <div 
+                        key={item.id} 
+                        className="Product-details-related-item"
+                        onClick={() => handleRelatedProductClick(item)}
+                        style={{ cursor: 'pointer' }}
+                    >
                         <img 
                             src={item.image} 
                             alt={item.name} 
@@ -141,10 +157,13 @@ const ProductDetails = () => {
                         </p>
                         <button 
                             className="Product-details-add-to-cart"
-                            onClick={() => addToCart({
-                                ...item,
-                                price: item.discountedPrice
-                            })}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                addToCart({
+                                    ...item,
+                                    price: item.discountedPrice
+                                })
+                            }}
                         >
                             Add to Cart
                         </button>
