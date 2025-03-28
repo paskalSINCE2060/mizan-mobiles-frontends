@@ -36,7 +36,7 @@ const Category = () => {
           <div className="category-content">
             <h2>Tablets</h2>
             <p>Portable computing power</p>
-            <a href="#" className="category-link">Browse</a>
+            <a href="/tablets" className="category-link">Browse</a>
           </div>
         </div>
         <div className="category category-earphones">

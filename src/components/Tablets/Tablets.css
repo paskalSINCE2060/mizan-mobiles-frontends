@@ -1,13 +1,7 @@
-/* General Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
+
 
 /* Container */
-.watches-container {
+.Tablets-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
@@ -17,7 +11,7 @@
 }
 
 /* Card */
-.watches-card {
+.Tablets-card {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -27,12 +21,12 @@
     transition: transform 0.3s ease-in-out;
 }
 
-.watches-card:hover {
+.Tablets-card:hover {
     transform: translateY(-5px);
 }
 
 /* Image */
-.watches-image {
+.Tablets-image {
     width: 100%;
     height: 200px;
     object-fit: cover;
@@ -40,27 +34,27 @@
 }
 
 /* Name */
-.watches-name {
+.Tablets-name {
     font-size: 1.2rem;
     margin: 10px 0;
     color: #333;
 }
 
 /* Price */
-.watches-price {
+.Tablets-price {
     font-size: 1rem;
     font-weight: bold;
     color: #2c3e50;
 }
 
-.watches-old-price {
+.Tablets-old-price {
     text-decoration: line-through;
     color: #b2bec3;
     margin-right: 5px;
 }
 
 /* Button */
-.watches-btn {
+.Tablets-btn {
     background: #27ae60;
     color: #fff;
     border: none;
@@ -72,13 +66,13 @@
     transition: background 0.3s ease;
 }
 
-.watches-btn:hover {
+.Tablets-btn:hover {
     background: #219150;
 }
 
 /* Responsive */
 @media (max-width: 600px) {
-    .watches-container {
+    .Tablets-container {
         grid-template-columns: 1fr;
     }
 }
