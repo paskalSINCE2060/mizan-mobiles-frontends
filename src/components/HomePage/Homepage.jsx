@@ -2,7 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/cartContext";
 import './Homepage.css';
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 // Import all necessary images
 import iphone11promax from '../../assets/iphone11promax.jpeg'
 import iphone13pro from '../../assets/iphone13pro.jpg'
@@ -27,6 +29,7 @@ import sale from '../../assets/sale.png'
 function HomePage() {
     const { addToCart } = useCart();
     const navigate = useNavigate();
+
 
     // Comprehensive product data with detailed information
     const products = [
@@ -154,9 +157,11 @@ function HomePage() {
         navigate('/productdetails', { state: { product } });
     };
 
+
+
     return (
         <div>
-            {/* Hero Section */}
+ <ToastContainer position="top-right" autoClose={3000} hideProgressBar />            {/* Hero Section */}
             <section className="hero">
                 <div className="hero-content">
                     <button>Shop Now</button>
@@ -188,6 +193,15 @@ function HomePage() {
                                         price: product.discountedPrice,
                                         image: product.image
                                     })
+                                    toast.success("Added to Cart!", {
+                                        position: "top-right",
+                                        autoClose: 2000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        theme: "light",
+                                    });
                                 }}
                             >
                                 Add to Cart
@@ -196,7 +210,6 @@ function HomePage() {
                     ))}
                 </div>
             </section>
-
 
             <div className="why-us-container">
                 <div className="why-us-content">
@@ -269,6 +282,15 @@ function HomePage() {
                                         price: product.discountedPrice,
                                         image: product.image
                                     })
+                                    toast.success("Added to Cart!", {
+                                        position: "top-right",
+                                        autoClose: 2000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        theme: "light",
+                                    });
                                 }}
                             >
                                 Add to Cart
@@ -334,7 +356,7 @@ function HomePage() {
                     <div class="category">
                         <h2>Phones + iPhones</h2>
                         <div class="product-image">
-                            <img src="phones.jpg" alt="Phone Collection"/>
+                            <img src={sellPhone} alt="Phone Collection"/>
                         </div>
                         <div class="category-stats">
                             <span class="listings">15996 approved listings</span>
@@ -345,7 +367,7 @@ function HomePage() {
                     <div class="category">
                         <h2>MacBooks + Laptops</h2>
                         <div class="product-image">
-                            <img src="laptops.jpg" alt="Laptop Collection"/>
+                            <img src={buylaptops} alt="Laptop Collection"/>
                         </div>
                         <div class="category-stats">
                             <span class="listings">1022 approved listings</span>
@@ -356,7 +378,7 @@ function HomePage() {
                     <div class="category">
                         <h2>Watches</h2>
                         <div class="product-image">
-                            <img src="watches.jpg" alt="Watch Collection" />
+                            <img src={galaxybuds3} alt="Watch Collection" />
                         </div>
                         <div class="category-stats">
                             <span class="listings">1017 approved listings</span>

@@ -37,11 +37,6 @@
 .hero button:hover {
   background-color: #ff6347;
 }
-  
-
-  
- 
-
   .carts-item body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -92,18 +87,6 @@
 .carts-item button:hover {
     background-color: #4a148c;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 .different-equipment body {
   font-family: Arial, sans-serif;
@@ -318,17 +301,6 @@
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
 :root {
   --dark-purple: #1A1033;
   --light-purple: #4A3AFF;
@@ -453,14 +425,6 @@
   }
 }
 
-
-
-
-
-
-
-
-
 .why-us-container {
   position: relative;
   display: flex;
@@ -562,5 +526,107 @@
   .why-us-feature {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+.marketplace-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.marketplace-title {
+  text-align: center;
+  color: #ff5722;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+}
+
+.product-categories {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.category {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  text-align: center;
+  padding: 20px;
+  transition: transform 0.3s ease;
+}
+
+.category:hover {
+  transform: scale(1.03);
+}
+
+.category h2 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.product-image {
+  margin-bottom: 15px;
+}
+
+.product-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.category-stats {
+  display: flex;
+  justify-content: space-between;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.category-stats .listings,
+.category-stats .sellers {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+@media screen and (max-width: 768px) {
+  .product-categories {
+      flex-direction: column;
+  }
+}
+.cart-message {
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #28a745;
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  animation: fadeInOut 2s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% {
+      opacity: 0;
+      transform: translate(-50%, -70%);
+  }
+  20% {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+  }
+  80% {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+  }
+  100% {
+      opacity: 0;
+      transform: translate(-50%, -30%);
   }
 }
