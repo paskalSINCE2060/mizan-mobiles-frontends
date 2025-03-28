@@ -50,6 +50,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/productdetails" element={<ProductDetails />} />
+        
       </Routes>
       <Footer />
     </Router>

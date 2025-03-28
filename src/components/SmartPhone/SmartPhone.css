@@ -1,0 +1,76 @@
+
+.smart-phone-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* Card */
+.smart-phone-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    padding: 15px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.smart-phone-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Image */
+.smart-phone-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Name */
+.smart-phone-name {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #333;
+}
+
+/* Price */
+.smart-phone-price {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.smart-phone-old-price {
+    text-decoration: line-through;
+    color: #b2bec3;
+    margin-right: 5px;
+}
+
+/* Button */
+.smart-phone-btn {
+    background: #27ae60;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+}
+
+.smart-phone-btn:hover {
+    background: #219150;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .smart-phone-container {
+        grid-template-columns: 1fr;
+    }
+}
