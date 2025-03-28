@@ -46,7 +46,7 @@ const Category = () => {
           <div className="category-content">
             <h2>Earphones</h2>
             <p>Audio excellence</p>
-            <a href="#" className="category-link">View Collection</a>
+            <a href="/airpods" className="category-link">View Collection</a>
           </div>
         </div>
       </section>
