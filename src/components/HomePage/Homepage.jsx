@@ -22,6 +22,7 @@ import recycle from '../../assets/Recycle.webp'
 import repairphone from '../../assets/RepairPhone.webp'
 import repairLaptop from '../../assets/RepairLaptop.webp'
 import sellPhone from '../../assets/sellPhone.webp'
+import sale from '../../assets/sale.png'
 
 function HomePage() {
     const { addToCart } = useCart();
@@ -196,6 +197,45 @@ function HomePage() {
                 </div>
             </section>
 
+
+            <div className="why-us-container">
+  <div className="why-us-content">
+    <h2>Why us?</h2>
+    <p>
+      The products we sell are professionally inspected and thoroughly tested using a full diagnostic testing software. Our skilled professionals make sure that the products that reach your doorsteps are always in a pristine condition.
+    </p>
+  </div>
+  <div className="why-us-features">
+    <div className="why-us-feature">
+      <div className="why-us-feature-icon">
+        {/* Icon for Product you can trust */}
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+        </svg>
+      </div>
+      <div className="why-us-feature-content">
+        <h3>Product you can trust</h3>
+        <p>You'll always have a tested and certified latest piece of tech and a Happy Wallet all the time.</p>
+      </div>
+    </div>
+    {/* Repeat similar structure for other features */}
+    <div className="why-us-feature">
+      <div className="why-us-feature-icon">
+        {/* Icon for Quality you can rely on */}
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div className="why-us-feature-content">
+        <h3>Quality you can rely on</h3>
+        <p>Our working professionals make sure that the utmost quality products are always in a top-notch condition.</p>
+      </div>
+    </div>
+    {/* Add other features similarly */}
+  </div>
+</div>
+
+
             {/* Galaxy Products Section */}
             <section className="different-equipment container">
                 <h2 className="different-equipment">Multi Buy Offer</h2>
@@ -272,6 +312,26 @@ function HomePage() {
                     ))}
                 </div>
             </section>
+
+
+            <div className="sell-your-smartphone-container">
+                <div className="sell-your-smartphone-wrapper">
+                    <div className="sell-your-smartphone-content">
+                        <h1 className="sell-your-smartphone-title">Wanna Sell Your Smartphone?</h1>
+                        <p className="sell-your-smartphone-description">
+                            Get Instant Valuation in just a minute. Just enter your device's true condition and get a price quote. 
+                            Get Door-step Pickup with Same Day Payment Guaranteed.
+                        </p>
+                        <button className="sell-your-smartphone-cta">Sell Now</button>
+                    </div>
+                    <div className="sell-your-smartphone-devices">
+                        <img src={sale} alt="" />
+                    </div>
+                </div>
+             </div>
+
+
+
         </div>
     );
 }

@@ -318,3 +318,226 @@
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+:root {
+  --dark-purple: #1A1033;
+  --light-purple: #4A3AFF;
+  --white: #FFFFFF;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+    background-color: #1A1033;
+  }
+  25% {
+    background-position: 50% 75%;
+    background-color: #4A3AFF;
+  }
+  50% {
+    background-position: 100% 100%;
+    background-color: #FF4A92;
+  }
+  75% {
+    background-position: 50% 125%;
+    background-color: #4AFF6D;
+  }
+  100% {
+    background-position: 0% 50%;
+    background-color: #1A1033;
+  }
+}
+
+.sell-your-smartphone-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  background: linear-gradient(
+    -45deg, 
+    #1A1033, 
+    #4A3AFF, 
+    #FF4A92, 
+    #4AFF6D
+  );
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  color: white;
+  overflow: hidden;
+}
+
+.sell-your-smartphone-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 1;
+}
+
+.sell-your-smartphone-wrapper {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.sell-your-smartphone-content {
+  flex: 1;
+  max-width: 50%;
+  color: var(--white);
+  text-align: left; /* Ensure text is left-aligned */
+  padding-right: 2rem;
+}
+
+.sell-your-smartphone-content button {
+  padding: 10px;
+  border-radius: 15px;
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.sell-your-smartphone-content button:hover {
+  background-color: cornsilk;
+  transform: scale(1.05); 
+  color: rgb(223, 181, 75);
+  font-weight: bold;
+
+}
+
+.sell-your-smartphone-devices {
+  flex: 1;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  position: relative;
+}
+.sell-your-smartphone-devices img {
+  width: 30%;
+}
+
+@media screen and (max-width: 1024px) {
+  .sell-your-smartphone-wrapper {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .sell-your-smartphone-content {
+    max-width: 100%;
+    padding-right: 0;
+    text-align: center; /* Center text on smaller screens */
+  }
+
+  .sell-your-smartphone-devices {
+    margin-top: 2rem;
+    width: 100%;
+  }
+}
+
+
+
+
+
+
+
+
+
+.why-us-container {
+  background-color: #6a28f2; /* Purple background from the image */
+  color: white;
+  padding: 4rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.why-us-content {
+  flex: 1;
+}
+
+.why-us-content h2 {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.why-us-content p {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+.why-us-features {
+  flex: 2;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.why-us-feature {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.why-us-feature-icon {
+  width: 60px;
+  height: 60px;
+  background-color: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.why-us-feature-icon svg {
+  width: 30px;
+  height: 30px;
+  color: #00ff00; /* Bright green from the icons */
+}
+
+.why-us-feature-content h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.why-us-feature-content p {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.8);
+}
+
+@media (max-width: 1024px) {
+  .why-us-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .why-us-features {
+    grid-template-columns: 1fr;
+  }
+
+  .why-us-feature {
+    flex-direction: column;
+    text-align: center;
+  }
+}
