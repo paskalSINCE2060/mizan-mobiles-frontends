@@ -16,7 +16,7 @@ const Category = () => {
           <div className="category-content">
             <h2>Smartphones</h2>
             <p>Latest mobile technology</p>
-            <a href="#" className="category-link">Shop Now</a>
+            <a href="/smartphone" className="category-link">Shop Now</a>
           </div>
         </div>
         <div className="category category-accessories">
@@ -26,7 +26,7 @@ const Category = () => {
           <div className="category-content">
             <h2>Accessories</h2>
             <p>Essential tech companions</p>
-            <a href="#" className="category-link">Explore</a>
+            <a href="/watches" className="category-link">Explore</a>
           </div>
         </div>
         <div className="category category-tablets">

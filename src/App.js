@@ -14,6 +14,8 @@ import Cart from "./components/Cart/Cart";
 import Checkout from "./components/Checkout/Checkout";
 import { CartProvider } from "./context/cartContext";
 import ProductDetails from "./components/ProductDetails/ProductDetails";
+import SmartPhone from "./components/SmartPhone/SmartPhone";
+import Watches from "./Watches/Watches";
 
 function App() {
   const [userData, setUserData] = useState(null);
@@ -50,7 +52,8 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/productdetails" element={<ProductDetails />} />
-        
+        <Route path="/smartphone" element={<SmartPhone />} />
+        <Route path="/watches" element={<Watches/>} />
       </Routes>
       <Footer />
     </Router>
