@@ -199,44 +199,39 @@ function HomePage() {
 
 
             <div className="why-us-container">
-  <div className="why-us-content">
-    <h2>Why us?</h2>
-    <p>
-      The products we sell are professionally inspected and thoroughly tested using a full diagnostic testing software. Our skilled professionals make sure that the products that reach your doorsteps are always in a pristine condition.
-    </p>
-  </div>
-  <div className="why-us-features">
-    <div className="why-us-feature">
-      <div className="why-us-feature-icon">
-        {/* Icon for Product you can trust */}
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-        </svg>
-      </div>
-      <div className="why-us-feature-content">
-        <h3>Product you can trust</h3>
-        <p>You'll always have a tested and certified latest piece of tech and a Happy Wallet all the time.</p>
-      </div>
-    </div>
-    {/* Repeat similar structure for other features */}
-    <div className="why-us-feature">
-      <div className="why-us-feature-icon">
-        {/* Icon for Quality you can rely on */}
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      </div>
-      <div className="why-us-feature-content">
-        <h3>Quality you can rely on</h3>
-        <p>Our working professionals make sure that the utmost quality products are always in a top-notch condition.</p>
-      </div>
-    </div>
-    {/* Add other features similarly */}
-  </div>
-</div>
+                <div className="why-us-content">
+                    <h2>Why us?</h2>
+                    <p>
+                    The products we sell are professionally inspected and thoroughly tested using a full diagnostic testing software. Our skilled professionals make sure that the products that reach your doorsteps are always in a pristine condition.
+                    </p>
+                </div>
+                <div className="why-us-features">
+                    <div className="why-us-feature">
+                    <div className="why-us-feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                        </svg>
+                    </div>
+                    <div className="why-us-feature-content">
+                        <h3>Product you can trust</h3>
+                        <p>You'll always have a tested and certified latest piece of tech and a Happy Wallet all the time.</p>
+                    </div>
+                    </div>
+                    <div className="why-us-feature">
+                    <div className="why-us-feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div className="why-us-feature-content">
+                        <h3>Quality you can rely on</h3>
+                        <p>Our working professionals make sure that the utmost quality products are always in a top-notch condition.</p>
+                    </div>
+                    </div>
+                </div>
+            </div>
 
 
-            {/* Galaxy Products Section */}
             <section className="different-equipment container">
                 <h2 className="different-equipment">Multi Buy Offer</h2>
                 <p className="different-equipment offer-text">Get up to 30% off selected Galaxy products on selected Watches, Tablets, Buds and more</p>
@@ -329,6 +324,47 @@ function HomePage() {
                     </div>
                 </div>
              </div>
+
+
+
+             <div class="marketplace-container">
+                <h1 class="marketplace-title">Buy + Sell + Save</h1>
+                
+                <div class="product-categories">
+                    <div class="category">
+                        <h2>Phones + iPhones</h2>
+                        <div class="product-image">
+                            <img src="phones.jpg" alt="Phone Collection"/>
+                        </div>
+                        <div class="category-stats">
+                            <span class="listings">15996 approved listings</span>
+                            <span class="sellers">1398 legit sellers</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category">
+                        <h2>MacBooks + Laptops</h2>
+                        <div class="product-image">
+                            <img src="laptops.jpg" alt="Laptop Collection"/>
+                        </div>
+                        <div class="category-stats">
+                            <span class="listings">1022 approved listings</span>
+                            <span class="sellers">450 legit sellers</span>
+                        </div>
+                    </div>
+                    
+                    <div class="category">
+                        <h2>Watches</h2>
+                        <div class="product-image">
+                            <img src="watches.jpg" alt="Watch Collection" />
+                        </div>
+                        <div class="category-stats">
+                            <span class="listings">1017 approved listings</span>
+                            <span class="sellers">271 legit sellers</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
 

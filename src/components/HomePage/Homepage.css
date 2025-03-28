@@ -462,13 +462,36 @@
 
 
 .why-us-container {
-  background-color: #6a28f2; /* Purple background from the image */
-  color: white;
-  padding: 4rem 2rem;
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 3rem;
+  justify-content: center;
+  min-height: 50vh;
+  background: linear-gradient(
+    -45deg, 
+    #1A1033, 
+    #4A3AFF, 
+    #FF4A92, 
+    #4AFF6D
+  );
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
+  color: white;
+  overflow: hidden;
+  gap: 30px;
+  padding: 10px;
 }
+
+.why-us-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
 
 .why-us-content {
   flex: 1;
