@@ -89,9 +89,12 @@ const RepairPhones = () => {
                     <span className="Repair-phone repair-time-icon">⏱</span> {service.estimatedTime}
                   </p>
                 </div>
-                <button className="Repair-phone repair-service-button">
+                <a href="/booking">
+               <button className="Repair-phone repair-service-button">
                   Book This Service
                 </button>
+                </a>
+
               </div>
             </div>
           ))}
@@ -145,9 +148,12 @@ const RepairPhones = () => {
       <section className="Repair-phone cta-section">
         <h2 className="Repair-phone cta-title">Our Repairs Are Guaranteed</h2>
         <p className="Repair-phone cta-text">All repairs come with a 90-day warranty on parts and service</p>
-        <button className="Repair-phone cta-button">
+        <a href="/contact">
+           <button className="Repair-phone cta-button">
           Contact Us Today
         </button>
+        </a>
+
       </section>
 
       {/* Testimonials */}

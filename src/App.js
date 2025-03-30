@@ -20,6 +20,7 @@ import Tablets from "./components/Tablets/Tablets";
 import Airpods from "./components/Airpods/Airpods";
 import SellYourPhone from "./components/SellYourPhone/SellYourPhone";
 import RepairPhones from "./components/RepairPhones/RepairPhones";
+import BookingPage from "./components/Booking/Booking";
 
 function App() {
   const [userData, setUserData] = useState(null);
@@ -62,6 +63,7 @@ function App() {
         <Route path="/airpods" element={<Airpods/>} />
         <Route path="/sellyourphone" element={<SellYourPhone/>} />
         <Route path="/repair" element={<RepairPhones/>} />
+        <Route path="/booking" element={<BookingPage/>} />
       </Routes>
       <Footer />
     </Router>
