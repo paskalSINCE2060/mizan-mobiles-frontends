@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import './Repair.css'
+import repair from "../../assets/repair.jpeg"
+import repair2 from "../../assets/repair2.jpg"
+import repair3 from "../../assets/repair3.jpeg"
+import repair4 from "../../assets/repair4.jpeg"
+import bannerrepair from "../../assets/repairbanner.jpeg"
 const RepairPhones = () => {
     const [selectedService, setSelectedService] = useState(null);
 
@@ -10,7 +15,7 @@ const RepairPhones = () => {
           description: "Fix cracked or damaged screens with high-quality replacement parts. Compatible with all major phone brands.",
           price: "Starting at $79",
           estimatedTime: "1-2 hours",
-          image: "/api/placeholder/300/200"
+          image: repair
         },
         {
           id: 2,
@@ -18,7 +23,7 @@ const RepairPhones = () => {
           description: "Restore your phone's battery life with our professional battery replacement service.",
           price: "Starting at $49",
           estimatedTime: "30-60 minutes",
-          image: "/api/placeholder/300/200"
+          image: repair2
         },
         {
           id: 3,
@@ -26,7 +31,7 @@ const RepairPhones = () => {
           description: "Specialized treatment for water-damaged phones. Quick response increases chances of recovery.",
           price: "Starting at $99",
           estimatedTime: "24-48 hours",
-          image: "/api/placeholder/300/200"
+          image: repair3
         },
         {
           id: 4,
@@ -34,7 +39,7 @@ const RepairPhones = () => {
           description: "Fix loose or non-functioning charging ports to restore normal charging capabilities.",
           price: "Starting at $59",
           estimatedTime: "1-2 hours",
-          image: "/api/placeholder/300/200"
+          image: repair4
         }
       ];
     
@@ -57,7 +62,7 @@ const RepairPhones = () => {
           </button>
         </div>
         <div className="Repair-phone repair-hero-image-container">
-          <img src="/api/placeholder/500/300" alt="Phone repair technician" className="Repair-phone repair-hero-image" />
+          <img src={bannerrepair} alt="Phone repair technician" className="Repair-phone repair-hero-image" />
         </div>
       </div>
 
