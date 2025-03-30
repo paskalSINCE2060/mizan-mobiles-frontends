@@ -57,9 +57,12 @@ const RepairPhones = () => {
           <p className="Repair-phone repair-hero-text">
             Our certified technicians can fix almost any phone issue with same-day service for most repairs.
           </p>
-          <button className="Repair-phone repair-cta-button">
+          <a href="/booking">
+            <button className="Repair-phone repair-cta-button">
             Schedule a Repair
           </button>
+          </a>
+          
         </div>
         <div className="Repair-phone repair-hero-image-container">
           <img src={bannerrepair} alt="Phone repair technician" className="Repair-phone repair-hero-image" />

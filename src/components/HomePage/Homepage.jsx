@@ -161,7 +161,7 @@ function HomePage() {
 
     return (
         <div>
- <ToastContainer position="top-right" autoClose={3000} hideProgressBar />            {/* Hero Section */}
+ <ToastContainer position="top-right" autoClose={3000} hideProgressBar />            
             <section className="hero">
                 <div className="hero-content">
                    < a href="/categories">
