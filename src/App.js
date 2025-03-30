@@ -18,6 +18,7 @@ import SmartPhone from "./components/SmartPhone/SmartPhone";
 import Watches from "./Watches/Watches";
 import Tablets from "./components/Tablets/Tablets";
 import Airpods from "./components/Airpods/Airpods";
+import SellYourPhone from "./components/SellYourPhone/SellYourPhone";
 
 function App() {
   const [userData, setUserData] = useState(null);
@@ -58,6 +59,7 @@ function App() {
         <Route path="/watches" element={<Watches/>} />
         <Route path="/tablets" element={<Tablets/>} />
         <Route path="/airpods" element={<Airpods/>} />
+        <Route path="/sellyourphone" element={<SellYourPhone/>} />
       </Routes>
       <Footer />
     </Router>

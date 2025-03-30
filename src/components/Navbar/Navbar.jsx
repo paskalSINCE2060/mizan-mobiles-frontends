@@ -118,6 +118,7 @@ function Navbar({ userData, setUserData }) {
          <li><RouterLink to="/categories">Categories</RouterLink></li>
          <li><RouterLink to="/about">About</RouterLink></li>
          <li><RouterLink to="/contact">Contact</RouterLink></li>
+         <li><RouterLink to="/sellyourphone">Sell Your Phone</RouterLink></li>
          <li><button onClick={handleScrollToServices} className="nav-button">Services</button></li>
        </ul>
 
