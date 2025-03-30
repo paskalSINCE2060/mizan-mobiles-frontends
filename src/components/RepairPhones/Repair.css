@@ -1,0 +1,404 @@
+/* CSS for Phone Repair Page with Repair-phone prefix */
+
+/* Container and layout */
+.Repair-phone.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Header styles */
+  .Repair-phone.header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .Repair-phone.title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .Repair-phone.subtitle {
+    font-size: 1.25rem;
+    color: #666;
+  }
+  
+  /* Hero Section */
+  .Repair-phone.repair-hero {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 3rem;
+    background-color: #f8f8f8;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  @media (min-width: 768px) {
+    .Repair-phone.repair-hero {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+  
+  .Repair-phone.repair-hero-content {
+    padding: 2rem;
+    flex: 1;
+  }
+  
+  .Repair-phone.repair-hero-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .Repair-phone.repair-hero-text {
+    font-size: 1.125rem;
+    margin-bottom: 1.5rem;
+    color: #666;
+  }
+  
+  .Repair-phone.repair-cta-button {
+    background-color: #2563eb;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .Repair-phone.repair-cta-button:hover {
+    background-color: #1d4ed8;
+  }
+  
+  .Repair-phone.repair-hero-image-container {
+    flex: 1;
+    min-height: 250px;
+    position: relative;
+  }
+  
+  .Repair-phone.repair-hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Repair Services */
+  .Repair-phone.repair-services-section {
+    margin-bottom: 3rem;
+  }
+  
+  .Repair-phone.section-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .Repair-phone.repair-services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  @media (min-width: 768px) {
+    .Repair-phone.repair-services-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  .Repair-phone.repair-service-card {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .Repair-phone.repair-service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Repair-phone.repair-service-image-container {
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .Repair-phone.repair-service-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+  }
+  
+  .Repair-phone.repair-service-card:hover .Repair-phone.repair-service-image {
+    transform: scale(1.05);
+  }
+  
+  .Repair-phone.repair-service-details {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .Repair-phone.repair-service-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .Repair-phone.repair-service-description {
+    color: #666;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+  }
+  
+  .Repair-phone.repair-service-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  
+  .Repair-phone.repair-service-price {
+    font-weight: 600;
+    color: #2563eb;
+  }
+  
+  .Repair-phone.repair-service-time {
+    color: #666;
+    display: flex;
+    align-items: center;
+  }
+  
+  .Repair-phone.repair-time-icon {
+    margin-right: 0.25rem;
+  }
+  
+  .Repair-phone.repair-service-button {
+    background-color: #2563eb;
+    color: white;
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .Repair-phone.repair-service-button:hover {
+    background-color: #1d4ed8;
+  }
+  
+  /* Repair Process */
+  .Repair-phone.repair-process-section {
+    margin-bottom: 3rem;
+  }
+  
+  .Repair-phone.repair-process-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .Repair-phone.repair-process-steps {
+      flex-direction: row;
+    }
+  }
+  
+  .Repair-phone.repair-step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.5rem;
+    background-color: white;
+  }
+  
+  .Repair-phone.repair-step-number {
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2563eb;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+  }
+  
+  .Repair-phone.repair-step-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .Repair-phone.repair-step-description {
+    color: #666;
+    font-size: 0.9375rem;
+  }
+  
+  /* CTA section with animated gradient background */
+  .Repair-phone.cta-section {
+    position: relative;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    overflow: hidden;
+    /* Basic fallback background */
+    background-color: #f8f8f8;
+    /* Text and content needs to be visible over the animation */
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Pseudo-element for the animated gradient */
+  .Repair-phone.cta-section::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    z-index: -1;
+    animation: gradientAnimation 15s ease infinite;
+    opacity: 0.85; /* Adjust for better text readability */
+  }
+  
+  /* Animation keyframes for the gradient */
+  @keyframes gradientAnimation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .Repair-phone.cta-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  
+  .Repair-phone.cta-text {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+  
+  .Repair-phone.cta-button {
+    background-color: white;
+    color: #333;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 1.125rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+  
+  .Repair-phone.cta-button:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  }
+  
+  /* Testimonials */
+  .Repair-phone.testimonials-section {
+    margin-bottom: 3rem;
+  }
+  
+  .Repair-phone.testimonials-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .Repair-phone.testimonials-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .Repair-phone.testimonial-card {
+    padding: 1.5rem;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.5rem;
+    background-color: white;
+  }
+  
+  .Repair-phone.testimonial-rating {
+    color: #f59e0b;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .Repair-phone.testimonial-text {
+    font-style: italic;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .Repair-phone.testimonial-author {
+    font-weight: 600;
+    color: #666;
+  }
+  
+  /* Footer */
+  .Repair-phone.footer {
+    border-top: 1px solid #e5e5e5;
+    padding-top: 2rem;
+    text-align: center;
+    color: #666;
+  }
+  
+  .Repair-phone.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .Repair-phone.footer-link {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .Repair-phone.footer-link:hover {
+    color: #2563eb;
+  }
+  
+  .Repair-phone.copyright {
+    margin-bottom: 1rem;
+  }
