@@ -112,9 +112,12 @@ const SellYourPhone = () => {
       <section className="sale-your-phone cta-section">
         <h2 className="sale-your-phone cta-title">Ready to Upgrade?</h2>
         <p className="sale-your-phone cta-text">Check out our latest models and special offers</p>
+        <a href="/categories">
         <button className="sale-your-phone cta-button">
           View All Phones
-        </button>
+        </button> 
+        </a>
+       
       </section>
     </div>
   );

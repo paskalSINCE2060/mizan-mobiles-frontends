@@ -193,40 +193,82 @@
     color: #666;
   }
   
-  /* CTA section */
-  .sale-your-phone.cta-section {
-    background-color: #f8f8f8;
+  /* CTA section with animated gradient background */
+.sale-your-phone.cta-section {
+    position: relative;
     padding: 2rem;
     border-radius: 0.5rem;
     text-align: center;
     margin-bottom: 3rem;
+    overflow: hidden;
+    /* Basic fallback background */
+    background-color: #f8f8f8;
+    /* Text and content needs to be visible over the animation */
+    position: relative;
+    z-index: 1;
   }
   
+  /* Pseudo-element for the animated gradient */
+  .sale-your-phone.cta-section::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    z-index: -1;
+    animation: gradientAnimation 15s ease infinite;
+    opacity: 0.85; /* Adjust for better text readability */
+  }
+  
+  /* Animation keyframes for the gradient */
+  @keyframes gradientAnimation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  /* Make text more visible on gradient */
   .sale-your-phone.cta-title {
     font-size: 1.875rem;
     font-weight: 700;
     margin-bottom: 1rem;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
   }
   
   .sale-your-phone.cta-text {
     font-size: 1.25rem;
     margin-bottom: 1.5rem;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
   }
   
   .sale-your-phone.cta-button {
-    background-color: #2563eb;
-    color: white;
+    background-color: white;
+    color: #333;
     padding: 0.75rem 2rem;
     border-radius: 0.5rem;
     font-weight: 500;
     font-size: 1.125rem;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   }
   
   .sale-your-phone.cta-button:hover {
-    background-color: #1d4ed8;
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
   }
   
   /* Footer */
