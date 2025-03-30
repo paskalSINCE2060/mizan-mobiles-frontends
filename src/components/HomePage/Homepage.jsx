@@ -164,7 +164,11 @@ function HomePage() {
  <ToastContainer position="top-right" autoClose={3000} hideProgressBar />            {/* Hero Section */}
             <section className="hero">
                 <div className="hero-content">
-                    <button>Shop Now</button>
+                   < a href="/categories">
+                    <button>
+                    Shop Now
+                    </button>
+                    </a>
                 </div>
             </section>
 
