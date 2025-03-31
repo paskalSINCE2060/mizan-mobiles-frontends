@@ -1,6 +1,9 @@
 import React from 'react';
 import sellPhone from '../../assets/sellPhone.webp';
 import { useCart } from '../../context/cartContext';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import "./SmartPhone.css";
 
 const SmartPhone = () => {
@@ -13,6 +16,16 @@ const SmartPhone = () => {
       price: product.price,
       image: sellPhone,
       quantity: 1
+    });
+    
+    toast.success("Added to Cart!", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
     });
   };
 
@@ -49,6 +62,7 @@ const SmartPhone = () => {
 
   return (
     <>
+      <ToastContainer />
       <div className="smart-phone-container">
         {smartphones.map((phone) => (
           <div key={phone.id} className="smart-phone-card">
