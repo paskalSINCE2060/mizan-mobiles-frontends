@@ -300,3 +300,251 @@
   .sale-your-phone.copyright {
     margin-bottom: 1rem;
   }
+
+
+
+
+  /* Sell Your Phone CSS - Responsive Design */
+
+/* Base styles */
+.sale-me-your-phone-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+.sale-me-your-phone-header {
+  text-align: center;
+  padding: 30px 0;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.sale-me-your-phone-header h1 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.sale-me-your-phone-header p {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+}
+
+.sale-me-your-phone-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.sale-me-your-phone-info-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.sale-me-your-phone-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sale-me-your-phone-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sale-me-your-phone-step-number {
+  width: 40px;
+  height: 40px;
+  background-color: #3498db;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.sale-me-your-phone-step-text h3 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+}
+
+.sale-me-your-phone-step-text p {
+  margin: 0;
+  color: #7f8c8d;
+}
+
+/* Form styles */
+.sale-me-your-phone-form {
+  flex: 1;
+  min-width: 300px;
+  background-color: #f8f9fa;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.sale-me-your-phone-form h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.sale-me-your-phone-form-group {
+  margin-bottom: 20px;
+}
+
+.sale-me-your-phone-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.sale-me-your-phone-form-group input,
+.sale-me-your-phone-form-group select,
+.sale-me-your-phone-form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.sale-me-your-phone-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sale-me-your-phone-checkbox-label input[type="checkbox"] {
+  width: auto;
+}
+
+.sale-me-your-phone-image-preview {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.sale-me-your-phone-image-preview img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.sale-me-your-phone-submit-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 15px 25px;
+  font-size: 1.1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.sale-me-your-phone-submit-btn:hover {
+  background-color: #2980b9;
+}
+
+/* Testimonials */
+.sale-me-your-phone-testimonials {
+  margin-top: 40px;
+  padding: 30px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.sale-me-your-phone-testimonials h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #2c3e50;
+}
+
+.sale-me-your-phone-testimonial-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.sale-me-your-phone-testimonial {
+  flex: 1;
+  min-width: 250px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sale-me-your-phone-testimonial p {
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.sale-me-your-phone-testimonial-author {
+  display: block;
+  text-align: right;
+  font-weight: bold;
+  color: #3498db;
+}
+
+/* Footer */
+.sale-me-your-phone-footer {
+  margin-top: 40px;
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid #ddd;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .sale-me-your-phone-header h1 {
+    font-size: 2rem;
+  }
+  
+  .sale-me-your-phone-content {
+    flex-direction: column;
+  }
+  
+  .sale-me-your-phone-testimonial-container {
+    flex-direction: column;
+  }
+  
+  .sale-me-your-phone-info-section,
+  .sale-me-your-phone-form {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .sale-me-your-phone-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .sale-me-your-phone-header p {
+    font-size: 1rem;
+  }
+  
+  .sale-me-your-phone-step {
+    flex-direction: column;
+  }
+  
+  .sale-me-your-phone-step-number {
+    margin-bottom: 10px;
+  }
+}
