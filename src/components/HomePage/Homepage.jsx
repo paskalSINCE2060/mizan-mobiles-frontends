@@ -160,7 +160,7 @@ function HomePage() {
 
 
     return (
-        <div>
+        <div className="white">
  <ToastContainer position="top-right" autoClose={3000} hideProgressBar />            
             <section className="hero">
                 <div className="hero-content">

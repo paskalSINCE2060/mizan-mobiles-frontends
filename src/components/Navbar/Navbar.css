@@ -1,288 +1,372 @@
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #333;
-    color: white;
-    position: relative;
-  }
-  
-  .navbar .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  .navbar .search-form {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40%;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #1E1E1E;
+  color: #FFFFFF;
+  position: relative;
+  flex-wrap: wrap;
+}
 
-  .search-recommendations {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: #222;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    max-height: 250px;
-    overflow-y: auto;
-    z-index: 100;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  .recommendation-item {
-    padding: 12px 15px;
-    font-size: 0.9rem;
-    color: white;
-    cursor: pointer;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    transition: background 0.3s ease;
-  }
-  
-  .recommendation-item:hover {
-    background-color: #4caf50;
-    color: #fff;
-  }
-  
-  .recommendation-item:last-child {
-    border-bottom: none;
-  }
-  
-  /* Scrollbar Styling */
-  .search-recommendations::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  .search-recommendations::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 5px;
-  }
-  
-  .search-recommendations::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 255, 0.6);
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .search-recommendations {
-      width: 100%;
-      left: 0;
-    }
-    .recommendation-item {
-      font-size: 0.85rem;
-      padding: 10px 12px;
-    }
-  }
-  
-  
-  .navbar .search-input {
-    padding: 0.5rem;
-    border: none;
-    border-radius: 5px;
-    padding-right: 150px;
-  }
+.navbar .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  z-index: 10;
+}
 
-  .search-container{
-    margin-left: 180px;
-  }
-  
-  .navbar .search-btn {
-    padding: 0.5rem;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .navbar .search-btn i {
-    font-size: 1.2rem;
-  }
-  
-  .navbar .nav-links {
-    display: flex;
-    list-style: none;
-    gap: 1rem;
-    margin-top: 20px;
-  }
-  
-  .navbar .nav-links li {
-    display: inline-block;
-  }
-  
-  .navbar .nav-links a {
-    color: white;
-    text-decoration: none;
-    cursor: pointer;
-  }
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
 
-  .nav-button{
-    background-color:#333 ;
-    border: none;
-    color: white;
-    font-size: 15px;
-    font-weight: lighter;
-    cursor: pointer;
-  }
+.search-container {
+  position: relative;
+  width: 40%;
+  margin: 0 auto;
+  z-index: 20;
+}
 
-  .cart-icon {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .cart-count {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: red;
-    color: white;
-    border-radius: 50%;
-    padding: 2px 6px;
-    font-size: 0.7rem;
-  }
+.navbar .search-form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.navbar .search-input {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 5px 0 0 5px;
+  width: 100%;
+}
+
+.navbar .search-btn {
+  padding: 0.5rem;
+  background-color: #4CAF50;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+.search-recommendations {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #222;
+  border-radius: 0 0 5px 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.3s ease;
+}
+
+.recommendation-item-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.recommendation-item-text {
+  flex: 1;
+}
+
+.recommendation-item:hover {
+  background-color: #4caf50;
+}
+
+.recommendation-item:last-child {
+  border-bottom: none;
+}
+
+.search-recommendations::-webkit-scrollbar {
+  width: 8px;
+}
+
+.search-recommendations::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+}
+
+.search-recommendations::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.bottom-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.navbar .nav-links {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar .nav-links li {
+  margin: 0;
+}
+
+.navbar .nav-links a, .nav-button {
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: block;
+  font-size: 1rem;
+}
+
+.navbar .nav-links a:hover, .nav-button:hover {
+  color: #4CAF50;
+}
+
+.nav-button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.right-icons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.right-icons a {
+  color: white;
+  font-size: 1.2rem;
+}
+
+.right-icons a:hover {
+  color: #4CAF50;
+}
+
+.cart-icon {
+  position: relative;
+  display: inline-block;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+}
+
 .logout-btn {
   background-color: #e74c3c;
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 20px;
-  font-family: 'Poppins', sans-serif;
   font-size: 0.9rem;
-  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 8px;
-  outline: none;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .logout-btn::before {
-  content: '⏻'; 
+  content: '⏻';
   font-size: 1rem;
 }
 
 .logout-btn:hover {
   background-color: #c0392b;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
-.logout-btn:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.auth-links {
+  white-space: nowrap;
+}
+
+.menu-icon {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  z-index: 30;
+}
+
+.menu-icon .bar {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+.menu-icon.open .bar:nth-child(1) {
+  transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.menu-icon.open .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-icon.open .bar:nth-child(3) {
+  transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  .search-container {
+    width: 35%;
+  }
+}
+
+@media (max-width: 992px) {
+  .navbar {
+    padding: 1rem;
+  }
+  
+  .search-container {
+    width: 40%;
+  }
+  
+  .navbar .nav-links {
+    gap: 1rem;
+  }
 }
 
 @media (max-width: 768px) {
-  .logout-btn {
-      padding: 6px 12px;
-      font-size: 0.8rem;
+  .navbar {
+    flex-wrap: wrap;
+    padding: 1rem;
   }
-}
   
-  .navbar .right-icons {
+  .top-section {
+    flex-wrap: wrap;
+  }
+  
+  .menu-icon {
     display: flex;
-    gap: 1rem;
-    align-items: center;
+    order: 1;
   }
   
-  .navbar .right-icons i {
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-
-  .navbar .right-icons a{
-    color: white;
-    text-decoration: none;
+  .logo {
+    order: 2;
+    flex-grow: 1;
+    text-align: center;
   }
   
-  .navbar .auth-links a {
-    color: white;
-    text-decoration: none;
+  .right-icons {
+    order: 3;
   }
   
-  .navbar .auth-links a:hover {
-    text-decoration: underline;
+  .search-container {
+    order: 4;
+    width: 100%;
+    margin: 1rem 0;
   }
   
-  .navbar .menu-icon {
+  .bottom-section {
+    order: 5;
+  }
+  
+  .navbar .nav-links {
     display: none;
-    cursor: pointer;
     flex-direction: column;
-    gap: 4px;
-  }
-  
-  .navbar .menu-icon .bar {
-    width: 25px;
-    height: 4px;
-    background-color: white;
-    border-radius: 2px;
+    background-color: #333;
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0;
+    gap: 0.5rem;
   }
   
   .navbar .nav-links.active {
-    display: block;
+    display: flex;
   }
   
-  .search-recommendations {
-    position: absolute;
-    top: 100%;
-    left: 0;
+  .navbar .nav-links li {
+    margin: 0.5rem 0;
     width: 100%;
-    background-color: black;
-    border: 1px solid #ddd;
-    border-top: none;
-    z-index: 10;
-    max-height: 300px;
-    overflow-y: auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .navbar .nav-links a, .nav-button {
+    padding: 0.5rem 1rem;
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .logout-btn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+  
+  .auth-links {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    padding: 0.8rem;
+  }
+  
+  .logo {
+    font-size: 1.2rem;
+  }
+  
+  .search-container {
+    width: 100%;
+  }
+  
+  .navbar .search-input {
+    padding: 0.4rem;
+    font-size: 0.9rem;
+  }
+  
+  .navbar .search-btn {
+    padding: 0.4rem;
+  }
+  
+  .right-icons {
+    gap: 0.7rem;
+  }
+  
+  .right-icons a {
+    font-size: 1rem;
   }
   
   .recommendation-item {
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    padding: 8px;
   }
   
-  .recommendation-item:hover {
-    background-color: black;
+  .recommendation-item-img {
+    width: 30px;
+    height: 30px;
   }
   
-  .recommendation-item:not(:last-child) {
-    border-bottom: 1px solid #eee;
+  .recommendation-item-text p {
+    font-size: 0.8rem;
+    margin: 0;
   }
-  
-  @media (max-width: 768px) {
-    .navbar .nav-links {
-      display: none;
-      flex-direction: column;
-      background-color: #333;
-      position: absolute;
-      top: 60px;
-      left: 0;
-      width: 100%;
-      text-align: center;
-      padding: 1rem 0;
-    }
-  
-    .navbar .menu-icon {
-      display: flex;
-    }
-  
-    .navbar .nav-links.active {
-      display: flex;
-    }
-  
-    .navbar .right-icons {
-      display: none;
-    }
-  
-    .navbar .search-form {
-      display: none; /* Hide search bar on mobile */
-    }
-  }
-  
+}
