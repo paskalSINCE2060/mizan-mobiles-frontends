@@ -343,7 +343,9 @@ function HomePage() {
                             Get Instant Valuation in just a minute. Just enter your device's true condition and get a price quote. 
                             Get Door-step Pickup with Same Day Payment Guaranteed.
                         </p>
+                        <a href="/sellyourphone">
                         <button className="sell-your-smartphone-cta">Sell Now</button>
+                        </a>
                     </div>
                     <div className="sell-your-smartphone-devices">
                         <img src={sale} alt="" />
