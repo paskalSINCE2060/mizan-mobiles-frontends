@@ -81,7 +81,7 @@
     border: none;
     padding: 10px 15px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 15px;
     margin-top: 10px;
 }
 .carts-item button:hover {
