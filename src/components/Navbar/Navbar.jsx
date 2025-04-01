@@ -179,6 +179,7 @@ function Navbar({ userData, setUserData }) {
           <li><RouterLink to="/contact" onClick={() => setIsOpen(false)}>Contact</RouterLink></li>
           <li><RouterLink to="/sellyourphone" onClick={() => setIsOpen(false)}>Sell Phone</RouterLink></li>
           <li><RouterLink to="/repair" onClick={() => setIsOpen(false)}>Repair</RouterLink></li>
+          <li><RouterLink to="/specialoffers" onClick={() => setIsOpen(false)}>SpecialOffers</RouterLink></li>
           <li><button onClick={handleScrollToServices} className="nav-button">Services</button></li>
         </ul>
       </div>
