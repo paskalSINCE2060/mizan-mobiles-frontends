@@ -1,4 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import sellPhone from '../../assets/sellPhone.webp';
+import GalaxyWatch7 from '../../assets/GalaxyWatch7.jpeg';
+import GalaxyBuds3 from '../../assets/GalaxyBuds3.jpeg';
+import repair from '../../assets/repair.jpeg';
+import repair4 from '../../assets/repair4.jpeg';
+import RepairPhone from '../../assets/RepairPhone.webp';
 import './SpecialOffers.css';
 
 const SpecialOffers = () => {
@@ -7,15 +13,12 @@ const SpecialOffers = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // This would typically be an API call to fetch offers
-    // For demonstration, using mock data
+  
     const fetchOffers = async () => {
       try {
         setIsLoading(true);
-        // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 800));
         
-        // Mock data
         const mockOffers = [
           {
             id: 1,
@@ -23,7 +26,7 @@ const SpecialOffers = () => {
             description: "Limited time offer on all iPhone models. Get yours now!",
             discount: "20%",
             validUntil: "2025-04-15",
-            image: "/api/placeholder/300/200",
+            image: sellPhone,
             category: "Apple"
           },
           {
@@ -32,7 +35,7 @@ const SpecialOffers = () => {
             description: "Purchase any Samsung Galaxy and get 50% off on accessories",
             discount: "50%",
             validUntil: "2025-04-30",
-            image: "/api/placeholder/300/200",
+            image: GalaxyWatch7,
             category: "Samsung"
           },
           {
@@ -41,7 +44,7 @@ const SpecialOffers = () => {
             description: "Get free wireless earbuds with any Google Pixel purchase",
             discount: "Free Gift",
             validUntil: "2025-05-10",
-            image: "/api/placeholder/300/200",
+            image: GalaxyBuds3,
             category: "Google"
           },
           {
@@ -50,7 +53,7 @@ const SpecialOffers = () => {
             description: "Extra $100 value when you trade in your old phone",
             discount: "$100",
             validUntil: "2025-04-20",
-            image: "/api/placeholder/300/200",
+            image: RepairPhone,
             category: "All Brands"
           },
           {
@@ -59,7 +62,7 @@ const SpecialOffers = () => {
             description: "30% off all phone cases and screen protectors",
             discount: "30%",
             validUntil: "2025-04-10",
-            image: "/api/placeholder/300/200",
+            image: repair,
             category: "Accessories"
           },
           {
@@ -68,7 +71,7 @@ const SpecialOffers = () => {
             description: "Extra 15% off with valid student ID on any phone",
             discount: "15%",
             validUntil: "2025-05-31",
-            image: "/api/placeholder/300/200",
+            image:repair4,
             category: "All Brands"
           }
         ];
