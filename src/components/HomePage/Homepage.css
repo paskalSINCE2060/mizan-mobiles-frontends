@@ -549,6 +549,10 @@
   gap: 20px;
 }
 
+.product-categories a{
+  text-decoration: none;
+}
+
 .category {
   background-color: white;
   border-radius: 10px;

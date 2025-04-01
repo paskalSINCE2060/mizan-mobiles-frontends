@@ -359,17 +359,22 @@ function HomePage() {
                 <h1 class="marketplace-title">Buy + Sell + Save</h1>
                 
                 <div class="product-categories">
+                    <a href="/smartphone"
+                    class="category">
                     <div class="category">
-                        <h2>Phones + iPhones</h2>
-                        <div class="product-image">
+                           <h2>Phones + iPhones</h2>
+                          <div class="product-image">
                             <img src={sellPhone} alt="Phone Collection"/>
+                          </div>
+                         <div class="category-stats">
+                         <span class="listings">15996 approved listings</span>
+                        <span class="sellers">1398 legit sellers</span>
                         </div>
-                        <div class="category-stats">
-                            <span class="listings">15996 approved listings</span>
-                            <span class="sellers">1398 legit sellers</span>
-                        </div>
-                    </div>
+                     </div>                        
+                    </a>
                     
+                    <a href="/tablets"
+                    className="category">
                     <div class="category">
                         <h2>MacBooks + Laptops</h2>
                         <div class="product-image">
@@ -380,7 +385,10 @@ function HomePage() {
                             <span class="sellers">450 legit sellers</span>
                         </div>
                     </div>
+                    </a>
                     
+                    <a href="/watches"
+                    className="category">
                     <div class="category">
                         <h2>Watches</h2>
                         <div class="product-image">
@@ -391,6 +399,7 @@ function HomePage() {
                             <span class="sellers">271 legit sellers</span>
                         </div>
                     </div>
+                    </a>
                 </div>
             </div>
 
