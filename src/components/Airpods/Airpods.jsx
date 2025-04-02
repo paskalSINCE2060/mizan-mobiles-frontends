@@ -5,9 +5,11 @@ import { useCart } from '../../context/cartContext';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
 const Airpods = () => {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   const handleAddToCart = (product) => {
     addToCart({
@@ -28,6 +30,28 @@ const Airpods = () => {
       theme: "light",
     });
   };
+
+   const handleProductClick = (product) => {
+      // Add detailed product information
+      const detailedProduct = {
+        ...product,
+        image: airpodsImage,
+        originalPrice: product.oldPrice,
+        discountedPrice: product.price,
+        description: `The ${product.name} is a premium tablet designed for productivity and entertainment with a high-resolution display and powerful performance.`,
+        specs: {
+          storage: '256GB',
+          display: '11-inch Liquid Retina display',
+          battery: 'Up to 10 hours of web surfing',
+          processor: 'High-performance processor',
+          connectivity: 'Wi-Fi 6, Bluetooth 5.0',
+          camera: '12MP Wide camera'
+        }
+      };
+      
+      // Navigate to product details with product data
+      navigate('/productdetails', { state: { product: detailedProduct } });
+    };
 
   const airpodsProducts = [
     {
@@ -99,7 +123,11 @@ const Airpods = () => {
       <div className="airpods-container">
         {firstRowAirpods.map((item) => (
           <div key={item.id} className="airpods-card">
-            <img src={item.image} alt={item.name} className="airpods-image" />
+            <img src={item.image}
+             alt={item.name}
+             className="airpods-image"
+             onClick={() => handleProductClick(item)}
+              style={{ cursor: 'pointer' }} />
             <h2 className="airpods-name">{item.name}</h2>
             <p className="airpods-price">
               <span className="airpods-old-price">RS.{item.oldPrice.toLocaleString()}</span> RS.{item.price.toLocaleString()}
@@ -117,7 +145,11 @@ const Airpods = () => {
       <div className="airpods-container">
         {secondRowAirpods.map((item) => (
           <div key={item.id} className="airpods-card">
-            <img src={item.image} alt={item.name} className="airpods-image" />
+            <img src={item.image}
+             alt={item.name}
+              className="airpods-image"
+              onClick={() => handleProductClick(item)}
+              style={{ cursor: 'pointer' }} />
             <h2 className="airpods-name">{item.name}</h2>
             <p className="airpods-price">
               <span className="airpods-old-price">RS.{item.oldPrice.toLocaleString()}</span> RS.{item.price.toLocaleString()}
