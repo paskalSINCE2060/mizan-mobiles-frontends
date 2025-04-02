@@ -1,6 +1,7 @@
 import React from 'react';
 import "./Tablets.css";
 import tablet from '../../assets/iphone11promax.jpeg';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/cartContext';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 
 const Tablets = () => {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   const handleAddToCart = (product) => {
     addToCart({
@@ -27,6 +29,28 @@ const Tablets = () => {
       draggable: true,
       theme: "light",
     });
+  };
+
+  const handleProductClick = (product) => {
+    // Add detailed product information
+    const detailedProduct = {
+      ...product,
+      image: tablet,
+      originalPrice: product.oldPrice,
+      discountedPrice: product.price,
+      description: `The ${product.name} is a premium tablet designed for productivity and entertainment with a high-resolution display and powerful performance.`,
+      specs: {
+        storage: '256GB',
+        display: '11-inch Liquid Retina display',
+        battery: 'Up to 10 hours of web surfing',
+        processor: 'High-performance processor',
+        connectivity: 'Wi-Fi 6, Bluetooth 5.0',
+        camera: '12MP Wide camera'
+      }
+    };
+    
+    // Navigate to product details with product data
+    navigate('/productdetails', { state: { product: detailedProduct } });
   };
 
   const tabletProducts = [
@@ -99,7 +123,13 @@ const Tablets = () => {
       <div className="Tablets-container">
         {firstRowTablets.map((item) => (
           <div key={item.id} className="Tablets-card">
-            <img src={item.image} alt={item.name} className="Tablets-image" />
+            <img 
+              src={item.image} 
+              alt={item.name} 
+              className="Tablets-image" 
+              onClick={() => handleProductClick(item)}
+              style={{ cursor: 'pointer' }}
+            />
             <h2 className="Tablets-name">{item.name}</h2>
             <p className="Tablets-price">
               <span className="Tablets-old-price">RS.{item.oldPrice.toLocaleString()}</span> RS.{item.price.toLocaleString()}
@@ -117,7 +147,13 @@ const Tablets = () => {
       <div className="Tablets-container">
         {secondRowTablets.map((item) => (
           <div key={item.id} className="Tablets-card">
-            <img src={item.image} alt={item.name} className="Tablets-image" />
+            <img 
+              src={item.image} 
+              alt={item.name} 
+              className="Tablets-image" 
+              onClick={() => handleProductClick(item)}
+              style={{ cursor: 'pointer' }}
+            />
             <h2 className="Tablets-name">{item.name}</h2>
             <p className="Tablets-price">
               <span className="Tablets-old-price">RS.{item.oldPrice.toLocaleString()}</span> RS.{item.price.toLocaleString()}
