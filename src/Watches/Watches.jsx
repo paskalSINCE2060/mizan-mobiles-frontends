@@ -1,6 +1,7 @@
 import React from 'react';
 import "./Watches.css";
 import watch from '../../src/assets/GalaxyWatchUltra.jpeg';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/cartContext';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 
 const Watches = () => {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   const handleAddToCart = (product) => {
     addToCart({
@@ -27,6 +29,28 @@ const Watches = () => {
       draggable: true,
       theme: "light",
     });
+  };
+
+  const handleProductClick = (product) => {
+    // Add detailed product information
+    const detailedProduct = {
+      ...product,
+      image: watch,
+      originalPrice: product.oldPrice,
+      discountedPrice: product.price,
+      description: `The ${product.name} is a premium timepiece combining elegant design with precision engineering and advanced technology.`,
+      specs: {
+        material: 'Premium stainless steel',
+        display: 'Sapphire crystal glass',
+        waterResistance: 'Up to 100 meters',
+        movement: 'Swiss-made automatic movement',
+        features: 'Chronograph, date display',
+        battery: product.id.includes('apple') ? 'Up to 36 hours' : 'Not applicable'
+      }
+    };
+    
+    // Navigate to product details with product data
+    navigate('/productdetails', { state: { product: detailedProduct } });
   };
 
   const watches = [
@@ -66,7 +90,13 @@ const Watches = () => {
       <div className="watches-container">
         {watches.map((item) => (
           <div key={item.id} className="watches-card">
-            <img src={item.image} alt={item.name} className="watches-image" />
+            <img 
+              src={item.image} 
+              alt={item.name} 
+              className="watches-image" 
+              onClick={() => handleProductClick(item)}
+              style={{ cursor: 'pointer' }}
+            />
             <h2 className="watches-name">{item.name}</h2>
             <p className="watches-price">
               <span className="watches-old-price">RS.{item.oldPrice.toLocaleString()}</span> RS.{item.price.toLocaleString()}
@@ -84,7 +114,13 @@ const Watches = () => {
       <div className="watches-container">
         {watches.map((item) => (
           <div key={`second-${item.id}`} className="watches-card">
-            <img src={item.image} alt={item.name} className="watches-image" />
+            <img 
+              src={item.image} 
+              alt={item.name} 
+              className="watches-image" 
+              onClick={() => handleProductClick(item)}
+              style={{ cursor: 'pointer' }}
+            />
             <h2 className="watches-name">{item.name}</h2>
             <p className="watches-price">
               <span className="watches-old-price">RS.{item.oldPrice.toLocaleString()}</span> RS.{item.price.toLocaleString()}
