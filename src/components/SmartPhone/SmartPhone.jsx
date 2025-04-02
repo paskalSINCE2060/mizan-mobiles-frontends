@@ -1,5 +1,6 @@
 import React from 'react';
 import sellPhone from '../../assets/sellPhone.webp';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/cartContext';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,6 +9,7 @@ import "./SmartPhone.css";
 
 const SmartPhone = () => {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
 
   const handleAddToCart = (product) => {
     addToCart({
@@ -27,6 +29,26 @@ const SmartPhone = () => {
       draggable: true,
       theme: "light",
     });
+  };
+
+  const handleProductClick = (product) => {
+    // Add detailed product information
+    const detailedProduct = {
+      ...product,
+      image: sellPhone,
+      originalPrice: product.oldPrice,
+      discountedPrice: product.price,
+      description: `The ${product.name} is a high-end smartphone with cutting-edge features and performance.`,
+      specs: {
+        storage: '128GB',
+        display: '6.1-inch Super Retina XDR',
+        battery: 'Up to 24 hours video playback',
+        camera: 'Triple 12MP camera system'
+      }
+    };
+    
+    // Navigate to product details with product data
+    navigate('/productdetails', { state: { product: detailedProduct } });
   };
 
   const smartphones = [
@@ -66,7 +88,13 @@ const SmartPhone = () => {
       <div className="smart-phone-container">
         {smartphones.map((phone) => (
           <div key={phone.id} className="smart-phone-card">
-            <img src={phone.image} alt={phone.name} className="smart-phone-image"/>
+            <img 
+              src={phone.image} 
+              alt={phone.name} 
+              className="smart-phone-image"
+              onClick={() => handleProductClick(phone)}
+              style={{ cursor: 'pointer' }}
+            />
             <h2 className="smart-phone-name">{phone.name}</h2>
             <p className="smart-phone-price">
               <span className="smart-phone-old-price">RS.{phone.oldPrice}</span> RS.{phone.price}
@@ -84,7 +112,13 @@ const SmartPhone = () => {
       <div className="smart-phone-container">
         {smartphones.map((phone) => (
           <div key={`second-${phone.id}`} className="smart-phone-card">
-            <img src={phone.image} alt={phone.name} className="smart-phone-image"/>
+            <img 
+              src={phone.image} 
+              alt={phone.name} 
+              className="smart-phone-image"
+              onClick={() => handleProductClick(phone)}
+              style={{ cursor: 'pointer' }}
+            />
             <h2 className="smart-phone-name">{phone.name}</h2>
             <p className="smart-phone-price">
               <span className="smart-phone-old-price">RS.{phone.oldPrice}</span> RS.{phone.price}
