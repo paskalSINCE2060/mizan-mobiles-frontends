@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useCart } from '../../context/cartContext';
 import sellPhone from '../../assets/sellPhone.webp';
 import GalaxyWatch7 from '../../assets/GalaxyWatch7.jpeg';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 import GalaxyBuds3 from '../../assets/GalaxyBuds3.jpeg';
 import repair from '../../assets/repair.jpeg';
 import repair4 from '../../assets/repair4.jpeg';
@@ -218,15 +221,17 @@ const SpecialOffers = () => {
         }
       };
       
-      // Add to cart using the context function
       addItemToCart(cartItem);
-      
-      // Show confirmation
-      alert(`"${selectedOffer.title}" has been added to your cart with discount applied!`);
-      closeModal();
-      
-      // Optionally redirect to cart
-      // window.location.href = '/cart';
+      toast.success("Added to Cart!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+      setShowModal(false);
     }
   };
 
@@ -263,6 +268,7 @@ const SpecialOffers = () => {
 
   return (
     <div className="offers-page-container">
+      <ToastContainer />
       <div className="offers-header">
         <h1>Special Offers</h1>
         <p>Exclusive deals on mobile phones and accessories</p>
