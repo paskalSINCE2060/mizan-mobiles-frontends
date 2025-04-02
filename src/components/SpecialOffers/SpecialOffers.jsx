@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useCart } from '../../context/cartContext';
 import sellPhone from '../../assets/sellPhone.webp';
 import GalaxyWatch7 from '../../assets/GalaxyWatch7.jpeg';
 import GalaxyBuds3 from '../../assets/GalaxyBuds3.jpeg';
@@ -13,6 +14,9 @@ const SpecialOffers = () => {
   const [error, setError] = useState(null);
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  
+  // Import the cart context
+  const { addToCart: addItemToCart } = useCart();
 
   useEffect(() => {
     // This would typically be an API call to fetch offers
@@ -38,7 +42,13 @@ const SpecialOffers = () => {
               "Add any iPhone to your cart",
               "Enter promo code during checkout",
               "Discount will be applied automatically"
-            ]
+            ],
+            // Added product details for cart
+            productDetails: {
+              name: "iPhone 15 Pro",
+              price: 150000,
+              discountPercentage: 20
+            }
           },
           {
             id: 2,
@@ -54,7 +64,14 @@ const SpecialOffers = () => {
               "Add any accessories you want",
               "Enter promo code at checkout",
               "50% will be deducted from accessories"
-            ]
+            ],
+            // Added product details for cart
+            productDetails: {
+              name: "Samsung Galaxy S24",
+              price: 120000,
+              discountPercentage: 0,
+              bundleDiscount: 50
+            }
           },
           {
             id: 3,
@@ -70,7 +87,14 @@ const SpecialOffers = () => {
               "Add compatible earbuds to your cart",
               "Enter promo code at checkout",
               "Earbuds price will be deducted automatically"
-            ]
+            ],
+            // Added product details for cart
+            productDetails: {
+              name: "Google Pixel 8 Pro",
+              price: 130000,
+              discountPercentage: 0,
+              freeGift: "Google Pixel Buds"
+            }
           },
           {
             id: 4,
@@ -86,7 +110,14 @@ const SpecialOffers = () => {
               "Enter the details of your current phone",
               "Use promo code when prompted",
               "$100 will be added to the standard trade-in value"
-            ]
+            ],
+            // Added product details for cart
+            productDetails: {
+              name: "Trade-in Any Phone",
+              price: -10000, // NPR equivalent of $100 discount
+              discountPercentage: 0,
+              tradeInBonus: true
+            }
           },
           {
             id: 5,
@@ -101,7 +132,13 @@ const SpecialOffers = () => {
               "Add any phone case or screen protector to cart",
               "Enter promo code at checkout",
               "Discount applies to all eligible accessories"
-            ]
+            ],
+            // Added product details for cart
+            productDetails: {
+              name: "Premium Phone Case",
+              price: 5000,
+              discountPercentage: 30
+            }
           },
           {
             id: 6,
@@ -117,7 +154,14 @@ const SpecialOffers = () => {
               "Upload a copy of your student ID during checkout",
               "Enter promo code when prompted",
               "Discount will be applied after verification"
-            ]
+            ],
+            // Added product details for cart
+            productDetails: {
+              name: "Any Phone - Student Discount",
+              price: 100000,
+              discountPercentage: 15,
+              requiresVerification: true
+            }
           }
         ];
         
@@ -149,10 +193,41 @@ const SpecialOffers = () => {
   };
 
   const addToCart = () => {
-    // This would connect to your cart functionality
-    alert(`Offer "${selectedOffer.title}" has been applied. Redirecting to cart...`);
-    closeModal();
-    // Redirect logic would go here
+    if (selectedOffer && selectedOffer.productDetails) {
+      const { productDetails } = selectedOffer;
+      
+      // Calculate the discounted price if there's a discount percentage
+      const discountedPrice = productDetails.discountPercentage 
+        ? productDetails.price * (1 - productDetails.discountPercentage / 100) 
+        : productDetails.price;
+      
+      // Prepare cart item with discount info
+      const cartItem = {
+        id: `${selectedOffer.id}-${Date.now()}`, // Unique ID
+        name: productDetails.name,
+        price: discountedPrice,
+        originalPrice: productDetails.price,
+        quantity: 1,
+        image: selectedOffer.image,
+        promoCode: selectedOffer.promoCode,
+        discountApplied: productDetails.discountPercentage > 0,
+        discountPercentage: productDetails.discountPercentage,
+        specialOffer: {
+          title: selectedOffer.title,
+          description: selectedOffer.description
+        }
+      };
+      
+      // Add to cart using the context function
+      addItemToCart(cartItem);
+      
+      // Show confirmation
+      alert(`"${selectedOffer.title}" has been added to your cart with discount applied!`);
+      closeModal();
+      
+      // Optionally redirect to cart
+      // window.location.href = '/cart';
+    }
   };
 
   const copyPromoCode = () => {
