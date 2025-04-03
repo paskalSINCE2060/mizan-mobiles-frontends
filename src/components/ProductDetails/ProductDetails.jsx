@@ -33,6 +33,16 @@ const ProductDetails = () => {
     const productDiscountedPrice = product.discountedPrice ?? 0;
     const productOriginalPrice = product.originalPrice ?? 0;
 
+    // Check if the product has special offer
+    const hasSpecialOffer = !!product.specialOffer;
+
+    // Format date for special offer validity
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    };
+
     // Related products based on the current product category
     const relatedProducts = [
         { 
@@ -71,6 +81,19 @@ const ProductDetails = () => {
         navigate('/productdetails', { state: { product: relatedProduct } });
     };
 
+    // Function to copy promo code to clipboard
+    const copyPromoCode = (code) => {
+        if (!code) return;
+        
+        navigator.clipboard.writeText(code)
+            .then(() => {
+                alert('Promo code copied to clipboard!');
+            })
+            .catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+    };
+
     return (
         <div className="Product-details-container">
             {/* Main Product Details */}
@@ -91,6 +114,36 @@ const ProductDetails = () => {
                     </div>
                     <div className="Product-details-info">
                         <h2 className="Product-details-name">{product.name}</h2>
+
+                        {/* Special Offer Banner */}
+                        {hasSpecialOffer && (
+                            <div className="Product-details-special-offer">
+                                <div className="special-offer-badge">
+                                    {product.specialOffer.discount}
+                                </div>
+                                <div className="special-offer-info">
+                                    <h3>{product.specialOffer.title}</h3>
+                                    <p>{product.specialOffer.description}</p>
+                                    {product.specialOffer.validUntil && (
+                                        <p className="special-offer-validity">
+                                            Valid until: {formatDate(product.specialOffer.validUntil)}
+                                        </p>
+                                    )}
+                                    {product.specialOffer.promoCode && (
+                                        <div className="special-offer-promo">
+                                            <span>Promo Code: <b>{product.specialOffer.promoCode}</b></span>
+                                            <button 
+                                                className="copy-promo-button"
+                                                onClick={() => copyPromoCode(product.specialOffer.promoCode)}
+                                            >
+                                                Copy
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
                         <p className="Product-details-price">
                             NPR {productDiscountedPrice.toLocaleString()} 
                             <span className="Product-details-original-price">
@@ -126,13 +179,21 @@ const ProductDetails = () => {
                 >
                     Specifications
                 </button>
+                {hasSpecialOffer && (
+                    <button 
+                        onClick={() => setActiveTab("offer")} 
+                        className={`Product-details-tab ${activeTab === "offer" ? "Product-details-active-tab" : ""}`}
+                    >
+                        Special Offer
+                    </button>
+                )}
             </div>
 
             {/* Tab Content */}
             <div className="Product-details-tab-content">
                 {activeTab === "description" ? (
                     <p>{product.description}</p>
-                ) : (
+                ) : activeTab === "specs" ? (
                     <div className="Product-details-specs">
                         <h3 className="Product-details-specs-header">Specifications</h3>
                         {Object.entries(product.specs || {}).map(([key, value]) => (
@@ -142,6 +203,30 @@ const ProductDetails = () => {
                             </p>
                         ))}
                     </div>
+                ) : (
+                    hasSpecialOffer && (
+                        <div className="Product-details-offer-details">
+                            <h3>Special Offer Details</h3>
+                            <div className="offer-details-content">
+                                <p><strong>Offer:</strong> {product.specialOffer.title}</p>
+                                <p><strong>Description:</strong> {product.specialOffer.description}</p>
+                                {product.specialOffer.validUntil && (
+                                    <p><strong>Valid Until:</strong> {formatDate(product.specialOffer.validUntil)}</p>
+                                )}
+                                {product.specialOffer.promoCode && (
+                                    <div className="promo-code-container">
+                                        <p><strong>Promo Code:</strong></p>
+                                        <div className="promo-code-box">
+                                            <span>{product.specialOffer.promoCode}</span>
+                                            <button onClick={() => copyPromoCode(product.specialOffer.promoCode)}>
+                                                Copy Code
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )
                 )}
             </div>
 

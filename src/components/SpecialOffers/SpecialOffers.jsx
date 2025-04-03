@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../../context/cartContext';
+import { useNavigate } from 'react-router-dom';
 import sellPhone from '../../assets/sellPhone.webp';
 import GalaxyWatch7 from '../../assets/GalaxyWatch7.jpeg';
 import { toast } from 'react-toastify';
@@ -17,6 +18,7 @@ const SpecialOffers = () => {
   const [error, setError] = useState(null);
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
   
   // Import the cart context
   const { addToCart: addItemToCart } = useCart();
@@ -50,7 +52,16 @@ const SpecialOffers = () => {
             productDetails: {
               name: "iPhone 15 Pro",
               price: 150000,
-              discountPercentage: 20
+              discountedPrice: 120000,
+              originalPrice: 150000,
+              discountPercentage: 20,
+              description: "The iPhone 15 Pro features a powerful A17 Pro chip, titanium design, and an advanced camera system with a 48MP main camera.",
+              specs: {
+                storage: "256GB",
+                display: "6.1-inch Super Retina XDR display",
+                camera: "48MP main, 12MP ultra wide, 12MP telephoto",
+                chip: "A17 Pro chip"
+              }
             }
           },
           {
@@ -72,8 +83,17 @@ const SpecialOffers = () => {
             productDetails: {
               name: "Samsung Galaxy S24",
               price: 120000,
+              discountedPrice: 120000,
+              originalPrice: 120000,
               discountPercentage: 0,
-              bundleDiscount: 50
+              bundleDiscount: 50,
+              description: "The Samsung Galaxy S24 features a stunning AMOLED display, powerful processor, and advanced camera system with AI enhancements.",
+              specs: {
+                storage: "256GB",
+                display: "6.2-inch Dynamic AMOLED 2X display",
+                camera: "50MP main, 12MP ultra wide, 10MP telephoto",
+                chip: "Snapdragon 8 Gen 3"
+              }
             }
           },
           {
@@ -95,8 +115,17 @@ const SpecialOffers = () => {
             productDetails: {
               name: "Google Pixel 8 Pro",
               price: 130000,
+              discountedPrice: 130000,
+              originalPrice: 130000,
               discountPercentage: 0,
-              freeGift: "Google Pixel Buds"
+              freeGift: "Google Pixel Buds",
+              description: "The Google Pixel 8 Pro features an outstanding camera system with advanced AI capabilities, a vibrant display, and pure Android experience.",
+              specs: {
+                storage: "256GB",
+                display: "6.7-inch LTPO OLED display",
+                camera: "50MP main, 48MP ultra wide, 48MP telephoto",
+                chip: "Google Tensor G3"
+              }
             }
           },
           {
@@ -118,8 +147,16 @@ const SpecialOffers = () => {
             productDetails: {
               name: "Trade-in Any Phone",
               price: -10000, // NPR equivalent of $100 discount
+              discountedPrice: -10000,
+              originalPrice: 0,
               discountPercentage: 0,
-              tradeInBonus: true
+              tradeInBonus: true,
+              description: "Trade in your old phone and receive an extra NPR 10,000 on top of the standard trade-in value.",
+              specs: {
+                eligibility: "Any smartphone in working condition",
+                bonus: "Extra NPR 10,000 in trade-in value",
+                process: "In-store or online evaluation"
+              }
             }
           },
           {
@@ -140,7 +177,16 @@ const SpecialOffers = () => {
             productDetails: {
               name: "Premium Phone Case",
               price: 5000,
-              discountPercentage: 30
+              discountedPrice: 3500,
+              originalPrice: 5000,
+              discountPercentage: 30,
+              description: "High-quality protective cases for all phone models. Premium materials with shock absorption technology.",
+              specs: {
+                material: "Premium silicone and polycarbonate",
+                protection: "Military-grade drop protection",
+                compatibility: "All major phone models",
+                features: "Raised edges for screen protection"
+              }
             }
           },
           {
@@ -162,8 +208,16 @@ const SpecialOffers = () => {
             productDetails: {
               name: "Any Phone - Student Discount",
               price: 100000,
+              discountedPrice: 85000,
+              originalPrice: 100000,
               discountPercentage: 15,
-              requiresVerification: true
+              requiresVerification: true,
+              description: "Special student discount applicable on any smartphone purchase with valid student ID verification.",
+              specs: {
+                eligibility: "Valid student ID required",
+                discount: "15% off on any smartphone",
+                process: "ID verification during checkout"
+              }
             }
           }
         ];
@@ -247,6 +301,28 @@ const SpecialOffers = () => {
     }
   };
 
+  // Handle image click to navigate to product details page
+  const handleImageClick = (offer) => {
+    if (offer && offer.productDetails) {
+      // Navigate to product details page with the offer data
+      navigate('/productdetails', { 
+        state: { 
+          product: {
+            ...offer.productDetails,
+            image: offer.image,
+            specialOffer: {
+              title: offer.title,
+              description: offer.description,
+              discount: offer.discount,
+              validUntil: offer.validUntil,
+              promoCode: offer.promoCode
+            }
+          } 
+        } 
+      });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="offers-loading-container">
@@ -285,7 +361,11 @@ const SpecialOffers = () => {
       <div className="offers-grid">
         {offers.map((offer) => (
           <div key={offer.id} className="offer-card">
-            <div className="offer-card-image">
+            <div 
+              className="offer-card-image" 
+              onClick={() => handleImageClick(offer)}
+              style={{ cursor: 'pointer' }}
+            >
               <img src={offer.image} alt={offer.title} />
               <div className="offer-discount-badge">{offer.discount}</div>
             </div>
