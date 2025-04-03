@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaSearch, FaUser, FaShoppingCart } from "react-icons/fa";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from '../../context/cartContext';
 import "./Navbar.css";
 
@@ -10,6 +10,7 @@ function Navbar({ userData, setUserData }) {
   const [searchRecommendations, setSearchRecommendations] = useState([]);
   const { cartCount } = useCart();
   const navigate = useNavigate();
+  const location = useLocation(); // Add this to track current route
   const navRef = useRef(null);
   const searchRef = useRef(null);
 
@@ -107,6 +108,36 @@ function Navbar({ userData, setUserData }) {
     navigate("/login");
   };
 
+  // Function to check if a link is active
+  const isLinkActive = (path) => {
+    return location.pathname === path;
+  };
+
+  // Check if we're on the homepage and services section is active
+  const [isServicesActive, setIsServicesActive] = useState(false);
+  
+  useEffect(() => {
+    const checkIfServicesActive = () => {
+      if (location.pathname === '/') {
+        const servicesSection = document.getElementById('services');
+        if (servicesSection) {
+          const rect = servicesSection.getBoundingClientRect();
+          const isVisible = 
+            rect.top >= 0 &&
+            rect.bottom <= window.innerHeight;
+          setIsServicesActive(isVisible);
+        }
+      } else {
+        setIsServicesActive(false);
+      }
+    };
+    
+    window.addEventListener('scroll', checkIfServicesActive);
+    checkIfServicesActive(); // Check initially
+    
+    return () => window.removeEventListener('scroll', checkIfServicesActive);
+  }, [location.pathname]);
+
   return (
     <nav className="navbar" ref={navRef}>
       <div className="top-section">
@@ -148,8 +179,10 @@ function Navbar({ userData, setUserData }) {
         <div className="right-icons">
           {userData ? (
             <>
-              <RouterLink to="/profile"><FaUser /></RouterLink>
-              <RouterLink to="/cart" className="cart-icon">
+              <RouterLink to="/profile" className={isLinkActive('/profile') ? 'active-link' : ''}>
+                <FaUser />
+              </RouterLink>
+              <RouterLink to="/cart" className={`cart-icon ${isLinkActive('/cart') ? 'active-link' : ''}`}>
                 <FaShoppingCart />
                 {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
               </RouterLink>
@@ -159,7 +192,8 @@ function Navbar({ userData, setUserData }) {
             </>
           ) : (
             <div className="auth-links">
-              <RouterLink to="/login">Login</RouterLink> | <RouterLink to="/signup">Signup</RouterLink>
+              <RouterLink to="/login" className={isLinkActive('/login') ? 'active-link' : ''}>Login</RouterLink> | 
+              <RouterLink to="/signup" className={isLinkActive('/signup') ? 'active-link' : ''}>Signup</RouterLink>
             </div>
           )}
         </div>
@@ -173,14 +207,77 @@ function Navbar({ userData, setUserData }) {
       
       <div className="bottom-section">
         <ul className={`nav-links ${isOpen ? "active" : ""}`}>
-          <li><RouterLink to="/" onClick={() => setIsOpen(false)}>Home</RouterLink></li>
-          <li><RouterLink to="/categories" onClick={() => setIsOpen(false)}>Categories</RouterLink></li>
-          <li><RouterLink to="/about" onClick={() => setIsOpen(false)}>About</RouterLink></li>
-          <li><RouterLink to="/contact" onClick={() => setIsOpen(false)}>Contact</RouterLink></li>
-          <li><RouterLink to="/sellyourphone" onClick={() => setIsOpen(false)}>Sell Phone</RouterLink></li>
-          <li><RouterLink to="/repair" onClick={() => setIsOpen(false)}>Repair</RouterLink></li>
-          <li><RouterLink to="/specialoffers" onClick={() => setIsOpen(false)}>SpecialOffers</RouterLink></li>
-          <li><button onClick={handleScrollToServices} className="nav-button">Services</button></li>
+          <li>
+            <RouterLink 
+              to="/" 
+              className={isLinkActive('/') ? 'active-link' : ''}
+              onClick={() => setIsOpen(false)}
+            >
+              Home
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink 
+              to="/categories" 
+              className={isLinkActive('/categories') ? 'active-link' : ''}
+              onClick={() => setIsOpen(false)}
+            >
+              Categories
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink 
+              to="/about" 
+              className={isLinkActive('/about') ? 'active-link' : ''}
+              onClick={() => setIsOpen(false)}
+            >
+              About
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink 
+              to="/contact" 
+              className={isLinkActive('/contact') ? 'active-link' : ''}
+              onClick={() => setIsOpen(false)}
+            >
+              Contact
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink 
+              to="/sellyourphone" 
+              className={isLinkActive('/sellyourphone') ? 'active-link' : ''}
+              onClick={() => setIsOpen(false)}
+            >
+              Sell Phone
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink 
+              to="/repair" 
+              className={isLinkActive('/repair') ? 'active-link' : ''}
+              onClick={() => setIsOpen(false)}
+            >
+              Repair
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink 
+              to="/specialoffers" 
+              className={isLinkActive('/specialoffers') ? 'active-link' : ''}
+              onClick={() => setIsOpen(false)}
+            >
+              SpecialOffers
+            </RouterLink>
+          </li>
+          <li>
+            <button 
+              onClick={handleScrollToServices} 
+              className={`nav-button ${isServicesActive ? 'active-link' : ''}`}
+            >
+              Services
+            </button>
+          </li>
         </ul>
       </div>
     </nav>
