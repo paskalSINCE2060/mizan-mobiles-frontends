@@ -1,5 +1,5 @@
 .hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../../assets/heroImage.png') no-repeat center center;
+  background:  url('../../assets/heroImage.png') no-repeat center center;
   background-size: cover;
   color: white;
   text-align: center;
@@ -111,6 +111,7 @@
   font-weight: bold;
   font-size: 18px;
   margin: 10px 0;
+
 }
 
 .carts-item h3 {
@@ -183,7 +184,7 @@
   text-align: center;
   display: flex;
   flex-direction: column;
-  height: 550px;
+  height: 600px;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   border: 1px solid #eaeaea;
 }
@@ -778,11 +779,3 @@
   }
 }
 
-.Toastify__toast {
-  border-radius: 10px !important;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2) !important;
-}
-
-.Toastify__toast--success {
-  background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
-}
