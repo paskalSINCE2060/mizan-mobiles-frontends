@@ -14,10 +14,12 @@ import './SpecialOffers.css';
 
 const SpecialOffers = () => {
   const [offers, setOffers] = useState([]);
+  const [filteredOffers, setFilteredOffers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [activeFilter, setActiveFilter] = useState('All Offers');
   const navigate = useNavigate();
   
   // Import the cart context
@@ -223,6 +225,7 @@ const SpecialOffers = () => {
         ];
         
         setOffers(mockOffers);
+        setFilteredOffers(mockOffers); // Initially show all offers
       } catch (err) {
         setError('Failed to fetch offers. Please try again later.');
         console.error(err);
@@ -233,6 +236,16 @@ const SpecialOffers = () => {
 
     fetchOffers();
   }, []);
+
+  // Filter offers when activeFilter changes
+  useEffect(() => {
+    if (activeFilter === 'All Offers') {
+      setFilteredOffers(offers);
+    } else {
+      const filtered = offers.filter(offer => offer.category === activeFilter);
+      setFilteredOffers(filtered);
+    }
+  }, [activeFilter, offers]);
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -323,6 +336,11 @@ const SpecialOffers = () => {
     }
   };
 
+  // Handle filter button click
+  const handleFilterClick = (filter) => {
+    setActiveFilter(filter);
+  };
+
   if (isLoading) {
     return (
       <div className="offers-loading-container">
@@ -351,37 +369,68 @@ const SpecialOffers = () => {
       </div>
 
       <div className="offers-filter-container">
-        <button className="offers-filter-button active">All Offers</button>
-        <button className="offers-filter-button">Apple</button>
-        <button className="offers-filter-button">Samsung</button>
-        <button className="offers-filter-button">Google</button>
-        <button className="offers-filter-button">Accessories</button>
+        <button 
+          className={`offers-filter-button ${activeFilter === 'All Offers' ? 'active' : ''}`}
+          onClick={() => handleFilterClick('All Offers')}
+        >
+          All Offers
+        </button>
+        <button 
+          className={`offers-filter-button ${activeFilter === 'Apple' ? 'active' : ''}`}
+          onClick={() => handleFilterClick('Apple')}
+        >
+          Apple
+        </button>
+        <button 
+          className={`offers-filter-button ${activeFilter === 'Samsung' ? 'active' : ''}`}
+          onClick={() => handleFilterClick('Samsung')}
+        >
+          Samsung
+        </button>
+        <button 
+          className={`offers-filter-button ${activeFilter === 'Google' ? 'active' : ''}`}
+          onClick={() => handleFilterClick('Google')}
+        >
+          Google
+        </button>
+        <button 
+          className={`offers-filter-button ${activeFilter === 'Accessories' ? 'active' : ''}`}
+          onClick={() => handleFilterClick('Accessories')}
+        >
+          Accessories
+        </button>
       </div>
 
       <div className="offers-grid">
-        {offers.map((offer) => (
-          <div key={offer.id} className="offer-card">
-            <div 
-              className="offer-card-image" 
-              onClick={() => handleImageClick(offer)}
-              style={{ cursor: 'pointer' }}
-            >
-              <img src={offer.image} alt={offer.title} />
-              <div className="offer-discount-badge">{offer.discount}</div>
-            </div>
-            <div className="offer-card-content">
-              <h3>{offer.title}</h3>
-              <p>{offer.description}</p>
-              <p className="offer-expiry">Valid until: {formatDate(offer.validUntil)}</p>
-              <button 
-                className="offer-cta-button"
-                onClick={() => handleClaimOffer(offer)}
+        {filteredOffers.length > 0 ? (
+          filteredOffers.map((offer) => (
+            <div key={offer.id} className="offer-card">
+              <div 
+                className="offer-card-image" 
+                onClick={() => handleImageClick(offer)}
+                style={{ cursor: 'pointer' }}
               >
-                Claim Offer
-              </button>
+                <img src={offer.image} alt={offer.title} />
+                <div className="offer-discount-badge">{offer.discount}</div>
+              </div>
+              <div className="offer-card-content">
+                <h3>{offer.title}</h3>
+                <p>{offer.description}</p>
+                <p className="offer-expiry">Valid until: {formatDate(offer.validUntil)}</p>
+                <button 
+                  className="offer-cta-button"
+                  onClick={() => handleClaimOffer(offer)}
+                >
+                  Claim Offer
+                </button>
+              </div>
             </div>
+          ))
+        ) : (
+          <div className="no-offers-message">
+            <p>No offers available for {activeFilter} at this time.</p>
           </div>
-        ))}
+        )}
       </div>
 
       <div className="offers-newsletter">
