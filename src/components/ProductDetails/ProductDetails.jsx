@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/cartContext";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 import "./ProductDetails.css";
 
 // Import related products images
@@ -87,15 +90,53 @@ const ProductDetails = () => {
         
         navigator.clipboard.writeText(code)
             .then(() => {
-                alert('Promo code copied to clipboard!');
+                toast.info('Promo code copied to clipboard!', {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "light",
+                });
             })
             .catch(err => {
                 console.error('Failed to copy: ', err);
+                toast.error('Failed to copy promo code', {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "light",
+                });
             });
+    };
+
+    // Handle add to cart with toast notification
+    const handleAddToCart = (item) => {
+        addToCart({
+            ...item,
+            price: item.discountedPrice
+        });
+        
+        toast.success(`${item.name} added to cart!`, {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+        });
     };
 
     return (
         <div className="Product-details-container">
+            {/* Toast Container */}
+            <ToastContainer />
+            
             {/* Main Product Details */}
             {product && product.name ? (
                 <div className="Product-details-main">
@@ -152,10 +193,7 @@ const ProductDetails = () => {
                         </p>
                         <button 
                             className="Product-details-add-to-cart"
-                            onClick={() => addToCart({
-                                ...product,
-                                price: productDiscountedPrice
-                            })}
+                            onClick={() => handleAddToCart(product)}
                         >
                             Add to Cart
                         </button>
@@ -256,10 +294,7 @@ const ProductDetails = () => {
                             className="Product-details-add-to-cart"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                addToCart({
-                                    ...item,
-                                    price: item.discountedPrice
-                                });
+                                handleAddToCart(item);
                             }}
                         >
                             Add to Cart
