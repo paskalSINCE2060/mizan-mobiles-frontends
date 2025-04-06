@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './Homepage.css';
 import { useCart } from "../../context/cartContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify"; 
 // Import all necessary images
 import iphone11promax from '../../assets/iphone11promax.jpeg'
 import iphone13pro from '../../assets/iphone13pro.jpg'
@@ -157,9 +157,141 @@ function HomePage() {
         navigate('/productdetails', { state: { product } });
     };
 
+        const [isOpen, setIsOpen] = useState(false);
+        const [messages, setMessages] = useState([
+          { text: "Hi there! How can I help you today?", isBot: true }
+        ]);
+        const [inputText, setInputText] = useState('');
+        const [isTyping, setIsTyping] = useState(false);
+        const messagesEndRef = useRef(null);
+      
+        const toggleChat = () => {
+          setIsOpen(!isOpen);
+        };
+      
+        const handleInputChange = (e) => {
+          setInputText(e.target.value);
+        };
+      
+        const scrollToBottom = () => {
+          messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        };
+      
+        useEffect(() => {
+          scrollToBottom();
+        }, [messages]);
+      
+        const sendMessage = (e) => {
+          e.preventDefault();
+          if (inputText.trim() === '') return;
+      
+          // Add user message
+          setMessages([...messages, { text: inputText, isBot: false }]);
+          setInputText('');
+          setIsTyping(true);
+      
+          // Simulate bot reply after delay
+          setTimeout(() => {
+            const botResponse = getBotResponse(inputText);
+            setMessages(prev => [...prev, { text: botResponse, isBot: true }]);
+            setIsTyping(false);
+          }, 1000);
+        };
+      
+        const getBotResponse = (message) => {
+          const lowerCaseMsg = message.toLowerCase();
+          
+          if (lowerCaseMsg.includes('price') || lowerCaseMsg.includes('cost')) {
+            return "Our products vary in price. You can check individual product pages for pricing details. We offer discounts on many items!";
+          } else if (lowerCaseMsg.includes('delivery') || lowerCaseMsg.includes('shipping')) {
+            return "We offer free delivery on orders above NPR 5000. Standard delivery takes 2-3 business days.";
+          } else if (lowerCaseMsg.includes('return')) {
+            return "We have a 7-day return policy for most products. Please make sure the item is in its original condition.";
+          } else if (lowerCaseMsg.includes('payment') || lowerCaseMsg.includes('pay')) {
+            return "We accept credit/debit cards, eSewa, Khalti, and cash on delivery.";
+          } else if (lowerCaseMsg.includes('warranty')) {
+            return "All our products come with a standard warranty. iPhones have a 6-month warranty, and Samsung products have a 1-year warranty.";
+          } else if (lowerCaseMsg.includes('hello') || lowerCaseMsg.includes('hi') || lowerCaseMsg.includes('hey')) {
+            return "Hello! How can I assist you with our tech products today?";
+          } else if (lowerCaseMsg.includes('thank')) {
+            return "You're welcome! Is there anything else I can help you with?";
+          } else if (lowerCaseMsg.includes('bye') || lowerCaseMsg.includes('goodbye')) {
+            return "Thank you for chatting with us! Feel free to return if you have more questions.";
+          } else if (lowerCaseMsg.includes('sell') || lowerCaseMsg.includes('selling')) {
+            return "Yes, we buy used smartphones! Click the 'Sell Now' button to get an instant valuation for your device.";
+          } else if (lowerCaseMsg.includes('condition') || lowerCaseMsg.includes('quality')) {
+            return "All our pre-loved products are professionally inspected and thoroughly tested. We guarantee they're in excellent working condition.";
+          } else {
+            return "Thanks for your message. If you have questions about our products or services, please let me know specifically what you're looking for.";
+          }
+        };
+
 
 
     return (
+        <>
+
+<div className="chatbot-container">
+      {/* Chat toggle button */}
+      <button className={`chat-toggle-btn ${isOpen ? 'active' : ''}`} onClick={toggleChat}>
+        {isOpen ? (
+          <span>×</span>
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        )}
+      </button>
+
+      {/* Chat window */}
+      <div className={`chat-window ${isOpen ? 'open' : ''}`}>
+        <div className="chat-header">
+          <div className="chat-title">
+            <div className="chat-avatar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+              </svg>
+            </div>
+            Mizan Support
+          </div>
+          <button className="chat-close" onClick={toggleChat}>×</button>
+        </div>
+        
+        <div className="chat-messages">
+          {messages.map((msg, index) => (
+            <div key={index} className={`message ${msg.isBot ? 'bot' : 'user'}`}>
+              {msg.text}
+            </div>
+          ))}
+          {isTyping && <div className="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>}
+          <div ref={messagesEndRef} />
+        </div>
+        
+        <form onSubmit={sendMessage} className="chat-input-container">
+          <input
+            type="text"
+            value={inputText}
+            onChange={handleInputChange}
+            placeholder="Type your message..."
+            className="chat-input"
+          />
+          <button type="submit" className="chat-send-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+
         <div className="white">
  <ToastContainer position="top-right" autoClose={3000} hideProgressBar />            
             <section className="hero">
@@ -406,6 +538,7 @@ function HomePage() {
 
 
         </div>
+        </>
     );
 }
 
