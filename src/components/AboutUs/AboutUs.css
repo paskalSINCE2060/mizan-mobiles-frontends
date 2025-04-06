@@ -43,6 +43,7 @@
     margin: 30px 0;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
     transition: transform 0.4s ease, box-shadow 0.4s ease;
+    margin-left: 50px;
 }
 
 .aboutUs-image:hover {

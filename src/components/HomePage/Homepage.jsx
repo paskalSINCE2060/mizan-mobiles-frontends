@@ -157,195 +157,254 @@ function HomePage() {
         navigate('/productdetails', { state: { product } });
     };
 
-        const [isOpen, setIsOpen] = useState(false);
-        const [messages, setMessages] = useState([
-          { text: "Hi there! How can I help you today?", isBot: true }
-        ]);
-        const [inputText, setInputText] = useState('');
-        const [isTyping, setIsTyping] = useState(false);
-        const messagesEndRef = useRef(null);
-      
-        const toggleChat = () => {
-          setIsOpen(!isOpen);
-        };
-      
-        const handleInputChange = (e) => {
-          setInputText(e.target.value);
-        };
-      
-        const scrollToBottom = () => {
-          messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-        };
-      
-        useEffect(() => {
-          scrollToBottom();
-        }, [messages]);
-      
-        const sendMessage = (e) => {
-          e.preventDefault();
-          if (inputText.trim() === '') return;
-      
-          // Add user message
-          setMessages([...messages, { text: inputText, isBot: false }]);
-          setInputText('');
-          setIsTyping(true);
-      
-          // Simulate bot reply after delay
-          setTimeout(() => {
-            const botResponse = getBotResponse(inputText);
-            setMessages(prev => [...prev, { text: botResponse, isBot: true }]);
-            setIsTyping(false);
-          }, 1000);
-        };
-      
-        const getBotResponse = (message) => {
-          const lowerCaseMsg = message.toLowerCase();
-          
-          if (lowerCaseMsg.includes('price') || lowerCaseMsg.includes('cost')) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [messages, setMessages] = useState([
+        { text: "Hi there! How can I help you today?", isBot: true }
+    ]);
+    const [inputText, setInputText] = useState('');
+    const [isTyping, setIsTyping] = useState(false);
+    const messagesEndRef = useRef(null);
+    
+    const toggleChat = () => {
+        setIsOpen(!isOpen);
+    };
+    
+    const handleInputChange = (e) => {
+        setInputText(e.target.value);
+    };
+    
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+    
+    const loadChatFromStorage = () => {
+        const savedChat = localStorage.getItem('mizan_chat_history');
+        if (savedChat) {
+            return JSON.parse(savedChat);
+        }
+        return [{ text: "Hi there! How can I help you today?", isBot: true }];
+    };
+
+    const saveChatToStorage = (chatMessages) => {
+        localStorage.setItem('mizan_chat_history', JSON.stringify(chatMessages));
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
+    useEffect(() => {
+        const savedMessages = loadChatFromStorage();
+        setMessages(savedMessages);
+    }, []);
+    
+    const getBotResponse = (message) => {
+        const lowerCaseMsg = message.toLowerCase();
+        
+        if (lowerCaseMsg.includes('price') || lowerCaseMsg.includes('cost')) {
             return "Our products vary in price. You can check individual product pages for pricing details. We offer discounts on many items!";
-          } else if (lowerCaseMsg.includes('delivery') || lowerCaseMsg.includes('shipping')) {
+        } else if (lowerCaseMsg.includes('delivery') || lowerCaseMsg.includes('shipping')) {
             return "We offer free delivery on orders above NPR 5000. Standard delivery takes 2-3 business days.";
-          } else if (lowerCaseMsg.includes('return')) {
+        } else if (lowerCaseMsg.includes('return')) {
             return "We have a 7-day return policy for most products. Please make sure the item is in its original condition.";
-          } else if (lowerCaseMsg.includes('payment') || lowerCaseMsg.includes('pay')) {
+        } else if (lowerCaseMsg.includes('payment') || lowerCaseMsg.includes('pay')) {
             return "We accept credit/debit cards, eSewa, Khalti, and cash on delivery.";
-          } else if (lowerCaseMsg.includes('warranty')) {
+        } else if (lowerCaseMsg.includes('warranty')) {
             return "All our products come with a standard warranty. iPhones have a 6-month warranty, and Samsung products have a 1-year warranty.";
-          } else if (lowerCaseMsg.includes('hello') || lowerCaseMsg.includes('hi') || lowerCaseMsg.includes('hey')) {
+        } else if (lowerCaseMsg.includes('hello') || lowerCaseMsg.includes('hi') || lowerCaseMsg.includes('hey')) {
             return "Hello! How can I assist you with our tech products today?";
-          } else if (lowerCaseMsg.includes('thank')) {
+        } else if (lowerCaseMsg.includes('thank')) {
             return "You're welcome! Is there anything else I can help you with?";
-          } else if (lowerCaseMsg.includes('bye') || lowerCaseMsg.includes('goodbye')) {
+        } else if (lowerCaseMsg.includes('bye') || lowerCaseMsg.includes('goodbye')) {
             return "Thank you for chatting with us! Feel free to return if you have more questions.";
-          } else if (lowerCaseMsg.includes('sell') || lowerCaseMsg.includes('selling')) {
+        } else if (lowerCaseMsg.includes('sell') || lowerCaseMsg.includes('selling')) {
             return "Yes, we buy used smartphones! Click the 'Sell Now' button to get an instant valuation for your device.";
-          } else if (lowerCaseMsg.includes('condition') || lowerCaseMsg.includes('quality')) {
+        } else if (lowerCaseMsg.includes('condition') || lowerCaseMsg.includes('quality')) {
             return "All our pre-loved products are professionally inspected and thoroughly tested. We guarantee they're in excellent working condition.";
-          } else {
+        } else {
             return "Thanks for your message. If you have questions about our products or services, please let me know specifically what you're looking for.";
-          }
-        };
+        }
+    };
 
+    const sendMessage = (e) => {
+        e.preventDefault();
+        if (inputText.trim() === '') return;
+  
+        // Add user message
+        const updatedMessages = [...messages, { text: inputText, isBot: false }];
+        setMessages(updatedMessages);
+        saveChatToStorage(updatedMessages); // Save after adding user message
+        
+        setInputText('');
+        setIsTyping(true);
+  
+        // Simulate bot reply after delay
+        setTimeout(() => {
+            const botResponse = getBotResponse(inputText);
+            const messagesWithBotResponse = [...updatedMessages, { text: botResponse, isBot: true }];
+            setMessages(messagesWithBotResponse);
+            saveChatToStorage(messagesWithBotResponse); // Save after adding bot response
+            setIsTyping(false);
+        }, 1000);
+    };
 
+    const clearChatHistory = () => {
+        const initialMessage = [{ text: "Hi there! How can I help you today?", isBot: true }];
+        setMessages(initialMessage);
+        saveChatToStorage(initialMessage);
+        toast.info("Chat history cleared!");
+    };
+
+    const exportChatHistory = () => {
+        const chatData = JSON.stringify(messages, null, 2);
+        const blob = new Blob([chatData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `mizan_chat_history_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        toast.success("Chat history exported successfully!");
+    };
 
     return (
         <>
 
 <div className="chatbot-container">
-      {/* Chat toggle button */}
-      <button className={`chat-toggle-btn ${isOpen ? 'active' : ''}`} onClick={toggleChat}>
-        {isOpen ? (
-          <span>×</span>
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-        )}
-      </button>
+<button className={`chat-toggle-btn ${isOpen ? 'active' : ''}`} onClick={toggleChat}>
+                    {isOpen ? (
+                        <span>×</span>
+                    ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    )}
+                </button>
 
-      {/* Chat window */}
-      <div className={`chat-window ${isOpen ? 'open' : ''}`}>
-        <div className="chat-header">
-          <div className="chat-title">
-            <div className="chat-avatar">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-                <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                <line x1="15" y1="9" x2="15.01" y2="9"></line>
-              </svg>
-            </div>
-            Mizan Support
-          </div>
-          <button className="chat-close" onClick={toggleChat}>×</button>
-        </div>
-        
-        <div className="chat-messages">
-          {messages.map((msg, index) => (
-            <div key={index} className={`message ${msg.isBot ? 'bot' : 'user'}`}>
-              {msg.text}
-            </div>
-          ))}
-          {isTyping && <div className="typing-indicator">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>}
-          <div ref={messagesEndRef} />
-        </div>
-        
-        <form onSubmit={sendMessage} className="chat-input-container">
-          <input
-            type="text"
-            value={inputText}
-            onChange={handleInputChange}
-            placeholder="Type your message..."
-            className="chat-input"
-          />
-          <button type="submit" className="chat-send-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-          </button>
-        </form>
-      </div>
-    </div>
-
-        <div className="white">
- <ToastContainer position="top-right" autoClose={3000} hideProgressBar />            
-            <section className="hero">
-                <div className="hero-content">
-                   < a href="/categories">
-                    <button>
-                    Shop Now
-                    </button>
-                    </a>
+                <div className={`chat-window ${isOpen ? 'open' : ''}`}>
+                    <div className="chat-header">
+                        <div className="chat-title">
+                            <div className="chat-avatar">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                                    <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                    <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                                </svg>
+                            </div>
+                            Mizan Support
+                        </div>
+                        <button className="chat-close" onClick={toggleChat}>×</button>
+                    </div>
+                    
+                    <div className="chat-messages">
+                        {messages.map((msg, index) => (
+                            <div key={index} className={`message ${msg.isBot ? 'bot' : 'user'}`}>
+                                {msg.text}
+                            </div>
+                        ))}
+                        {isTyping && <div className="typing-indicator">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>}
+                        <div ref={messagesEndRef} />
+                    </div>
+                    
+                    <div className="chat-actions">
+                        <button className="chat-action-btn" onClick={clearChatHistory}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 6h18"></path>
+                                <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path>
+                            </svg>
+                            Clear
+                        </button>
+                        <button className="chat-action-btn" onClick={exportChatHistory}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Export
+                        </button>
+                    </div>
+                    
+                    <form onSubmit={sendMessage} className="chat-input-container">
+                        <input
+                            type="text"
+                            value={inputText}
+                            onChange={handleInputChange}
+                            placeholder="Type your message..."
+                            className="chat-input"
+                        />
+                        <button type="submit" className="chat-send-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </form>
                 </div>
-            </section>
+            </div>
+
+            <div className="white">
+                <ToastContainer position="top-right" autoClose={3000} hideProgressBar />            
+                <section className="hero">
+                    <div className="hero-content">
+                        <a href="/categories">
+                            <button>
+                                Shop Now
+                            </button>
+                        </a>
+                    </div>
+                </section>
 
             {/* iPhone Products Section */}
             <section className="carts-item container">
-                <h2 className="carts-item">Premium PreLoved Smartphones</h2>
-                <div className="carts-item product-grid">
-                    {products.map((product) => (
-                        <div 
-                            key={product.id} 
-                            className="carts-item product"
-                            onClick={() => handleProductClick(product)}
-                        >
-                            <img src={product.image} alt={product.name} className="carts-item"/>
-                            <h3 className="carts-item">{product.name}</h3>
-                            <p className="carts-item price">
-                                <del>NPR {product.originalPrice.toLocaleString()}</del> 
-                                NPR {product.discountedPrice.toLocaleString()}
-                            </p>
-                            <button 
-                                className="carts-item" 
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    addToCart({
-                                        ...product,
-                                        price: product.discountedPrice,
-                                        image: product.image
-                                    })
-                                    toast.success("Added to Cart!", {
-                                        position: "top-right",
-                                        autoClose: 2000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        theme: "light",
-                                    });
-                                }}
+                    <h2 className="carts-item">Premium PreLoved Smartphones</h2>
+                    <div className="carts-item product-grid">
+                        {products.map((product) => (
+                            <div 
+                                key={product.id} 
+                                className="carts-item product"
+                                onClick={() => handleProductClick(product)}
                             >
-                                Add to Cart
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            </section>
+                                <img src={product.image} alt={product.name} className="carts-item"/>
+                                <h3 className="carts-item">{product.name}</h3>
+                                <p className="carts-item price">
+                                    <del>NPR {product.originalPrice.toLocaleString()}</del> 
+                                    NPR {product.discountedPrice.toLocaleString()}
+                                </p>
+                                <button 
+                                    className="carts-item" 
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        addToCart({
+                                            ...product,
+                                            price: product.discountedPrice,
+                                            image: product.image
+                                        })
+                                        toast.success("Added to Cart!", {
+                                            position: "top-right",
+                                            autoClose: 2000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            theme: "light",
+                                        });
+                                    }}
+                                >
+                                    Add to Cart
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </section>
 
             <div className="why-us-container">
                 <div className="why-us-content">
@@ -487,48 +546,48 @@ function HomePage() {
 
 
 
-             <div class="marketplace-container">
-                <h1 class="marketplace-title">Buy + Sell + Save</h1>
+             <div className="marketplace-container">
+                <h1 className="marketplace-title">Buy + Sell + Save</h1>
                 
-                <div class="product-categories">
+                <div className="product-categories">
                     <a href="/smartphone"
-                    class="category">
-                    <div class="category">
+                    className="category">
+                    <div className="category">
                            <h2>Phones + iPhones</h2>
-                          <div class="product-image">
+                          <div className="product-image">
                             <img src={sellPhone} alt="Phone Collection"/>
                           </div>
-                         <div class="category-stats">
-                         <span class="listings">15996 approved listings</span>
-                        <span class="sellers">1398 legit sellers</span>
+                         <div className="category-stats">
+                         <span className="listings">15996 approved listings</span>
+                        <span className="sellers">1398 legit sellers</span>
                         </div>
                      </div>                        
                     </a>
                     
                     <a href="/tablets"
                     className="category">
-                    <div class="category">
+                    <div className="category">
                         <h2>MacBooks + Laptops</h2>
-                        <div class="product-image">
+                        <div className="product-image">
                             <img src={buylaptops} alt="Laptop Collection"/>
                         </div>
-                        <div class="category-stats">
-                            <span class="listings">1022 approved listings</span>
-                            <span class="sellers">450 legit sellers</span>
+                        <div className="category-stats">
+                            <span className="listings">1022 approved listings</span>
+                            <span className="sellers">450 legit sellers</span>
                         </div>
                     </div>
                     </a>
                     
                     <a href="/watches"
                     className="category">
-                    <div class="category">
+                    <div className="category">
                         <h2>Watches</h2>
-                        <div class="product-image">
+                        <div className="product-image">
                             <img src={galaxybuds3} alt="Watch Collection" />
                         </div>
-                        <div class="category-stats">
-                            <span class="listings">1017 approved listings</span>
-                            <span class="sellers">271 legit sellers</span>
+                        <div className="category-stats">
+                            <span className="listings">1017 approved listings</span>
+                            <span className="sellers">271 legit sellers</span>
                         </div>
                     </div>
                     </a>

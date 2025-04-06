@@ -225,24 +225,7 @@ function Navbar({ userData, setUserData }) {
               Categories
             </RouterLink>
           </li>
-          <li>
-            <RouterLink 
-              to="/about" 
-              className={isLinkActive('/about') ? 'active-link' : ''}
-              onClick={() => setIsOpen(false)}
-            >
-              About
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink 
-              to="/contact" 
-              className={isLinkActive('/contact') ? 'active-link' : ''}
-              onClick={() => setIsOpen(false)}
-            >
-              Contact
-            </RouterLink>
-          </li>
+         
           <li>
             <RouterLink 
               to="/sellyourphone" 
@@ -277,6 +260,24 @@ function Navbar({ userData, setUserData }) {
             >
               Services
             </button>
+          </li>
+          <li>
+            <RouterLink 
+              to="/about" 
+              className={isLinkActive('/about') ? 'active-link' : ''}
+              onClick={() => setIsOpen(false)}
+            >
+              About
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink 
+              to="/contact" 
+              className={isLinkActive('/contact') ? 'active-link' : ''}
+              onClick={() => setIsOpen(false)}
+            >
+              Contact
+            </RouterLink>
           </li>
         </ul>
       </div>
