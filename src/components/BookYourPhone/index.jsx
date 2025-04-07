@@ -43,15 +43,15 @@ const PhoneBookingPage = () => {
   
   if (isSubmitted) {
     return (
-      <div className="container success-container">
-        <div className="success-message">
+      <div className="booking-phone container booking-phone success-container">
+        <div className="booking-phone success-message">
           <h2>Booking Confirmed!</h2>
           <p>Thank you for booking with us, {formData.name}.</p>
           <p>We've sent a confirmation to {formData.email}.</p>
           <p>Your phone model: {formData.model}</p>
           <p>Appointment: {formData.date} at {formData.time}</p>
           <button 
-            className="btn" 
+            className="booking-phone btn" 
             onClick={() => setIsSubmitted(false)}
           >
             Make Another Booking
@@ -62,14 +62,14 @@ const PhoneBookingPage = () => {
   }
   
   return (
-    <div className="container">
-      <header className="header">
+    <div className="booking-phone container">
+      <header className="booking-phone header">
         <h1>Phone Booking Service</h1>
         <p>Reserve your new phone today</p>
       </header>
       
-      <form className="booking-form" onSubmit={handleSubmit}>
-        <div className="form-group">
+      <form className="booking-phone booking-form" onSubmit={handleSubmit}>
+        <div className="booking-phone form-group">
           <label htmlFor="name">Full Name</label>
           <input
             type="text"
@@ -82,7 +82,7 @@ const PhoneBookingPage = () => {
           />
         </div>
         
-        <div className="form-group">
+        <div className="booking-phone form-group">
           <label htmlFor="email">Email Address</label>
           <input
             type="email"
@@ -95,7 +95,7 @@ const PhoneBookingPage = () => {
           />
         </div>
         
-        <div className="form-group">
+        <div className="booking-phone form-group">
           <label htmlFor="phone">Phone Number</label>
           <input
             type="tel"
@@ -108,7 +108,7 @@ const PhoneBookingPage = () => {
           />
         </div>
         
-        <div className="form-group">
+        <div className="booking-phone form-group">
           <label htmlFor="model">Phone Model</label>
           <select
             id="model"
@@ -124,8 +124,8 @@ const PhoneBookingPage = () => {
           </select>
         </div>
         
-        <div className="form-row">
-          <div className="form-group">
+        <div className="booking-phone form-row">
+          <div className="booking-phone form-group">
             <label htmlFor="date">Preferred Date</label>
             <input
               type="date"
@@ -137,7 +137,7 @@ const PhoneBookingPage = () => {
             />
           </div>
           
-          <div className="form-group">
+          <div className="booking-phone form-group">
             <label htmlFor="time">Preferred Time</label>
             <input
               type="time"
@@ -150,7 +150,7 @@ const PhoneBookingPage = () => {
           </div>
         </div>
         
-        <div className="form-group">
+        <div className="booking-phone form-group">
           <label htmlFor="message">Additional Notes</label>
           <textarea
             id="message"
@@ -162,8 +162,9 @@ const PhoneBookingPage = () => {
           ></textarea>
         </div>
         
-        <button type="submit" className="btn">Confirm Booking</button>
+        <button type="submit" className="booking-phone btn">Confirm Booking</button>
       </form>
+      
       
     </div>
   );
