@@ -261,6 +261,15 @@ function Navbar({ userData, setUserData }) {
               Services
             </button>
           </li>
+           <li>
+           <RouterLink 
+              to="/bookyourphone" 
+              className={isLinkActive('/about') ? 'active-link' : ''}
+              onClick={() => setIsOpen(false)}
+            >
+              Book Your Phone
+            </RouterLink>
+          </li>
           <li>
             <RouterLink 
               to="/about" 

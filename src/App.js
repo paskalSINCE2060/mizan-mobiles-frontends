@@ -20,7 +20,7 @@ import Tablets from "./components/Tablets/Tablets";
 import Airpods from "./components/Airpods/Airpods";
 import SellYourPhone from "./components/SellYourPhone/SellYourPhone";
 import RepairPhones from "./components/RepairPhones/RepairPhones";
-import BookingPage from "./components/Booking/Booking";
+import BookingPage from "./components/BookYourPhone/index";
 import SpecialOffers from "./components/SpecialOffers/SpecialOffers";
 
 function App() {
@@ -66,6 +66,7 @@ function App() {
         <Route path="/repair" element={<RepairPhones/>} />
         <Route path="/booking" element={<BookingPage/>} />
         <Route path="/specialoffers" element={<SpecialOffers/>} />
+        <Route path="/bookyourphone" element={<BookingPage/>} />
       </Routes>
       <Footer />
     </Router>
