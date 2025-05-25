@@ -1,4 +1,143 @@
+/* Main container to center the login box */
+.login-page-main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full viewport height */
+    padding: 20px;
+    box-sizing: border-box;
+}
 
+/* Main container to center the signup box */
+.signup-page-main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full viewport height */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.Login-page.login-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 360px;
+    margin: 0; /* Remove top and bottom margins since we're centering with flexbox */
+}
+
+.Login-page.login-container h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.Login-page.login-container p {
+    text-align: center;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.Login-page.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+
+.signup-link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.signup-btn {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.Login-page h2 {
+    color: #333;
+    font-weight: 600;
+}
+
+.Login-page p {
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.Login-page.input-group {
+    margin-bottom: 1rem;
+}
+
+.Login-page input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.Login-page input:focus {
+    border-color: #6e8efb;
+    box-shadow: 0 0 5px rgba(110, 142, 251, 0.5);
+}
+
+.Login-page.login-button {
+    width: 100%;
+    padding: 12px;
+    background: #6e8efb;
+    border: none;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.Login-page.login-button:hover {
+    background: #5a7be7;
+}
+
+.Login-page.forgot-password {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #6e8efb;
+    text-decoration: none;
+}
+
+.Login-page.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.Login-page.signup-text {
+    margin-top: 1rem;
+    font-size: 14px;
+}
+
+.Login-page.signup-text a {
+    color: #6e8efb;
+    text-decoration: none;
+    font-weight: 600;
+}
 
 .Signup-page.signup-container {
     background: #fff;
@@ -8,9 +147,7 @@
     text-align: center;
     width: 100%;
     max-width: 360px;
-    margin-left: 550px;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin: 50px auto 0 auto; /* 50px top margin, auto left/right for centering */
 }
 
 .Signup-page h2 {
