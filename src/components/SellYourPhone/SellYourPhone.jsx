@@ -17,7 +17,6 @@ const SellYourPhone = () => {
   });
 
   const [previewImage, setPreviewImage] = useState(null);
-  const [selectedPhone, setSelectedPhone] = useState(null);
   
   const phones = [
     {
@@ -295,7 +294,6 @@ const SellYourPhone = () => {
           <div 
             key={phone.id} 
             className="sale-your-phone product-card"
-            onClick={() => setSelectedPhone(phone)}
           >
             <div className="sale-your-phone product-image-container">
               <img 

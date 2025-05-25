@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { FaSearch, FaUser, FaShoppingCart } from "react-icons/fa";
 import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from '../../context/cartContext';
@@ -10,11 +10,12 @@ function Navbar({ userData, setUserData }) {
   const [searchRecommendations, setSearchRecommendations] = useState([]);
   const { cartCount } = useCart();
   const navigate = useNavigate();
-  const location = useLocation(); // Add this to track current route
+  const location = useLocation();
   const navRef = useRef(null);
   const searchRef = useRef(null);
 
-  const allProducts = [
+  // Move allProducts outside component or use useMemo to memoize it
+  const allProducts = useMemo(() => [
     { id: 'iphone14-256gb', name: 'Apple iPhone 14 Pro Max [256GB]', category: 'iPhone', image: '/path/to/iphone14.jpg', discountedPrice: 111500.00 },
     { id: 'iphone13pro-256gb', name: 'Apple iPhone 13 Pro Max [256GB]', category: 'iPhone', image: '/path/to/iphone13pro.jpg', discountedPrice: 91500.00 },
     { id: 'iphone13promax-128gb', name: 'Apple iPhone 13 Pro Max [128GB]', category: 'iPhone', image: '/path/to/iphone13promax.jpg', discountedPrice: 85500.00 },
@@ -23,7 +24,7 @@ function Navbar({ userData, setUserData }) {
     { id: 'galaxy-buds-3-pro', name: 'Galaxy Buds3 Pro', category: 'Galaxy Buds', image: '/path/to/galaxybuds3pro.jpg', discountedPrice: 250.60 },
     { id: 'galaxy-buds-3', name: 'Galaxy Buds3', category: 'Galaxy Buds', image: '/path/to/galaxybuds3.jpg', discountedPrice: 180.60 },
     { id: 'galaxy-watch-7', name: 'Galaxy Watch7 (Bluetooth, 44mm)', category: 'Galaxy Watch', image: '/path/to/galaxywatch7.jpg', discountedPrice: 348.60 }
-  ];
+  ], []);
 
   useEffect(() => {
     if (searchQuery.length > 1) {
@@ -35,7 +36,7 @@ function Navbar({ userData, setUserData }) {
     } else {
       setSearchRecommendations([]);
     }
-  }, [searchQuery]);
+  }, [searchQuery, allProducts]);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -72,10 +73,16 @@ function Navbar({ userData, setUserData }) {
   };
 
   const handleScrollToServices = () => {
-    navigate("/"); // Make sure you're on the homepage
-    const servicesSection = document.getElementById('services');
-    if (servicesSection) {
-      servicesSection.scrollIntoView({ behavior: 'smooth' });
+    // Check if we're already on the homepage
+    if (location.pathname === "/") {
+      // If already on homepage, scroll directly
+      const servicesSection = document.getElementById('services');
+      if (servicesSection) {
+        servicesSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // If on another page, navigate to homepage with a flag
+      navigate("/", { state: { scrollToServices: true } });
     }
     setIsOpen(false); // Close menu after click
   };
@@ -264,7 +271,7 @@ function Navbar({ userData, setUserData }) {
            <li>
            <RouterLink 
               to="/bookyourphone" 
-              className={isLinkActive('/about') ? 'active-link' : ''}
+              className={isLinkActive('/bookyourphone') ? 'active-link' : ''}
               onClick={() => setIsOpen(false)}
             >
               Book Your Phone
