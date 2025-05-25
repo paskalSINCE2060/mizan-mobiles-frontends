@@ -157,6 +157,7 @@
 .right-icons a {
   color: white;
   font-size: 1.2rem;
+  text-decoration: none;
 }
 
 .right-icons a:hover {

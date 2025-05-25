@@ -11,16 +11,16 @@ const ContactUs = () => {
             <p><strong>Visit us</strong>67 Wisteria Way, Croydon South, VIC 3136 AU</p>
 
             <p><strong>Chat to us</strong>Our friendly team is here to help.
-            <a href="/">mizanmobile@gmail.com</a></p>
+            <a href="mailto:mizanmobile@gmail.com">mizanmobile@gmail.com</a></p>
 
             <p><strong>Call us</strong>Mon-Fri from 8am to 5pm
             <a href="tel:+995555555555">(+995) 555-55-55-55</a></p>
 
             <p><strong>Social media</strong></p>
             <div className="Contact-us-social-icons">
-                <a href="#"><FaFacebook/></a>
-                <a href="#"><FaInstagram/></a>
-                <a href="#"><FaTwitter/></a>
+                <a href="https://facebook.com/mizanmobile" target="_blank" rel="noopener noreferrer"><FaFacebook/></a>
+                <a href="https://instagram.com/mizanmobile" target="_blank" rel="noopener noreferrer"><FaInstagram/></a>
+                <a href="https://twitter.com/mizanmobile" target="_blank" rel="noopener noreferrer"><FaTwitter/></a>
             </div>
         </div>
 

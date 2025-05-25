@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Repair.css'
 import repair from "../../assets/repair.jpeg"
 import repair2 from "../../assets/repair2.jpg"
 import repair3 from "../../assets/repair3.jpeg"
 import repair4 from "../../assets/repair4.jpeg"
 import bannerrepair from "../../assets/repairbanner.jpeg"
-const RepairPhones = () => {
-    const [selectedService, setSelectedService] = useState(null);
 
+const RepairPhones = () => {
     const repairServices = [
         {
           id: 1,
@@ -191,4 +190,3 @@ const RepairPhones = () => {
     };
 
     export default RepairPhones;
-  

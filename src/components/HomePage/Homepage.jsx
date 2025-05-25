@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import './Homepage.css';
 import { useCart } from "../../context/cartContext";
 import { toast } from "react-toastify";
@@ -29,7 +29,21 @@ import sale from '../../assets/sale.png'
 function HomePage() {
     const { addToCart } = useCart();
     const navigate = useNavigate();
+    const location = useLocation(); // Add this to handle navigation state
 
+    // Handle scrolling to services when navigating from another page
+    useEffect(() => {
+        if (location.state?.scrollToServices) {
+            const timer = setTimeout(() => {
+                const servicesSection = document.getElementById('services');
+                if (servicesSection) {
+                    servicesSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+            
+            return () => clearTimeout(timer);
+        }
+    }, [location.state]);
 
     // Comprehensive product data with detailed information
     const products = [

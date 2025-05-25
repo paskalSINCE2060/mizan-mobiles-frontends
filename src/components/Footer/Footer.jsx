@@ -20,10 +20,10 @@ const Footer = () => {
                 <h3>Quick Links</h3>
                 <ul>
                     <li><a href="/">Home</a></li>
-                    <li><a href="/">Shop</a></li>
-                    <li><a href="about">Deals</a></li>
+                    <li><a href="/categories">Shop</a></li>
+                    <li><a href="/specialoffers">Deals</a></li>
                     <li><a href="/contact">Contact</a></li>
-                    <li><a href="#">FAQs</a></li>
+                    <li><a href="/faq">FAQs</a></li>
                 </ul>
             </div>
 
@@ -31,8 +31,8 @@ const Footer = () => {
                 <h3>Contact Us</h3>
                 <ul>
                     <li><FaMapMarkerAlt/> 123 Mobile Street, City, Country</li>
-                    <li>< FaPhone/> +123 456 7890</li>
-                    <li>< FaEnvelope/> support@mizanmobileshop.com</li>
+                    <li><FaPhone/> +123 456 7890</li>
+                    <li><FaEnvelope/> support@mizanmobileshop.com</li>
                 </ul>
             </div>
 
@@ -40,9 +40,9 @@ const Footer = () => {
             <div className="mizan-footer-col">
                 <h3>Follow Us</h3>
                 <div className="mizan-social-icons">
-                    <a href="#">< FaFacebook/></a>
-                    <a href="#">< FaTwitter/></a>
-                    <a href="#">< FaInstagram /></a>
+                    <a href="https://facebook.com/mizanmobile" target="_blank" rel="noopener noreferrer"><FaFacebook/></a>
+                    <a href="https://twitter.com/mizanmobile" target="_blank" rel="noopener noreferrer"><FaTwitter/></a>
+                    <a href="https://instagram.com/mizanmobile" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
                 </div>
             </div>
         </div>
