@@ -1028,3 +1028,9 @@
 .chat-action-btn:hover {
   background-color: #e0e0e0;
 }
+@media screen and (max-width: 618px), screen and (max-height: 651px) {
+  .hero {
+    background: url('../../assets/mobileview.jpg') no-repeat center center;
+    background-size: cover;
+  }
+}
