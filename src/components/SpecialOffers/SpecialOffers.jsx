@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useCart } from '../../context/cartContext';
+import { addToCart } from '../../slice/cartSlice';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import sellPhone from '../../assets/sellPhone.webp';
 import GalaxyWatch7 from '../../assets/GalaxyWatch7.jpeg';
@@ -21,9 +22,7 @@ const SpecialOffers = () => {
   const [showModal, setShowModal] = useState(false);
   const [activeFilter, setActiveFilter] = useState('All Offers');
   const navigate = useNavigate();
-  
-  // Import the cart context
-  const { addToCart: addItemToCart } = useCart();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // This would typically be an API call to fetch offers
@@ -262,33 +261,36 @@ const SpecialOffers = () => {
     setSelectedOffer(null);
   };
 
-  const addToCart = () => {
+  const handleAddToCart = () => {
     if (selectedOffer && selectedOffer.productDetails) {
       const { productDetails } = selectedOffer;
       
       // Calculate the discounted price if there's a discount percentage
       const discountedPrice = productDetails.discountPercentage 
         ? productDetails.price * (1 - productDetails.discountPercentage / 100) 
-        : productDetails.price;
+        : productDetails.discountedPrice || productDetails.price;
       
       // Prepare cart item with discount info
       const cartItem = {
         id: `${selectedOffer.id}-${Date.now()}`, // Unique ID
         name: productDetails.name,
         price: discountedPrice,
-        originalPrice: productDetails.price,
+        originalPrice: productDetails.originalPrice || productDetails.price,
         quantity: 1,
         image: selectedOffer.image,
         promoCode: selectedOffer.promoCode,
         discountApplied: productDetails.discountPercentage > 0,
-        discountPercentage: productDetails.discountPercentage,
+        discountPercentage: productDetails.discountPercentage || 0,
         specialOffer: {
           title: selectedOffer.title,
           description: selectedOffer.description
         }
       };
       
-      addItemToCart(cartItem);
+      // Dispatch the addToCart action using Redux
+      dispatch(addToCart(cartItem));
+      
+      // Show success toast
       toast.success("Added to Cart!", {
         position: "top-right",
         autoClose: 2000,
@@ -298,7 +300,15 @@ const SpecialOffers = () => {
         draggable: true,
         theme: "light",
       });
+      
+      // Close modal
       setShowModal(false);
+      setSelectedOffer(null);
+      
+      // Optional: Navigate to cart page after adding item
+      setTimeout(() => {
+        navigate('/cart');
+      }, 2000); // Wait for toast to show, then navigate
     }
   };
 
@@ -306,10 +316,27 @@ const SpecialOffers = () => {
     if (selectedOffer && selectedOffer.promoCode) {
       navigator.clipboard.writeText(selectedOffer.promoCode)
         .then(() => {
-          alert('Promo code copied to clipboard!');
+          toast.success('Promo code copied to clipboard!', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+          });
         })
         .catch(err => {
           console.error('Failed to copy: ', err);
+          toast.error('Failed to copy promo code', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+          });
         });
     }
   };
@@ -480,7 +507,7 @@ const SpecialOffers = () => {
             </div>
             
             <div className="offer-modal-actions">
-              <button className="add-to-cart-button" onClick={addToCart}>
+              <button className="add-to-cart-button" onClick={handleAddToCart}>
                 Add to Cart with Offer
               </button>
               <button className="continue-shopping-button" onClick={closeModal}>

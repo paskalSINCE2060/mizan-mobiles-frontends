@@ -1,24 +1,27 @@
 import React from 'react';
 import "./Watches.css";
-import watch from '../../src/assets/GalaxyWatchUltra.jpeg';
+import watch from '../../assets/GalaxyWatchUltra.jpeg';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../context/cartContext';
+import { addToCart } from '../../slice/cartSlice';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
 const Watches = () => {
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleAddToCart = (product) => {
-    addToCart({
+    const cartItem=({
       id: product.id,
       name: product.name,
       price: product.price,
       image: watch,
       quantity: 1
     });
+        dispatch(addToCart(cartItem));
+    
     
     toast.success("Added to Cart!", {
       position: "top-right",

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useCart } from "../../context/cartContext";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../slice/cartSlice"; 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
@@ -13,7 +14,7 @@ import iphone13promax from '../../assets/iphone13promax.png';
 const ProductDetails = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { addToCart } = useCart();
+    const dispatch = useDispatch();
     const [activeTab, setActiveTab] = useState("description");
 
     // Scroll to top when component mounts
@@ -116,10 +117,20 @@ const ProductDetails = () => {
 
     // Handle add to cart with toast notification
     const handleAddToCart = (item) => {
-        addToCart({
-            ...item,
-            price: item.discountedPrice
-        });
+        // Ensure the item has required properties for the cart
+        const cartItem = {
+            id: item.id || `${item.name}-${Date.now()}`, // Generate ID if not present
+            name: item.name,
+            price: item.discountedPrice || item.price || 0,
+            image: item.image,
+            originalPrice: item.originalPrice,
+            discountedPrice: item.discountedPrice,
+            description: item.description,
+            specs: item.specs,
+            quantity: 1 // Default quantity
+        };
+
+        dispatch(addToCart(cartItem));
         
         toast.success(`${item.name} added to cart!`, {
             position: "top-right",

@@ -1,18 +1,19 @@
 import React from 'react';
 import "./Tablets.css";
 import tablet from '../../assets/iphone11promax.jpeg';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../../context/cartContext';
+import { addToCart } from '../../slice/cartSlice';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
 const Tablets = () => {
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleAddToCart = (product) => {
-    addToCart({
+    const cartItem=({
       id: product.id,
       name: product.name,
       price: product.price,
@@ -20,6 +21,9 @@ const Tablets = () => {
       quantity: 1
     });
     
+    dispatch(addToCart(cartItem));
+    
+
     toast.success("Added to Cart!", {
       position: "top-right",
       autoClose: 2000,
