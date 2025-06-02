@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from 'react-redux'; 
+import { addToCart as addToCartAction } from '../../slice/cartSlice'; 
+import { useWishlist } from '../../hooks/useWishlist'; // Import the wishlist hook
+import { FaHeart } from 'react-icons/fa'; // Import heart icon
 import './Homepage.css';
-import { useCart } from "../../context/cartContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify"; 
-// Import all necessary images
+
 import iphone11promax from '../../assets/iphone11promax.jpeg'
 import iphone13pro from '../../assets/iphone13pro.jpg'
 import iphone13promax from '../../assets/iphone13promax.png'
@@ -27,9 +30,16 @@ import sellPhone from '../../assets/sellPhone.webp'
 import sale from '../../assets/sale.png'
 
 function HomePage() {
-    const { addToCart } = useCart();
+    // Replace useCart with Redux dispatch
+    const dispatch = useDispatch();
     const navigate = useNavigate();
-    const location = useLocation(); // Add this to handle navigation state
+    const location = useLocation();
+    
+    // Add wishlist functionality
+    const { toggleWishlist, isInWishlist } = useWishlist();
+    
+    // State for wishlist click effect
+    const [clickedWishlistId, setClickedWishlistId] = useState(null);
 
     // Handle scrolling to services when navigating from another page
     useEffect(() => {
@@ -171,6 +181,63 @@ function HomePage() {
         navigate('/productdetails', { state: { product } });
     };
 
+    // Function to handle adding items to cart using Redux
+    const handleAddToCart = (product) => {
+        dispatch(addToCartAction({
+            ...product,
+            price: product.discountedPrice,
+            image: product.image
+        }));
+        
+        toast.success("Added to Cart!", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+        });
+    };
+
+    // Function to handle wishlist toggle with click effect
+    const handleWishlistToggle = (product, e) => {
+        e.stopPropagation(); // Prevent product click navigation
+        
+        // Set clicked effect
+        setClickedWishlistId(product.id);
+        
+        // Remove clicked effect after animation
+        setTimeout(() => {
+            setClickedWishlistId(null);
+        }, 300);
+        
+        const wasInWishlist = isInWishlist(product.id);
+        toggleWishlist(product);
+        
+        if (wasInWishlist) {
+            toast.info("Removed from Wishlist!", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "light",
+            });
+        } else {
+            toast.success("Added to Wishlist!", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "light",
+            });
+        }
+    };
+
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
         { text: "Hi there! How can I help you today?", isBot: true }
@@ -192,15 +259,23 @@ function HomePage() {
     };
     
     const loadChatFromStorage = () => {
-        const savedChat = localStorage.getItem('mizan_chat_history');
-        if (savedChat) {
-            return JSON.parse(savedChat);
+        try {
+            const savedChat = localStorage.getItem('mizan_chat_history');
+            if (savedChat) {
+                return JSON.parse(savedChat);
+            }
+        } catch (error) {
+            console.error('Error loading chat history:', error);
         }
         return [{ text: "Hi there! How can I help you today?", isBot: true }];
     };
 
     const saveChatToStorage = (chatMessages) => {
-        localStorage.setItem('mizan_chat_history', JSON.stringify(chatMessages));
+        try {
+            localStorage.setItem('mizan_chat_history', JSON.stringify(chatMessages));
+        } catch (error) {
+            console.error('Error saving chat history:', error);
+        }
     };
 
     useEffect(() => {
@@ -243,21 +318,21 @@ function HomePage() {
     const sendMessage = (e) => {
         e.preventDefault();
         if (inputText.trim() === '') return;
-  
+
         // Add user message
         const updatedMessages = [...messages, { text: inputText, isBot: false }];
         setMessages(updatedMessages);
-        saveChatToStorage(updatedMessages); // Save after adding user message
+        saveChatToStorage(updatedMessages);
         
         setInputText('');
         setIsTyping(true);
-  
+
         // Simulate bot reply after delay
         setTimeout(() => {
             const botResponse = getBotResponse(inputText);
             const messagesWithBotResponse = [...updatedMessages, { text: botResponse, isBot: true }];
             setMessages(messagesWithBotResponse);
-            saveChatToStorage(messagesWithBotResponse); // Save after adding bot response
+            saveChatToStorage(messagesWithBotResponse);
             setIsTyping(false);
         }, 1000);
     };
@@ -270,26 +345,30 @@ function HomePage() {
     };
 
     const exportChatHistory = () => {
-        const chatData = JSON.stringify(messages, null, 2);
-        const blob = new Blob([chatData], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `mizan_chat_history_${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        toast.success("Chat history exported successfully!");
+        try {
+            const chatData = JSON.stringify(messages, null, 2);
+            const blob = new Blob([chatData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `mizan_chat_history_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            toast.success("Chat history exported successfully!");
+        } catch (error) {
+            console.error('Error exporting chat history:', error);
+            toast.error("Failed to export chat history");
+        }
     };
 
     return (
         <>
-
-<div className="chatbot-container">
-<button className={`chat-toggle-btn ${isOpen ? 'active' : ''}`} onClick={toggleChat}>
+            <div className="chatbot-container">
+                <button className={`chat-toggle-btn ${isOpen ? 'active' : ''}`} onClick={toggleChat}>
                     {isOpen ? (
                         <span>×</span>
                     ) : (
@@ -377,40 +456,121 @@ function HomePage() {
                     </div>
                 </section>
 
-            {/* iPhone Products Section */}
-            <section className="carts-item container">
-                    <h2 className="carts-item">Premium PreLoved Smartphones</h2>
-                    <div className="carts-item product-grid">
-                        {products.map((product) => (
+            {/* iPhone Products Section - UPDATED */}
+<section className="carts-item container">
+    <h2 className="carts-item">Premium PreLoved Smartphones</h2>
+    <div className="carts-item product-grid">
+        {products.map((product) => (
+            <div 
+                key={product.id} 
+                className="carts-item product"
+                onClick={() => handleProductClick(product)}
+            >
+                <div className="product-image-container">
+                    <img src={product.image} alt={product.name} className="carts-item"/>
+                    {/* COMPLETELY NEW WISHLIST BUTTON */}
+                    <button 
+                        className={`wishlist-heart-btn ${isInWishlist(product.id) ? 'active' : ''} ${clickedWishlistId === product.id ? 'clicked' : ''}`}
+                        onClick={(e) => handleWishlistToggle(product, e)}
+                        title={isInWishlist(product.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                    >
+                        <FaHeart />
+                    </button>
+                </div>
+                <h3 className="carts-item">{product.name}</h3>
+                <p className="carts-item price">
+                    <del>NPR {product.originalPrice.toLocaleString()}</del> 
+                    NPR {product.discountedPrice.toLocaleString()}
+                </p>
+                <button 
+                    className="carts-item add-to-cart-btn" 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(product);
+                    }}
+                >
+                    Add to Cart
+                </button>
+            </div>
+        ))}
+    </div>
+</section>
+
+                <div className="why-us-container">
+                    <div className="why-us-content">
+                        <h2>Why us?</h2>
+                        <p>
+                        The products we sell are professionally inspected and thoroughly tested using a full diagnostic testing software. Our skilled professionals make sure that the products that reach your doorsteps are always in a pristine condition.
+                        </p>
+                    </div>
+                    <div className="why-us-features">
+                        <div className="why-us-feature">
+                        <div className="why-us-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                            </svg>
+                        </div>
+                        <div className="why-us-feature-content">
+                            <h3>Product you can trust</h3>
+                            <p>You'll always have a tested and certified latest piece of tech and a Happy Wallet all the time.</p>
+                        </div>
+                        </div>
+                        <div className="why-us-feature">
+                        <div className="why-us-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div className="why-us-feature-content">
+                            <h3>Quality you can rely on</h3>
+                            <p>Our working professionals make sure that the utmost quality products are always in a top-notch condition.</p>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <section className="different-equipment container">
+                    <h2 className="different-equipment">Multi Buy Offer</h2>
+                    <p className="different-equipment offer-text">Get up to 30% off selected Galaxy products on selected Watches, Tablets, Buds and more</p>
+                    <div className="different-equipment product-grid">
+                        {galaxyProducts.map((product) => (
                             <div 
                                 key={product.id} 
-                                className="carts-item product"
+                                className="different-equipment product"
                                 onClick={() => handleProductClick(product)}
                             >
-                                <img src={product.image} alt={product.name} className="carts-item"/>
-                                <h3 className="carts-item">{product.name}</h3>
-                                <p className="carts-item price">
-                                    <del>NPR {product.originalPrice.toLocaleString()}</del> 
+                                <div className="product-image-container">
+                                    <img src={product.image} alt={product.name} className="different-equipment"/>
+                                    <button 
+                                        className={`wishlist-btn ${isInWishlist(product.id) ? 'active' : ''} ${clickedWishlistId === product.id ? 'clicked' : ''}`}
+                                        onClick={(e) => handleWishlistToggle(product, e)}
+                                        title={isInWishlist(product.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                                    >
+                                        <FaHeart />
+                                    </button>
+                                </div>
+                                <h3 className="different-equipment">{product.name}</h3>
+                                <p className="different-equipment color">
+                                    <strong>Color:</strong> {product.color}
+                                </p>
+                                <div className="different-equipment color-options">
+                                    <span className="different-equipment color-circle blue selected"></span>
+                                    <span className="different-equipment color-circle gray"></span>
+                                </div>
+                                <p className="different-equipment price">
                                     NPR {product.discountedPrice.toLocaleString()}
                                 </p>
+                                <p className="different-equipment discount">
+                                    <del>NPR {product.originalPrice.toLocaleString()}</del> 
+                                    <span className="different-equipment save">
+                                        Save NPR {(product.originalPrice - product.discountedPrice).toLocaleString()}
+                                    </span>
+                                </p>
                                 <button 
-                                    className="carts-item" 
+                                    className="different-equipment add-button"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        addToCart({
-                                            ...product,
-                                            price: product.discountedPrice,
-                                            image: product.image
-                                        })
-                                        toast.success("Added to Cart!", {
-                                            position: "top-right",
-                                            autoClose: 2000,
-                                            hideProgressBar: false,
-                                            closeOnClick: true,
-                                            pauseOnHover: true,
-                                            draggable: true,
-                                            theme: "light",
-                                        });
+                                        handleAddToCart(product);
                                     }}
                                 >
                                     Add to Cart
@@ -420,197 +580,102 @@ function HomePage() {
                     </div>
                 </section>
 
-            <div className="why-us-container">
-                <div className="why-us-content">
-                    <h2>Why us?</h2>
-                    <p>
-                    The products we sell are professionally inspected and thoroughly tested using a full diagnostic testing software. Our skilled professionals make sure that the products that reach your doorsteps are always in a pristine condition.
-                    </p>
-                </div>
-                <div className="why-us-features">
-                    <div className="why-us-feature">
-                    <div className="why-us-feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                        </svg>
+                {/* Valentine's Day Banner */}
+                <header className="banner-content-header">
+                    <div className="banner-content-banner">
+                        <img src={hero_image} alt="Valentine's Day Sale Banner"/>
                     </div>
-                    <div className="why-us-feature-content">
-                        <h3>Product you can trust</h3>
-                        <p>You'll always have a tested and certified latest piece of tech and a Happy Wallet all the time.</p>
-                    </div>
-                    </div>
-                    <div className="why-us-feature">
-                    <div className="why-us-feature-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div className="why-us-feature-content">
-                        <h3>Quality you can rely on</h3>
-                        <p>Our working professionals make sure that the utmost quality products are always in a top-notch condition.</p>
-                    </div>
-                    </div>
-                </div>
-            </div>
+                </header>
 
-
-            <section className="different-equipment container">
-                <h2 className="different-equipment">Multi Buy Offer</h2>
-                <p className="different-equipment offer-text">Get up to 30% off selected Galaxy products on selected Watches, Tablets, Buds and more</p>
-                <div className="different-equipment product-grid">
-                    {galaxyProducts.map((product) => (
-                        <div 
-                            key={product.id} 
-                            className="different-equipment product"
-                            onClick={() => handleProductClick(product)}
-                        >
-                            <img src={product.image} alt={product.name} className="different-equipment"/>
-                            <h3 className="different-equipment">{product.name}</h3>
-                            <p className="different-equipment color">
-                                <strong>Color:</strong> {product.color}
-                            </p>
-                            <div className="different-equipment color-options">
-                                <span className="different-equipment color-circle blue selected"></span>
-                                <span className="different-equipment color-circle gray"></span>
+                {/* Services Section */}
+                <section className="banner-content-services" id="services">
+                    <h2>Our Services</h2>
+                    <div className="banner-content-services-container">
+                        {[
+                            { img: sellPhone, text: 'Sell Phone' },
+                            { img: buyPhone, text: 'Buy Phone' },
+                            { img: buylaptops, text: 'Buy Laptops' },
+                            { img: repairphone, text: 'Repair Phone' },
+                            { img: repairLaptop, text: 'Repair Laptop' },
+                            { img: findnewphone, text: 'Find New Phone' },
+                            { img: nearbystore, text: 'Nearby Stores' },
+                            { img: buySmartWatches, text: 'Buy Smartwatches' },
+                            { img: recycle, text: 'Recycle' }
+                        ].map((service, index) => (
+                            <div key={index} className="banner-content-service">
+                                <img src={service.img} alt={service.text}/>
+                                <p>{service.text}</p>
                             </div>
-                            <p className="different-equipment price">
-                                NPR {product.discountedPrice.toLocaleString()}
+                        ))}
+                    </div>
+                </section>
+
+                <div className="sell-your-smartphone-container">
+                    <div className="sell-your-smartphone-wrapper">
+                        <div className="sell-your-smartphone-content">
+                            <h1 className="sell-your-smartphone-title">Wanna Sell Your Smartphone?</h1>
+                            <p className="sell-your-smartphone-description">
+                                Get Instant Valuation in just a minute. Just enter your device's true condition and get a price quote. 
+                                Get Door-step Pickup with Same Day Payment Guaranteed.
                             </p>
-                            <p className="different-equipment discount">
-                                <del>NPR {product.originalPrice.toLocaleString()}</del> 
-                                <span className="different-equipment save">
-                                    Save NPR {(product.originalPrice - product.discountedPrice).toLocaleString()}
-                                </span>
-                            </p>
-                            <button 
-                                className="different-equipment add-button"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    addToCart({
-                                        ...product,
-                                        price: product.discountedPrice,
-                                        image: product.image
-                                    })
-                                    toast.success("Added to Cart!", {
-                                        position: "top-right",
-                                        autoClose: 2000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        theme: "light",
-                                    });
-                                }}
-                            >
-                                Add to Cart
-                            </button>
+                            <a href="/sellyourphone">
+                            <button className="sell-your-smartphone-cta">Sell Now</button>
+                            </a>
                         </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Valentine's Day Banner */}
-            <header className="banner-content-header">
-                <div className="banner-content-banner">
-                    <img src={hero_image} alt="Valentine's Day Sale Banner"/>
-                </div>
-            </header>
-
-            {/* Services Section */}
-            <section className="banner-content-services" id="services">
-                <h2>Our Services</h2>
-                <div className="banner-content-services-container">
-                    {[
-                        { img: sellPhone, text: 'Sell Phone' },
-                        { img: buyPhone, text: 'Buy Phone' },
-                        { img: buylaptops, text: 'Buy Laptops' },
-                        { img: repairphone, text: 'Repair Phone' },
-                        { img: repairLaptop, text: 'Repair Laptop' },
-                        { img: findnewphone, text: 'Find New Phone' },
-                        { img: nearbystore, text: 'Nearby Stores' },
-                        { img: buySmartWatches, text: 'Buy Smartwatches' },
-                        { img: recycle, text: 'Recycle' }
-                    ].map((service, index) => (
-                        <div key={index} className="banner-content-service">
-                            <img src={service.img} alt={service.text}/>
-                            <p>{service.text}</p>
+                        <div className="sell-your-smartphone-devices">
+                            <img src={sale} alt="" />
                         </div>
-                    ))}
+                    </div>
                 </div>
-            </section>
 
-
-            <div className="sell-your-smartphone-container">
-                <div className="sell-your-smartphone-wrapper">
-                    <div className="sell-your-smartphone-content">
-                        <h1 className="sell-your-smartphone-title">Wanna Sell Your Smartphone?</h1>
-                        <p className="sell-your-smartphone-description">
-                            Get Instant Valuation in just a minute. Just enter your device's true condition and get a price quote. 
-                            Get Door-step Pickup with Same Day Payment Guaranteed.
-                        </p>
-                        <a href="/sellyourphone">
-                        <button className="sell-your-smartphone-cta">Sell Now</button>
+                <div className="marketplace-container">
+                    <h1 className="marketplace-title">Buy + Sell + Save</h1>
+                    
+                    <div className="product-categories">
+                        <a href="/smartphone"
+                        className="category">
+                        <div className="category">
+                               <h2>Phones + iPhones</h2>
+                              <div className="product-image">
+                                <img src={sellPhone} alt="Phone Collection"/>
+                              </div>
+                             <div className="category-stats">
+                             <span className="listings">15996 approved listings</span>
+                            <span className="sellers">1398 legit sellers</span>
+                            </div>
+                         </div>                        
+                        </a>
+                        
+                        <a href="/tablets"
+                        className="category">
+                        <div className="category">
+                            <h2>MacBooks + Laptops</h2>
+                            <div className="product-image">
+                                <img src={buylaptops} alt="Laptop Collection"/>
+                            </div>
+                            <div className="category-stats">
+                                <span className="listings">1022 approved listings</span>
+                                <span className="sellers">450 legit sellers</span>
+                            </div>
+                        </div>
+                        </a>
+                        
+                        <a href="/watches"
+                        className="category">
+                        <div className="category">
+                            <h2>Watches</h2>
+                            <div className="product-image">
+                                <img src={galaxybuds3} alt="Watch Collection" />
+                            </div>
+                            <div className="category-stats">
+                                <span className="listings">1017 approved listings</span>
+                                <span className="sellers">271 legit sellers</span>
+                            </div>
+                        </div>
                         </a>
                     </div>
-                    <div className="sell-your-smartphone-devices">
-                        <img src={sale} alt="" />
-                    </div>
-                </div>
-             </div>
-
-
-
-             <div className="marketplace-container">
-                <h1 className="marketplace-title">Buy + Sell + Save</h1>
-                
-                <div className="product-categories">
-                    <a href="/smartphone"
-                    className="category">
-                    <div className="category">
-                           <h2>Phones + iPhones</h2>
-                          <div className="product-image">
-                            <img src={sellPhone} alt="Phone Collection"/>
-                          </div>
-                         <div className="category-stats">
-                         <span className="listings">15996 approved listings</span>
-                        <span className="sellers">1398 legit sellers</span>
-                        </div>
-                     </div>                        
-                    </a>
-                    
-                    <a href="/tablets"
-                    className="category">
-                    <div className="category">
-                        <h2>MacBooks + Laptops</h2>
-                        <div className="product-image">
-                            <img src={buylaptops} alt="Laptop Collection"/>
-                        </div>
-                        <div className="category-stats">
-                            <span className="listings">1022 approved listings</span>
-                            <span className="sellers">450 legit sellers</span>
-                        </div>
-                    </div>
-                    </a>
-                    
-                    <a href="/watches"
-                    className="category">
-                    <div className="category">
-                        <h2>Watches</h2>
-                        <div className="product-image">
-                            <img src={galaxybuds3} alt="Watch Collection" />
-                        </div>
-                        <div className="category-stats">
-                            <span className="listings">1017 approved listings</span>
-                            <span className="sellers">271 legit sellers</span>
-                        </div>
-                    </div>
-                    </a>
                 </div>
             </div>
-
-
-
-        </div>
         </>
     );
 }

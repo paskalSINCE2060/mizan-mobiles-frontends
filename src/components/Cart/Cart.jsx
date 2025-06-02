@@ -1,19 +1,77 @@
 import React from 'react';
-import { useCart } from '../../context/cartContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { 
+  removeFromCart, 
+  updateQuantity, 
+  clearCart,
+  selectCartItems,
+  selectCartSubtotal,
+  selectCartTotal
+} from '../../slice/cartSlice'; 
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import './Cart.css';
 
 const Cart = () => {
-  const { 
-    cartItems, 
-    removeFromCart, 
-    updateQuantity, 
-    clearCart,
-    calculateSubtotal,
-    calculateTotal
-  } = useCart();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const cartItems = useSelector(selectCartItems);
+  const subtotal = useSelector(selectCartSubtotal);
+  const total = useSelector(selectCartTotal);
+
+  const handleRemoveFromCart = (id) => {
+    dispatch(removeFromCart(id));
+    toast.success("Item removed from cart", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "light",
+    });
+  };
+
+  const handleUpdateQuantity = (id, quantity) => {
+    if (quantity > 0) {
+      dispatch(updateQuantity({ id, quantity }));
+      toast.info("Quantity updated", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    }
+  };
+
+  const handleClearCart = () => {
+    if (window.confirm('Are you sure you want to clear your cart?')) {
+      dispatch(clearCart());
+      toast.success("Cart cleared", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      });
+    }
+  };
 
   const proceedToCheckout = () => {
-    window.location.href = '/checkout';
+    navigate('/checkout');
+  };
+
+  const continueShopping = () => {
+    navigate('/');
+  };
+
+  const goToOffers = () => {
+    navigate('/specialoffers');
   };
 
   return (
@@ -48,6 +106,14 @@ const Cart = () => {
                           </span>
                         </div>
                       )}
+                      {/* Show special offer title if available */}
+                      {item.specialOffer && (
+                        <div className="cart-items-offer-title">
+                          <span className="cart-items-offer-name">
+                            {item.specialOffer.title}
+                          </span>
+                        </div>
+                      )}
                       {/* Show promo code if available */}
                       {item.promoCode && (
                         <div className="cart-items-promo-code">
@@ -56,7 +122,7 @@ const Cart = () => {
                       )}
                       <button 
                         className="cart-items-remove-btn" 
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => handleRemoveFromCart(item.id)}
                       >
                         <span className="cart-items-remove-icon">🗑</span> Remove
                       </button>
@@ -81,14 +147,14 @@ const Cart = () => {
                   
                   <div className="cart-items-quantity-controls">
                     <button 
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
                       disabled={item.quantity <= 1}
                     >
                       -
                     </button>
                     <span>{item.quantity}</span>
                     <button 
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
                     >
                       +
                     </button>
@@ -101,23 +167,34 @@ const Cart = () => {
               ))}
               
               <div className="cart-items-cart-actions">
-                <button className="cart-items-clear-cart" onClick={clearCart}>
+                <button className="cart-items-clear-cart" onClick={handleClearCart}>
                   Clear Cart
                 </button>
                 <button 
                   className="cart-items-continue-shopping" 
-                  onClick={() => window.location.href = '/'}
+                  onClick={continueShopping}
                 >
                   Continue Shopping
+                </button>
+                <button 
+                  className="cart-items-special-offers" 
+                  onClick={goToOffers}
+                >
+                  View Special Offers
                 </button>
               </div>
             </>
           ) : (
             <div className="cart-items-empty-cart">
-              <p>Your cart is empty</p>
-              <button onClick={() => window.location.href = '/'}>
-                Continue Shopping
-              </button>
+              <div className="cart-items-empty-icon">🛒</div>
+              <h2>Your cart is empty</h2>
+              <p>Looks like you haven't added anything to your cart yet.</p>
+              <div className="cart-items-empty-actions">
+                <button onClick={continueShopping}>
+                  Continue Shopping
+                </button>
+
+              </div>
             </div>
           )}
         </div>
@@ -126,19 +203,19 @@ const Cart = () => {
           <h2>Order Summary</h2>
           <div className="cart-items-summary-row">
             <span>Subtotal</span>
-            <span>NPR {calculateSubtotal().toLocaleString()}</span>
+            <span>NPR {subtotal.toLocaleString()}</span>
           </div>
           <div className="cart-items-summary-row">
             <span>Shipping</span>
             <span>NPR 15.00</span>
           </div>
           <div className="cart-items-summary-row">
-            <span>Tax</span>
-            <span>NPR {(calculateSubtotal() * 0.08).toLocaleString()}</span>
+            <span>Tax (8%)</span>
+            <span>NPR {(subtotal * 0.08).toLocaleString()}</span>
           </div>
           <div className="cart-items-summary-row cart-items-total">
             <span>Total</span>
-            <span>NPR {calculateTotal().toLocaleString()}</span>
+            <span>NPR {total.toLocaleString()}</span>
           </div>
           
           {/* Display active promotions section if any discounted items exist */}
@@ -150,10 +227,20 @@ const Cart = () => {
                 .map(item => (
                   <div key={`promo-${item.id}`} className="cart-items-promotion-item">
                     <span>{item.specialOffer?.title || `${item.discountPercentage}% Off`}</span>
-                    <span>-NPR {((item.originalPrice - item.price) * item.quantity).toLocaleString()}</span>
+                    <span className="cart-items-savings">
+                      -NPR {((item.originalPrice - item.price) * item.quantity).toLocaleString()}
+                    </span>
                   </div>
                 ))
               }
+              <div className="cart-items-total-savings">
+                <strong>
+                  Total Savings: NPR {cartItems
+                    .filter(item => item.discountApplied)
+                    .reduce((total, item) => total + ((item.originalPrice - item.price) * item.quantity), 0)
+                    .toLocaleString()}
+                </strong>
+              </div>
             </div>
           )}
           
@@ -166,9 +253,19 @@ const Cart = () => {
           </button>
           
           <div className="cart-items-additional-info">
-            <p>Free shipping on all orders over NPR 200</p>
-            <p>30-day money-back guarantee</p>
-            <p>Secure payments</p>
+            <p>✓ Free shipping on all orders over NPR 200</p>
+            <p>✓ 30-day money-back guarantee</p>
+            <p>✓ Secure payments</p>
+            <p>✓ 24/7 customer support</p>
+          </div>
+          
+          {/* Promotional banner for more offers */}
+          <div className="cart-items-promo-banner">
+            <h4>🎉 Don't miss out!</h4>
+            <p>Check out our special offers for more savings</p>
+            <button onClick={goToOffers} className="cart-items-promo-btn">
+              View All Offers
+            </button>
           </div>
         </div>
       </div>

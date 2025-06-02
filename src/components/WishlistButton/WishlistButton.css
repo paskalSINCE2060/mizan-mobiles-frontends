@@ -1,0 +1,31 @@
+.wishlist-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.wishlist-btn:hover {
+  background-color: rgba(255, 71, 87, 0.1);
+  transform: scale(1.1);
+}
+
+.wishlist-btn.active {
+  animation: heartbeat 0.6s ease-in-out;
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.wishlist-btn svg {
+  transition: all 0.3s ease;
+}

@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/cartContext';
 import './Checkout.css';
 import { CreditCard, Truck, User, CheckCircle, ChevronRight } from 'lucide-react';
 
 const Checkout = () => {
   const { cartItems, calculateSubtotal, clearCart } = useCart();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '',
@@ -17,9 +19,38 @@ const Checkout = () => {
     cardCvv: ''
   });
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const shippingCharge = 15.00;
   const taxRate = 0.08; // 8% tax rate
+
+  // Check if user is logged in on component mount
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!storedUser) {
+      // Show toast notification
+      setShowToast(true);
+      
+      // Hide toast after 3 seconds and redirect
+      setTimeout(() => {
+        setShowToast(false);
+        navigate('/login');
+      }, 3000);
+    }
+  }, [navigate]);
+
+  // Toast component
+  const Toast = ({ message, show }) => {
+    if (!show) return null;
+    
+    return (
+      <div className="toast-notification">
+        <div className="toast-content">
+          <span>{message}</span>
+        </div>
+      </div>
+    );
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -71,8 +102,24 @@ const Checkout = () => {
     return subtotal + shippingCharge + (subtotal * taxRate);
   };
 
+  // Check if user is logged in before rendering checkout content
+  const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  if (!storedUser) {
+    return (
+      <div className="Checkout-page">
+        <Toast message="Please login to checkout!" show={showToast} />
+        <div className="Checkout-page-container" style={{ textAlign: 'center', padding: '50px' }}>
+          <h2>Redirecting to login...</h2>
+          <p>You need to be logged in to access the checkout page.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="Checkout-page">
+      <Toast message="Please login to checkout!" show={showToast} />
+      
       <header className="Checkout-page-header">
         <div className="Checkout-page-container">
           <h1>Checkout</h1>

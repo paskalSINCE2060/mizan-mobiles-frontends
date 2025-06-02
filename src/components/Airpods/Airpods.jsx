@@ -1,24 +1,29 @@
 import React from 'react';
 import "./Airpods.css";
 import airpodsImage from '../../assets/GalaxyBuds3Pro.jpeg';
-import { useCart } from '../../context/cartContext';
+import { addToCart } from '../../slice/cartSlice';
+import { useDispatch } from 'react-redux';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
 const Airpods = () => {
-  const { addToCart } = useCart();
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleAddToCart = (product) => {
-    addToCart({
+    const cartItem=({
       id: product.id,
       name: product.name,
       price: product.price,
       image: airpodsImage,
       quantity: 1
     });
+
+    dispatch(addToCart(cartItem));
+    
     
     toast.success("Added to Cart!", {
       position: "top-right",

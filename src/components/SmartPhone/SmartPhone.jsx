@@ -1,24 +1,36 @@
 import React from 'react';
 import sellPhone from '../../assets/sellPhone.webp';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../../context/cartContext';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../slice/cartSlice'; // Adjust path as needed
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import "./SmartPhone.css";
 
 const SmartPhone = () => {
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleAddToCart = (product) => {
-    addToCart({
+    const cartItem = {
       id: product.id,
       name: product.name,
       price: product.price,
       image: sellPhone,
+      originalPrice: product.oldPrice,
+      discountedPrice: product.price,
+      description: `The ${product.name} is a high-end smartphone with cutting-edge features and performance.`,
+      specs: {
+        storage: '128GB',
+        display: '6.1-inch Super Retina XDR',
+        battery: 'Up to 24 hours video playback',
+        camera: 'Triple 12MP camera system'
+      },
       quantity: 1
-    });
+    };
+
+    dispatch(addToCart(cartItem));
     
     toast.success("Added to Cart!", {
       position: "top-right",

@@ -1,20 +1,25 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { FaSearch, FaUser, FaShoppingCart } from "react-icons/fa";
+import { FaSearch, FaUser, FaShoppingCart, FaHeart } from "react-icons/fa";
 import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
-import { useCart } from '../../context/cartContext';
+import { useSelector } from 'react-redux';
+import { selectCartItemsCount } from '../../slice/cartSlice';
+import { selectWishlistCount } from '../../slice/wishlistSlice'; // Import wishlist selector
 import "./Navbar.css";
 
 function Navbar({ userData, setUserData }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchRecommendations, setSearchRecommendations] = useState([]);
-  const { cartCount } = useCart();
+  
+  // Use Redux selectors for both cart and wishlist
+  const cartCount = useSelector(selectCartItemsCount);
+  const wishlistCount = useSelector(selectWishlistCount); // Use Redux selector instead of local state
+  
   const navigate = useNavigate();
   const location = useLocation();
   const navRef = useRef(null);
   const searchRef = useRef(null);
 
-  // Move allProducts outside component or use useMemo to memoize it
   const allProducts = useMemo(() => [
     { id: 'iphone14-256gb', name: 'Apple iPhone 14 Pro Max [256GB]', category: 'iPhone', image: '/path/to/iphone14.jpg', discountedPrice: 111500.00 },
     { id: 'iphone13pro-256gb', name: 'Apple iPhone 13 Pro Max [256GB]', category: 'iPhone', image: '/path/to/iphone13pro.jpg', discountedPrice: 91500.00 },
@@ -184,14 +189,22 @@ function Navbar({ userData, setUserData }) {
         </div>
         
         <div className="right-icons">
+          {/* Wishlist icon */}
+          <RouterLink to="/wishlist" className={`wishlist-icon ${isLinkActive('/wishlist') ? 'active-link' : ''}`}>
+            <FaHeart />
+            {wishlistCount > 0 && <span className="wishlist-count">{wishlistCount}</span>}
+          </RouterLink>
+          
+          {/* Cart icon */}
+          <RouterLink to="/cart" className={`cart-icon ${isLinkActive('/cart') ? 'active-link' : ''}`}>
+            <FaShoppingCart />
+            {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+          </RouterLink>
+          
           {userData ? (
             <>
               <RouterLink to="/profile" className={isLinkActive('/profile') ? 'active-link' : ''}>
                 <FaUser />
-              </RouterLink>
-              <RouterLink to="/cart" className={`cart-icon ${isLinkActive('/cart') ? 'active-link' : ''}`}>
-                <FaShoppingCart />
-                {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
               </RouterLink>
               <button onClick={handleLogout} className="logout-btn">
                 Logout
@@ -293,6 +306,26 @@ function Navbar({ userData, setUserData }) {
               onClick={() => setIsOpen(false)}
             >
               Contact
+            </RouterLink>
+          </li>
+          
+          {/* Mobile menu items for wishlist and cart */}
+          <li className="mobile-only">
+            <RouterLink 
+              to="/wishlist" 
+              className={isLinkActive('/wishlist') ? 'active-link' : ''}
+              onClick={() => setIsOpen(false)}
+            >
+              Wishlist {wishlistCount > 0 && `(${wishlistCount})`}
+            </RouterLink>
+          </li>
+          <li className="mobile-only">
+            <RouterLink 
+              to="/cart" 
+              className={isLinkActive('/cart') ? 'active-link' : ''}
+              onClick={() => setIsOpen(false)}
+            >
+              Cart {cartCount > 0 && `(${cartCount})`}
             </RouterLink>
           </li>
         </ul>
