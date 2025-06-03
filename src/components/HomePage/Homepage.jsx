@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from 'react-redux'; 
 import { addToCart as addToCartAction } from '../../slice/cartSlice'; 
 import { useWishlist } from '../../hooks/useWishlist'; // Import the wishlist hook
-import { FaHeart } from 'react-icons/fa'; // Import heart icon
+import { FaHeart, FaRegHeart } from 'react-icons/fa'; // Import heart icons
 import './Homepage.css';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -36,10 +36,11 @@ function HomePage() {
     const location = useLocation();
     
     // Add wishlist functionality
-    const { toggleWishlist, isInWishlist } = useWishlist();
+    const { toggleWishlist, isInWishlist, wishlistItems } = useWishlist();
     
-    // State for wishlist click effect
+    // State for wishlist click effect and animations
     const [clickedWishlistId, setClickedWishlistId] = useState(null);
+    const [wishlistAnimations, setWishlistAnimations] = useState({});
 
     // Handle scrolling to services when navigating from another page
     useEffect(() => {
@@ -200,42 +201,49 @@ function HomePage() {
         });
     };
 
-    // Function to handle wishlist toggle with click effect
+    // Enhanced function to handle wishlist toggle with animations
     const handleWishlistToggle = (product, e) => {
         e.stopPropagation(); // Prevent product click navigation
         
         // Set clicked effect
         setClickedWishlistId(product.id);
         
-        // Remove clicked effect after animation
+        // Add animation class
+        setWishlistAnimations(prev => ({
+            ...prev,
+            [product.id]: 'animate'
+        }));
+        
+        // Remove clicked effect and animation after duration
         setTimeout(() => {
             setClickedWishlistId(null);
-        }, 300);
+            setWishlistAnimations(prev => ({
+                ...prev,
+                [product.id]: ''
+            }));
+        }, 600);
         
-        const wasInWishlist = isInWishlist(product.id);
         toggleWishlist(product);
         
-        if (wasInWishlist) {
-            toast.info("Removed from Wishlist!", {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                theme: "light",
-            });
-        } else {
-            toast.success("Added to Wishlist!", {
-                position: "top-right",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                theme: "light",
-            });
-        }
+    };
+
+    // Wishlist component for rendering wishlist button
+    const WishlistButton = ({ product, className = "" }) => {
+        const isWishlisted = isInWishlist(product.id);
+        const isClicked = clickedWishlistId === product.id;
+        const animationClass = wishlistAnimations[product.id] || '';
+        
+        return (
+            <button 
+                className={`wishlist-btn ${isWishlisted ? 'active' : ''} ${isClicked ? 'clicked' : ''} ${animationClass} ${className}`}
+                onClick={(e) => handleWishlistToggle(product, e)}
+                title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                aria-label={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+            >
+                {isWishlisted ? <FaHeart /> : <FaRegHeart />}
+                <span className="wishlist-ripple"></span>
+            </button>
+        );
     };
 
     const [isOpen, setIsOpen] = useState(false);
@@ -310,6 +318,8 @@ function HomePage() {
             return "Yes, we buy used smartphones! Click the 'Sell Now' button to get an instant valuation for your device.";
         } else if (lowerCaseMsg.includes('condition') || lowerCaseMsg.includes('quality')) {
             return "All our pre-loved products are professionally inspected and thoroughly tested. We guarantee they're in excellent working condition.";
+        } else if (lowerCaseMsg.includes('wishlist')) {
+            return `You have ${wishlistItems.length} items in your wishlist. You can view and manage your wishlist by clicking the heart icon on any product.`;
         } else {
             return "Thanks for your message. If you have questions about our products or services, please let me know specifically what you're looking for.";
         }
@@ -456,45 +466,38 @@ function HomePage() {
                     </div>
                 </section>
 
-            {/* iPhone Products Section - UPDATED */}
-<section className="carts-item container">
-    <h2 className="carts-item">Premium PreLoved Smartphones</h2>
-    <div className="carts-item product-grid">
-        {products.map((product) => (
-            <div 
-                key={product.id} 
-                className="carts-item product"
-                onClick={() => handleProductClick(product)}
-            >
-                <div className="product-image-container">
-                    <img src={product.image} alt={product.name} className="carts-item"/>
-                    {/* COMPLETELY NEW WISHLIST BUTTON */}
-                    <button 
-                        className={`wishlist-heart-btn ${isInWishlist(product.id) ? 'active' : ''} ${clickedWishlistId === product.id ? 'clicked' : ''}`}
-                        onClick={(e) => handleWishlistToggle(product, e)}
-                        title={isInWishlist(product.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
-                    >
-                        <FaHeart />
-                    </button>
-                </div>
-                <h3 className="carts-item">{product.name}</h3>
-                <p className="carts-item price">
-                    <del>NPR {product.originalPrice.toLocaleString()}</del> 
-                    NPR {product.discountedPrice.toLocaleString()}
-                </p>
-                <button 
-                    className="carts-item add-to-cart-btn" 
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleAddToCart(product);
-                    }}
-                >
-                    Add to Cart
-                </button>
-            </div>
-        ))}
-    </div>
-</section>
+                {/* iPhone Products Section - UPDATED WITH WISHLIST */}
+                <section className="carts-item container">
+                    <h2 className="carts-item">Premium PreLoved Smartphones</h2>
+                    <div className="carts-item product-grid">
+                        {products.map((product) => (
+                            <div 
+                                key={product.id} 
+                                className="carts-item product"
+                                onClick={() => handleProductClick(product)}
+                            >
+                                <div className="product-image-container">
+                                    <img src={product.image} alt={product.name} className="carts-item"/>
+                                    <WishlistButton product={product} className="wishlist-button"  />
+                                </div>
+                                <h3 className="carts-item">{product.name}</h3>
+                                <p className="carts-item price">
+                                    <del>NPR {product.originalPrice.toLocaleString()}</del> 
+                                    NPR {product.discountedPrice.toLocaleString()}
+                                </p>
+                                <button 
+                                    className="carts-item add-to-cart-btn" 
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddToCart(product);
+                                    }}
+                                >
+                                    Add to Cart
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </section>
 
                 <div className="why-us-container">
                     <div className="why-us-content">
@@ -541,13 +544,7 @@ function HomePage() {
                             >
                                 <div className="product-image-container">
                                     <img src={product.image} alt={product.name} className="different-equipment"/>
-                                    <button 
-                                        className={`wishlist-btn ${isInWishlist(product.id) ? 'active' : ''} ${clickedWishlistId === product.id ? 'clicked' : ''}`}
-                                        onClick={(e) => handleWishlistToggle(product, e)}
-                                        title={isInWishlist(product.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
-                                    >
-                                        <FaHeart />
-                                    </button>
+                                    <WishlistButton product={product} className="wishlist-button" />
                                 </div>
                                 <h3 className="different-equipment">{product.name}</h3>
                                 <p className="different-equipment color">
