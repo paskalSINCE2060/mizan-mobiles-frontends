@@ -8,7 +8,7 @@
 
 .contact-us {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
+  /* background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%); */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,7 +98,8 @@
 
 .subtitle {
   font-size: 1.25rem;
-  color: #d1d5db;
+  color: linear-gradient(135deg, #60a5fa, #a855f7, #ec4899);
+;
   max-width: 32rem;
   margin: 0 auto;
   line-height: 1.6;
@@ -107,6 +108,7 @@
 /* Content Layout */
 .contact-content {
   display: grid;
+  /* background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%); */
   grid-template-columns: 2fr 3fr;
   gap: 3rem;
 }
@@ -114,11 +116,13 @@
 /* Contact Information Section */
 .contact-info-section {
   display: flex;
+  /* background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%); */
+
   flex-direction: column;
 }
 
 .contact-info-card {
-  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
   backdrop-filter: blur(20px);
   border-radius: 1.5rem;
   padding: 2rem;
@@ -282,7 +286,7 @@
 }
 
 .contact-form-card {
-  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
   backdrop-filter: blur(20px);
   border-radius: 1.5rem;
   padding: 2rem;
@@ -298,6 +302,7 @@
 
 .form-row {
   display: grid;
+  /* background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%); */
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
 }
@@ -497,6 +502,7 @@
 
   .form-container {
     gap: 1rem;
+    
   }
 
   .form-group input,
