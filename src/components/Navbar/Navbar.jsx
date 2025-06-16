@@ -1,24 +1,27 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { FaSearch, FaUser, FaShoppingCart, FaHeart } from "react-icons/fa";
 import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useSelector} from 'react-redux'; // <-- added useDispatch here
 import { selectCartItemsCount } from '../../slice/cartSlice';
-import { selectWishlistCount } from '../../slice/wishlistSlice'; // Import wishlist selector
+import { selectWishlistCount } from '../../slice/wishlistSlice';
+// import { logout } from '../../slice/authSlice';
+import LogoutButton from '../common/LogoutButton'; // Adjust path if needed
 import "./Navbar.css";
 
-function Navbar({ userData, setUserData }) {
+function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchRecommendations, setSearchRecommendations] = useState([]);
   
-  // Use Redux selectors for both cart and wishlist
   const cartCount = useSelector(selectCartItemsCount);
-  const wishlistCount = useSelector(selectWishlistCount); // Use Redux selector instead of local state
+  const wishlistCount = useSelector(selectWishlistCount);
+  const userData = useSelector(state => state.auth.user);
   
   const navigate = useNavigate();
   const location = useLocation();
   const navRef = useRef(null);
   const searchRef = useRef(null);
+  // const dispatch = useDispatch();
 
   const allProducts = useMemo(() => [
     { id: 'iphone14-256gb', name: 'Apple iPhone 14 Pro Max [256GB]', category: 'iPhone', image: '/path/to/iphone14.jpg', discountedPrice: 111500.00 },
@@ -43,32 +46,27 @@ function Navbar({ userData, setUserData }) {
     }
   }, [searchQuery, allProducts]);
 
-  // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (isOpen && navRef.current && !navRef.current.contains(event.target)) {
         setIsOpen(false);
       }
-      
       if (searchRecommendations.length > 0 && 
           searchRef.current && 
           !searchRef.current.contains(event.target)) {
         setSearchRecommendations([]);
       }
     }
-    
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen, searchRecommendations.length]);
 
-  // Close menu on window resize
   useEffect(() => {
     function handleResize() {
       if (window.innerWidth > 768 && isOpen) {
         setIsOpen(false);
       }
     }
-    
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [isOpen]);
@@ -78,18 +76,15 @@ function Navbar({ userData, setUserData }) {
   };
 
   const handleScrollToServices = () => {
-    // Check if we're already on the homepage
     if (location.pathname === "/") {
-      // If already on homepage, scroll directly
       const servicesSection = document.getElementById('services');
       if (servicesSection) {
         servicesSection.scrollIntoView({ behavior: 'smooth' });
       }
     } else {
-      // If on another page, navigate to homepage with a flag
       navigate("/", { state: { scrollToServices: true } });
     }
-    setIsOpen(false); // Close menu after click
+    setIsOpen(false);
   };
 
   const handleSearchChange = (e) => {
@@ -111,21 +106,19 @@ function Navbar({ userData, setUserData }) {
     navigate('/productdetails', { state: { product } });
     setSearchRecommendations([]);
     setSearchQuery('');
-    setIsOpen(false); // Close menu if open
+    setIsOpen(false);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("loggedInUser");
-    setUserData(null);
-    navigate("/login");
-  };
+  // const handleLogout = () => {
+  //   dispatch(logout());
+  //   localStorage.removeItem('authToken');
+  //   navigate("/login");
+  // };
 
-  // Function to check if a link is active
   const isLinkActive = (path) => {
     return location.pathname === path;
   };
 
-  // Check if we're on the homepage and services section is active
   const [isServicesActive, setIsServicesActive] = useState(false);
   
   useEffect(() => {
@@ -134,9 +127,7 @@ function Navbar({ userData, setUserData }) {
         const servicesSection = document.getElementById('services');
         if (servicesSection) {
           const rect = servicesSection.getBoundingClientRect();
-          const isVisible = 
-            rect.top >= 0 &&
-            rect.bottom <= window.innerHeight;
+          const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
           setIsServicesActive(isVisible);
         }
       } else {
@@ -145,7 +136,7 @@ function Navbar({ userData, setUserData }) {
     };
     
     window.addEventListener('scroll', checkIfServicesActive);
-    checkIfServicesActive(); // Check initially
+    checkIfServicesActive();
     
     return () => window.removeEventListener('scroll', checkIfServicesActive);
   }, [location.pathname]);
@@ -189,13 +180,11 @@ function Navbar({ userData, setUserData }) {
         </div>
         
         <div className="right-icons">
-          {/* Wishlist icon */}
           <RouterLink to="/wishlist" className={`wishlist-icon ${isLinkActive('/wishlist') ? 'active-link' : ''}`}>
             <FaHeart />
             {wishlistCount > 0 && <span className="wishlist-count">{wishlistCount}</span>}
           </RouterLink>
           
-          {/* Cart icon */}
           <RouterLink to="/cart" className={`cart-icon ${isLinkActive('/cart') ? 'active-link' : ''}`}>
             <FaShoppingCart />
             {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
@@ -206,9 +195,7 @@ function Navbar({ userData, setUserData }) {
               <RouterLink to="/profile" className={isLinkActive('/profile') ? 'active-link' : ''}>
                 <FaUser />
               </RouterLink>
-              <button onClick={handleLogout} className="logout-btn">
-                Logout
-              </button>
+              <LogoutButton />
             </>
           ) : (
             <div className="auth-links">
@@ -309,7 +296,6 @@ function Navbar({ userData, setUserData }) {
             </RouterLink>
           </li>
           
-          {/* Mobile menu items for wishlist and cart */}
           <li className="mobile-only">
             <RouterLink 
               to="/wishlist" 

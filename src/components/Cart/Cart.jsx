@@ -2,11 +2,15 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { 
   removeFromCart, 
+  removeSpecificItem,
   updateQuantity, 
+  updateSpecificQuantity,
   clearCart,
   selectCartItems,
   selectCartSubtotal,
-  selectCartTotal
+  selectCartTotal,
+  selectCartShipping,
+  selectCartTax
 } from '../../slice/cartSlice'; 
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -18,9 +22,15 @@ const Cart = () => {
   const cartItems = useSelector(selectCartItems);
   const subtotal = useSelector(selectCartSubtotal);
   const total = useSelector(selectCartTotal);
+  const shipping = useSelector(selectCartShipping);
+  const tax = useSelector(selectCartTax);
 
-  const handleRemoveFromCart = (id) => {
-    dispatch(removeFromCart(id));
+  const handleRemoveFromCart = (item) => {
+    if (item.specialOffer) {
+      dispatch(removeSpecificItem({ id: item.id, offerId: item.specialOffer.id }));
+    } else {
+      dispatch(removeFromCart(item.id));
+    }
     toast.success("Item removed from cart", {
       position: "top-right",
       autoClose: 2000,
@@ -32,9 +42,13 @@ const Cart = () => {
     });
   };
 
-  const handleUpdateQuantity = (id, quantity) => {
+  const handleUpdateQuantity = (item, quantity) => {
     if (quantity > 0) {
-      dispatch(updateQuantity({ id, quantity }));
+      if (item.specialOffer) {
+        dispatch(updateSpecificQuantity({ id: item.id, offerId: item.specialOffer.id, quantity }));
+      } else {
+        dispatch(updateQuantity({ id: item.id, quantity }));
+      }
       toast.info("Quantity updated", {
         position: "top-right",
         autoClose: 1500,
@@ -89,82 +103,81 @@ const Cart = () => {
                 <div className="cart-items-total-header">Total</div>
               </div>
               
-              {cartItems.map(item => (
-                <div key={item.id} className="cart-items-cart-item">
-                  <div className="cart-items-product-info">
-                    <div className="cart-items-product-image">
-                      <img src={item.image} alt={item.name} />
+              {cartItems.map(item => {
+                const key = `${item.id}-${item.specialOffer?.id || 'nooffer'}`;
+                return (
+                  <div key={key} className="cart-items-cart-item">
+                    <div className="cart-items-product-info">
+                      <div className="cart-items-product-image">
+                        <img src={item.image} alt={item.name} />
+                      </div>
+                      <div className="cart-items-product-details">
+                        <h3>{item.name}</h3>
+                        {item.discountApplied && (
+                          <div className="cart-items-special-offer">
+                            <span className="cart-items-offer-badge">SPECIAL OFFER</span>
+                            <span className="cart-items-discount-text">
+                              {item.discountPercentage}% OFF
+                            </span>
+                          </div>
+                        )}
+                        {item.specialOffer && (
+                          <div className="cart-items-offer-title">
+                            <span className="cart-items-offer-name">
+                              {item.specialOffer.title}
+                            </span>
+                          </div>
+                        )}
+                        {item.promoCode && (
+                          <div className="cart-items-promo-code">
+                            Promo: {item.promoCode}
+                          </div>
+                        )}
+                        <button 
+                          className="cart-items-remove-btn" 
+                          onClick={() => handleRemoveFromCart(item)}
+                        >
+                          <span className="cart-items-remove-icon">🗑</span> Remove
+                        </button>
+                      </div>
                     </div>
-                    <div className="cart-items-product-details">
-                      <h3>{item.name}</h3>
-                      {/* Display special offer tag if item has a discount */}
-                      {item.discountApplied && (
-                        <div className="cart-items-special-offer">
-                          <span className="cart-items-offer-badge">SPECIAL OFFER</span>
-                          <span className="cart-items-discount-text">
-                            {item.discountPercentage}% OFF
+                    
+                    <div className="cart-items-price">
+                      {item.originalPrice && item.originalPrice !== item.price ? (
+                        <>
+                          <span className="cart-items-original-price">
+                            NPR {item.originalPrice.toLocaleString()}
                           </span>
-                        </div>
-                      )}
-                      {/* Show special offer title if available */}
-                      {item.specialOffer && (
-                        <div className="cart-items-offer-title">
-                          <span className="cart-items-offer-name">
-                            {item.specialOffer.title}
+                          <span className="cart-items-discounted-price">
+                            NPR {item.price.toLocaleString()}
                           </span>
-                        </div>
+                        </>
+                      ) : (
+                        <>NPR {item.price.toLocaleString()}</>
                       )}
-                      {/* Show promo code if available */}
-                      {item.promoCode && (
-                        <div className="cart-items-promo-code">
-                          Promo: {item.promoCode}
-                        </div>
-                      )}
+                    </div>
+                    
+                    <div className="cart-items-quantity-controls">
                       <button 
-                        className="cart-items-remove-btn" 
-                        onClick={() => handleRemoveFromCart(item.id)}
+                        onClick={() => handleUpdateQuantity(item, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
                       >
-                        <span className="cart-items-remove-icon">🗑</span> Remove
+                        -
+                      </button>
+                      <span>{item.quantity}</span>
+                      <button 
+                        onClick={() => handleUpdateQuantity(item, item.quantity + 1)}
+                      >
+                        +
                       </button>
                     </div>
+                    
+                    <div className="cart-items-item-total">
+                      NPR {(item.price * item.quantity).toLocaleString()}
+                    </div>
                   </div>
-                  
-                  <div className="cart-items-price">
-                    {/* Show both original and discounted price if discounted */}
-                    {item.originalPrice && item.originalPrice !== item.price ? (
-                      <>
-                        <span className="cart-items-original-price">
-                          NPR {item.originalPrice.toLocaleString()}
-                        </span>
-                        <span className="cart-items-discounted-price">
-                          NPR {item.price.toLocaleString()}
-                        </span>
-                      </>
-                    ) : (
-                      <>NPR {item.price.toLocaleString()}</>
-                    )}
-                  </div>
-                  
-                  <div className="cart-items-quantity-controls">
-                    <button 
-                      onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
-                      disabled={item.quantity <= 1}
-                    >
-                      -
-                    </button>
-                    <span>{item.quantity}</span>
-                    <button 
-                      onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
-                    >
-                      +
-                    </button>
-                  </div>
-                  
-                  <div className="cart-items-item-total">
-                    NPR {(item.price * item.quantity).toLocaleString()}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
               
               <div className="cart-items-cart-actions">
                 <button className="cart-items-clear-cart" onClick={handleClearCart}>
@@ -193,7 +206,6 @@ const Cart = () => {
                 <button onClick={continueShopping}>
                   Continue Shopping
                 </button>
-
               </div>
             </div>
           )}
@@ -207,32 +219,33 @@ const Cart = () => {
           </div>
           <div className="cart-items-summary-row">
             <span>Shipping</span>
-            <span>NPR 15.00</span>
+            <span>NPR {shipping.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
           </div>
           <div className="cart-items-summary-row">
             <span>Tax (8%)</span>
-            <span>NPR {(subtotal * 0.08).toLocaleString()}</span>
+            <span>NPR {tax.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
           </div>
           <div className="cart-items-summary-row cart-items-total">
             <span>Total</span>
             <span>NPR {total.toLocaleString()}</span>
           </div>
           
-          {/* Display active promotions section if any discounted items exist */}
           {cartItems.some(item => item.discountApplied) && (
             <div className="cart-items-active-promotions">
               <h3>Active Promotions</h3>
               {cartItems
                 .filter(item => item.discountApplied)
-                .map(item => (
-                  <div key={`promo-${item.id}`} className="cart-items-promotion-item">
-                    <span>{item.specialOffer?.title || `${item.discountPercentage}% Off`}</span>
-                    <span className="cart-items-savings">
-                      -NPR {((item.originalPrice - item.price) * item.quantity).toLocaleString()}
-                    </span>
-                  </div>
-                ))
-              }
+                .map(item => {
+                  const key = `promo-${item.id}-${item.specialOffer?.id || 'nooffer'}`;
+                  return (
+                    <div key={key} className="cart-items-promotion-item">
+                      <span>{item.specialOffer?.title || `${item.discountPercentage}% Off`}</span>
+                      <span className="cart-items-savings">
+                        -NPR {((item.originalPrice - item.price) * item.quantity).toLocaleString()}
+                      </span>
+                    </div>
+                  );
+                })}
               <div className="cart-items-total-savings">
                 <strong>
                   Total Savings: NPR {cartItems
@@ -259,7 +272,6 @@ const Cart = () => {
             <p>✓ 24/7 customer support</p>
           </div>
           
-          {/* Promotional banner for more offers */}
           <div className="cart-items-promo-banner">
             <h4>🎉 Don't miss out!</h4>
             <p>Check out our special offers for more savings</p>
