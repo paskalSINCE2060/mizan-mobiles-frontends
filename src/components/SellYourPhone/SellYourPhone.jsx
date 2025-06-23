@@ -8,9 +8,6 @@ import {
   selectSubmitError
 } from '../../slice/sellPhoneSlice';
 import "./SellYourPhone.css"
-import phone1 from '../../assets/iphone13pro.jpg'
-import phone2 from '../../assets/iphone14.jpg'
-import phone3 from '../../assets/iphone11promax.jpeg'
 
 const SellYourPhone = () => {
   const dispatch = useDispatch();
@@ -38,35 +35,6 @@ const SellYourPhone = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [validationError, setValidationError] = useState('');
   
-  const phones = [
-    {
-      id: 1,
-      name: "UltraPhone Pro",
-      price: 999,
-      image: phone1,
-      colors: ["Black", "Silver", "Gold"],
-      storage: ["128GB", "256GB", "512GB"],
-      features: ["6.7\" AMOLED Display", "Triple Camera System", "All-day Battery", "Wireless Charging"]
-    },
-    {
-      id: 2,
-      name: "UltraPhone",
-      price: 799,
-      image: phone2,
-      colors: ["Black", "Blue", "Red"],
-      storage: ["128GB", "256GB"],
-      features: ["6.1\" HD Display", "Dual Camera System", "Fast Charging"]
-    },
-    {
-      id: 3,
-      name: "UltraPhone Lite",
-      price: 599,
-      image: phone3,
-      colors: ["Black", "White", "Green"],
-      storage: ["64GB", "128GB"],
-      features: ["5.8\" Display", "12MP Camera", "Long Battery Life"]
-    }
-  ];
 
   // Reset form and clear messages on component mount
   useEffect(() => {
@@ -210,7 +178,7 @@ const SellYourPhone = () => {
       }
 
       // Dispatch the Redux action
-      const result = await dispatch(submitSellPhoneRequest(formData)).unwrap();
+      await dispatch(submitSellPhoneRequest(formData)).unwrap();
       
       // Reset form on success (but keep user details)
       const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
@@ -540,86 +508,6 @@ const SellYourPhone = () => {
             <div className="sale-me-your-phone-testimonial">
               <p>"The shipping label made it so convenient. I just packed up my phone and dropped it off. Got paid exactly what they quoted!"</p>
               <span className="sale-me-your-phone-testimonial-author">- Jessica L.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="sale-your-phone container">
-        <header className="sale-your-phone header">
-          <h1 className="sale-your-phone title">Premium Smartphones</h1>
-          <p className="sale-your-phone subtitle">Discover the perfect phone for your lifestyle</p>
-        </header>
-
-        {/* Featured Products */}
-        <div className="sale-your-phone products-grid">
-          {phones.map((phone) => (
-            <div 
-              key={phone.id} 
-              className="sale-your-phone product-card"
-            >
-              <div className="sale-your-phone product-image-container">
-                <img 
-                  src={phone.image} 
-                  alt={phone.name} 
-                  className="sale-your-phone product-image"
-                />
-              </div>
-              <div className="sale-your-phone product-details">
-                <h2 className="sale-your-phone product-name">{phone.name}</h2>
-                <p className="sale-your-phone product-price">${phone.price}</p>
-                <div className="sale-your-phone color-options">
-                  <h3 className="sale-your-phone options-title">Available Colors:</h3>
-                  <div className="sale-your-phone colors-list">
-                    {phone.colors.map(color => (
-                      <span key={color} className="sale-your-phone color-tag">{color}</span>
-                    ))}
-                  </div>
-                </div>
-                <div className="sale-your-phone storage-options">
-                  <h3 className="sale-your-phone options-title">Storage Options:</h3>
-                  <div className="sale-your-phone storage-list">
-                    {phone.storage.map(storage => (
-                      <span key={storage} className="sale-your-phone storage-tag">{storage}</span>
-                    ))}
-                  </div>
-                </div>
-                <ul className="sale-your-phone features-list">
-                  {phone.features.map((feature, index) => (
-                    <li key={index} className="sale-your-phone feature-item">{feature}</li>
-                  ))}
-                </ul>
-                <div className="sale-your-phone product-actions">
-                  <button className="sale-your-phone btn-primary">
-                    Add to Cart
-                  </button>
-                  <button className="sale-your-phone btn-secondary">
-                    Learn More
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="sale-your-phone why-choose-us">
-          <h2>Why Choose Our Phones?</h2>
-          <div className="sale-your-phone benefits-grid">
-            <div className="sale-your-phone benefit-item">
-              <h3>Premium Quality</h3>
-              <p>All our phones undergo rigorous quality testing to ensure the best performance and durability.</p>
-            </div>
-            <div className="sale-your-phone benefit-item">
-              <h3>Latest Technology</h3>
-              <p>Stay ahead with cutting-edge features and the latest mobile technology innovations.</p>
-            </div>
-            <div className="sale-your-phone benefit-item">
-              <h3>24/7 Support</h3>
-              <p>Our dedicated customer support team is always ready to help you with any questions or issues.</p>
-            </div>
-            <div className="sale-your-phone benefit-item">
-              <h3>Best Value</h3>
-              <p>Get the most bang for your buck with our competitive prices and exclusive deals.</p>
             </div>
           </div>
         </div>

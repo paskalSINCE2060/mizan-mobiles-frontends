@@ -161,19 +161,17 @@ const SellRequestsTable = () => {
     }
   };
 
+  const getImageUrl = (imagePath) => {
+  if (!imagePath) return null;
+  if (imagePath.startsWith('http')) return imagePath;
+  const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  return `${baseUrl}${imagePath}`;
+};
+
   // Format currency
   const formatCurrency = (amount) => {
     return amount ? `$${parseFloat(amount).toFixed(2)}` : 'N/A';
   };
-
-  // Get image URL - adjust this based on your backend setup
-const getImageUrl = (imagePath) => {
-  if (!imagePath) return null;
-  if (imagePath.startsWith('http')) return imagePath;
-  const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-  return `${baseUrl}/${imagePath}`;
-  
-};
 
   // Error display
   if (error) {
@@ -268,14 +266,13 @@ const getImageUrl = (imagePath) => {
             <thead>
               <tr style={{ backgroundColor: '#f8f9fa' }}>
                 <th style={tableHeaderStyle}>ID</th>
-                <th style={tableHeaderStyle}>Image</th>
                 <th style={tableHeaderStyle}>Customer</th>
                 <th style={tableHeaderStyle}>Contact</th>
                 <th style={tableHeaderStyle}>Phone Details</th>
                 <th style={tableHeaderStyle}>Color</th>
+                <th style={tableHeaderStyle}>Image</th>
                 <th style={tableHeaderStyle}>Expected Price</th>
                 <th style={tableHeaderStyle}>Status</th>
-                <th style={tableHeaderStyle}>Additional Details</th>
                 <th style={tableHeaderStyle}>Submitted</th>
                 <th style={tableHeaderStyle}>Actions</th>
               </tr>
@@ -283,7 +280,7 @@ const getImageUrl = (imagePath) => {
             <tbody>
               {requests.length === 0 ? (
                 <tr>
-                  <td colSpan="11" style={{ 
+                  <td colSpan="10" style={{ 
                     textAlign: 'center', 
                     padding: '40px',
                     color: '#666'
@@ -300,73 +297,17 @@ const getImageUrl = (imagePath) => {
                     <td style={tableCellStyle}>
                       #{request._id?.slice(-6)}
                     </td>
-                    
-                    {/* Phone Image */}
-                    <td style={tableCellStyle}>
-                      {request.phoneImage ? (
-                        <img
-                          src={getImageUrl(request.phoneImage)}                          
-                          alt="Phone"
-                          style={{
-                            width: '50px',
-                            height: '50px',
-                            objectFit: 'cover',
-                            borderRadius: '4px',
-                            border: '1px solid #ddd'
-                          }}
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextSibling.style.display = 'block';
-                          }}
-                        />
-                      ) : (
-                        <div style={{
-                          width: '50px',
-                          height: '50px',
-                          backgroundColor: '#f8f9fa',
-                          border: '1px solid #ddd',
-                          borderRadius: '4px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '10px',
-                          color: '#666'
-                        }}>
-                          No Image
-                        </div>
-                      )}
-                      <div style={{
-                        display: 'none',
-                        width: '50px',
-                        height: '50px',
-                        backgroundColor: '#f8f9fa',
-                        border: '1px solid #ddd',
-                        borderRadius: '4px',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '10px',
-                        color: '#666'
-                      }}>
-                        Image Error
-                      </div>
-                    </td>
-                    
-                    {/* Customer Name */}
                     <td style={tableCellStyle}>
                       <div>
                         <strong>{request.fullName || 'N/A'}</strong>
                       </div>
                     </td>
-                    
-                    {/* Contact Info */}
                     <td style={tableCellStyle}>
                       <div style={{ fontSize: '12px' }}>
-                        <div>{request.contactEmail || 'N/A'}</div>
+                        <div>{request.contactEmail}</div>
                         <div style={{ color: '#666' }}>{request.contactPhone}</div>
                       </div>
                     </td>
-                    
-                    {/* Phone Details */}
                     <td style={tableCellStyle}>
                       <div style={{ fontSize: '12px' }}>
                         <strong>{request.brand} {request.model}</strong>
@@ -380,8 +321,6 @@ const getImageUrl = (imagePath) => {
                         )}
                       </div>
                     </td>
-                    
-                    {/* Color */}
                     <td style={tableCellStyle}>
                       <span style={{
                         backgroundColor: '#e9ecef',
@@ -393,15 +332,41 @@ const getImageUrl = (imagePath) => {
                         {request.color || 'N/A'}
                       </span>
                     </td>
+                      <td style={tableCellStyle}>
+                        {request.phoneImage ? (
+                          <>
+                            <img
+                              src={getImageUrl(request.phoneImage)}
+                              alt="Phone"
+                              style={{
+                                width: '50px',
+                                height: '50px',
+                                objectFit: 'cover',
+                                borderRadius: '4px',
+                                border: '1px solid #ddd'
+                              }}
+                              onError={(e) => {
+                                  console.log('Image failed to load:', e.target.src);
+                                e.target.style.display = 'none';
+                                e.target.nextSibling.style.display = 'inline';
+                              }}
+                            />
+                            <span style={{ display: 'none', fontSize: '11px', color: '#666' }}>
+                              No image
+                            </span>
+                          </>
+                        ) : (
+                          <span style={{ fontSize: '11px', color: '#666' }}>
+                            No image
+                          </span>
+                        )}
+                      </td>
                     
-                    {/* Expected Price */}
                     <td style={tableCellStyle}>
                       <strong style={{ color: '#28a745' }}>
                         {formatCurrency(request.expectedPrice)}
                       </strong>
                     </td>
-                    
-                    {/* Status */}
                     <td style={tableCellStyle}>
                       <span style={{
                         backgroundColor: getStatusColor(request.status),
@@ -414,49 +379,11 @@ const getImageUrl = (imagePath) => {
                         {request.status}
                       </span>
                     </td>
-                    
-                    {/* Additional Details */}
-                    <td style={tableCellStyle}>
-                      <div style={{ fontSize: '11px', maxWidth: '150px' }}>
-                        {request.description ? (
-                          <div>
-                            <div style={{ 
-                              overflow: 'hidden', 
-                              textOverflow: 'ellipsis', 
-                              whiteSpace: 'nowrap',
-                              marginBottom: '2px'
-                            }}>
-                              {request.description.substring(0, 50)}
-                              {request.description.length > 50 && '...'}
-                            </div>
-                            <button
-                              onClick={() => openModal(request, 'view')}
-                              style={{
-                                background: 'none',
-                                border: 'none',
-                                color: '#007bff',
-                                fontSize: '10px',
-                                cursor: 'pointer',
-                                textDecoration: 'underline'
-                              }}
-                            >
-                              Read more
-                            </button>
-                          </div>
-                        ) : (
-                          <span style={{ color: '#666' }}>No details</span>
-                        )}
-                      </div>
-                    </td>
-                    
-                    {/* Submitted Date */}
                     <td style={tableCellStyle}>
                       <div style={{ fontSize: '11px', color: '#666' }}>
                         {formatDate(request.createdAt)}
                       </div>
                     </td>
-                    
-                    {/* Actions */}
                     <td style={tableCellStyle}>
                       <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
                         <button
@@ -517,6 +444,7 @@ const getImageUrl = (imagePath) => {
                         </button>
                       </div>
                     </td>
+                    
                   </tr>
                 ))
               )}

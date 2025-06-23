@@ -71,14 +71,11 @@ const RequestModal = ({ request, type, onClose, onQuoteSubmit, onStatusSubmit })
 
   // Get image URL - adjust this based on your backend setup
   const getImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    // If imagePath is already a full URL, return it
-    if (imagePath.startsWith('http')) return imagePath;
-    // If it's a relative path, construct the full URL
-    // Adjust this base URL to match your backend setup
-    const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-    return `${baseUrl}/${imagePath}`;
-  };
+  if (!imagePath) return null;
+  if (imagePath.startsWith('http')) return imagePath;
+  const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  return `${baseUrl}${imagePath}`;
+};
 
   // Helper to get status color
   const getStatusColor = (status) => {

@@ -12,38 +12,45 @@ const wishlistSlice = createSlice({
   reducers: {
     addToWishlist: (state, action) => {
       const item = action.payload
-      const existingItem = state.items.find(i => i.id === item.id)
-      
+
+      // Normalize _id to id for internal usage
+      const normalizedItem = {
+        ...item,
+        id: item._id || item.id,  // prefer _id if available
+      }
+
+      const existingItem = state.items.find(i => i.id === normalizedItem.id)
+
       if (!existingItem) {
         state.items.push({
-          ...item,
+          ...normalizedItem,
           addedAt: new Date().toISOString()
         })
       }
     },
-    
+
     removeFromWishlist: (state, action) => {
       const itemId = action.payload
-      state.items = state.items.filter(item => item.id !== itemId)
+      // support removing by either _id or id
+      state.items = state.items.filter(item => item.id !== itemId && item._id !== itemId)
     },
-    
+
     clearWishlist: (state) => {
       state.items = []
     },
-    
+
     updateWishlistItem: (state, action) => {
       const { id, updates } = action.payload
       const item = state.items.find(i => i.id === id)
-      
       if (item) {
         Object.assign(item, updates)
       }
     },
-    
+
     setLoading: (state, action) => {
       state.loading = action.payload
     },
-    
+
     setError: (state, action) => {
       state.error = action.payload
     },
@@ -66,10 +73,14 @@ export const {
 
 // Selectors
 export const selectWishlistItems = (state) => state.wishlist.items
+
 export const selectWishlistCount = (state) => state.wishlist.items.length
+
 export const selectIsInWishlist = (state, itemId) => 
-  state.wishlist.items.some(item => item.id === itemId)
+  state.wishlist.items.some(item => item.id === itemId || item._id === itemId)
+
 export const selectWishlistLoading = (state) => state.wishlist.loading
+
 export const selectWishlistError = (state) => state.wishlist.error
 
 export default wishlistSlice.reducer
