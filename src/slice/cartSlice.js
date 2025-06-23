@@ -10,19 +10,19 @@ export const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const { 
-        id, 
+        _id,  // <- use _id here from backend
         name, 
         price, 
         image, 
         quantity = 1,
-        specialOffer = null,  // Add specialOffer parameter
-        originalPrice = null, // Add originalPrice parameter
-        promoCode = null      // Add promoCode parameter
+        specialOffer = null,  
+        originalPrice = null, 
+        promoCode = null      
       } = action.payload;
       
-      // Find existing item with same ID and same special offer
+      // Find existing item by matching internal id with _id
       const existingItem = state.cartItems.find(cartItem => 
-        cartItem.id === id && 
+        cartItem.id === _id && 
         cartItem.specialOffer?.id === specialOffer?.id
       );
       
@@ -30,16 +30,15 @@ export const cartSlice = createSlice({
         existingItem.quantity += quantity;
       } else {
         state.cartItems.push({
-          id,
+          id: _id,   // Store _id as id internally
           name,
           price,
-          originalPrice: originalPrice || price, // Store original price
+          originalPrice: originalPrice || price,
           image,
           quantity,
           specialOffer,
           promoCode,
           addedAt: Date.now(),
-          // Keep existing discount fields for backward compatibility
           discountApplied: specialOffer ? true : false,
           discountPercentage: specialOffer ? specialOffer.discount : 0
         });
@@ -64,20 +63,16 @@ export const cartSlice = createSlice({
       state.cartItems = [];
     },
     
-    // Load cart from localStorage on app start
     loadCartFromStorage: (state, action) => {
       state.cartItems = action.payload || [];
     },
     
-    // Apply promo code to cart items (enhanced to work with special offers)
     applyPromoCode: (state, action) => {
       const { promoCode, discountPercentage } = action.payload;
       state.cartItems = state.cartItems.map(item => {
-        // Don't apply promo if item already has special offer
         if (item.specialOffer) {
           return item;
         }
-        
         return {
           ...item,
           promoCode: promoCode,
@@ -89,14 +84,11 @@ export const cartSlice = createSlice({
       });
     },
     
-    // Remove promo code from cart (enhanced to preserve special offers)
     removePromoCode: (state) => {
       state.cartItems = state.cartItems.map(item => {
-        // Don't remove promo from items with special offers
         if (item.specialOffer) {
           return item;
         }
-        
         return {
           ...item,
           promoCode: null,
@@ -107,7 +99,6 @@ export const cartSlice = createSlice({
       });
     },
     
-    // New: Remove specific item by ID and offer ID
     removeSpecificItem: (state, action) => {
       const { id, offerId } = action.payload;
       state.cartItems = state.cartItems.filter(item => 
@@ -115,7 +106,6 @@ export const cartSlice = createSlice({
       );
     },
     
-    // New: Update quantity for specific item with offer
     updateSpecificQuantity: (state, action) => {
       const { id, offerId, quantity } = action.payload;
       const item = state.cartItems.find(item => 
@@ -129,7 +119,7 @@ export const cartSlice = createSlice({
   },
 })
 
-// Enhanced Selector functions
+// Selectors (unchanged)
 export const selectCartItems = (state) => state.cart.cartItems
 
 export const selectCartItemsCount = (state) =>
@@ -140,7 +130,7 @@ export const selectCartSubtotal = (state) =>
 
 export const selectCartTotal = (state) => {
   const subtotal = selectCartSubtotal(state)
-  const shipping = subtotal > 200 ? 0 : 15.00 // Free shipping over NPR 200
+  const shipping = subtotal > 200 ? 0 : 15.00
   const tax = subtotal * 0.08
   return subtotal + shipping + tax
 }
@@ -164,7 +154,6 @@ export const selectCartTax = (state) => {
   return subtotal * 0.08
 }
 
-// New selectors for special offers
 export const selectSpecialOfferItems = (state) =>
   state.cart.cartItems.filter(item => item.specialOffer)
 
