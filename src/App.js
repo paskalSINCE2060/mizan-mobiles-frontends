@@ -35,7 +35,6 @@ import BookingPage from "./components/BookYourPhone/index";
 import SpecialOffers from "./components/SpecialOffers/SpecialOffers";
 import Wishlist from "./components/Wishlist/wishlist";
 import ProductList from "./components/ProductList/ProductList";
-import AddProduct from "./components/AddProduct/AddProduct";
 import EditProduct from "./components/EditProduct/EditProduct";
 import PaymentSuccess from "./pages/payment-success";
 import AdminAddProduct from "./components/AdminAddProduct/AdminAddProduct";
@@ -43,6 +42,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminRouteGuard from "./components/AdminRouteGuard/AdminRouteGuard";
 
 import RequireAuth from "./components/common/RequireAuth";
+import AdminAddOffer from "./components/AdminAddOffer/AdminAddOffer";
 
 function AppContent() {
   const [userData, setUserData] = useState(null);
@@ -135,7 +135,6 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/products" element={<ProductList />} />
-          <Route path="/add-product" element={<AddProduct />} />
           <Route path="/edit-product/:id" element={<EditProduct />} />
 
           {/* Admin protected routes */}
@@ -152,6 +151,15 @@ function AppContent() {
             element={
               <AdminRouteGuard>
                 <AdminDashboard />
+              </AdminRouteGuard>
+            }
+          />
+
+          <Route
+            path="/admin/add-offer"
+            element={
+              <AdminRouteGuard>
+                <AdminAddOffer />
               </AdminRouteGuard>
             }
           />
