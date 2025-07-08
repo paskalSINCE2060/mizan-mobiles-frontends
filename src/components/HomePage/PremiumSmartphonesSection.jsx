@@ -95,23 +95,29 @@ function PremiumSmartphonesSection() {
     };
 
     // Function to handle adding items to cart using Redux
-    const handleAddToCart = (product) => {
-        dispatch(addToCartAction({
-            ...product,
-            price: product.discountedPrice,
-            image: product.image
-        }));
-        
-        toast.success("Added to Cart!", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "light",
-        });
-    };
+const handleAddToCart = (product) => {
+    dispatch(addToCartAction({
+        _id: product.id,  // ✅ Convert id back to _id for the Redux action
+        name: product.name,
+        price: product.discountedPrice,
+        image: product.image,
+        quantity: 1,
+        // Add other fields if needed
+        specialOffer: null,
+        originalPrice: product.originalPrice,
+        promoCode: null
+    }));
+    
+    toast.success("Added to Cart!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+    });
+};
 
     // Enhanced function to handle wishlist toggle with animations
     const handleWishlistToggle = (product, e) => {

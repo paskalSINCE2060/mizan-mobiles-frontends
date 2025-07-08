@@ -96,6 +96,30 @@ const authSlice = createSlice({
       state.user = action.payload;
       localStorage.setItem('loggedInUser', JSON.stringify(action.payload));
     },
+
+    // FIXED: Update user profile action
+    updateUserProfile(state, action) {
+      console.log('Updating user profile in Redux:', action.payload);
+      
+      // Handle both direct user object and nested response structure
+      let updatedUserData;
+      
+      if (action.payload.user) {
+        // If the payload has a nested user object (from login/signup responses)
+        updatedUserData = action.payload.user;
+      } else {
+        // If the payload is the user object directly (from profile update)
+        updatedUserData = action.payload;
+      }
+      
+      // Merge the updated profile data with existing user data
+      state.user = { ...state.user, ...updatedUserData };
+      
+      // Update localStorage with the new user data
+      localStorage.setItem('loggedInUser', JSON.stringify(state.user));
+      
+      console.log('Updated user in Redux store:', state.user);
+    },
   },
 });
 
@@ -110,6 +134,7 @@ export const {
   clearAuthError,
   setToken,
   setUser,
+  updateUserProfile, // Export the updated action
 } = authSlice.actions;
 
 export default authSlice.reducer;

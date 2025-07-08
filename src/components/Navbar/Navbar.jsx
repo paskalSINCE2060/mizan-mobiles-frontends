@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaSearch, FaUser, FaShoppingCart, FaHeart } from "react-icons/fa";
 import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
-import { useSelector} from 'react-redux'; // <-- added useDispatch here
+import { useSelector} from 'react-redux';
 import { selectCartItemsCount } from '../../slice/cartSlice';
 import { selectWishlistCount } from '../../slice/wishlistSlice';
-// import { logout } from '../../slice/authSlice';
-import LogoutButton from '../common/LogoutButton'; // Adjust path if needed
+import LogoutButton from '../common/LogoutButton';
 import "./Navbar.css";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchRecommendations, setSearchRecommendations] = useState([]);
   
   const cartCount = useSelector(selectCartItemsCount);
   const wishlistCount = useSelector(selectWishlistCount);
@@ -20,46 +18,16 @@ function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const navRef = useRef(null);
-  const searchRef = useRef(null);
-  // const dispatch = useDispatch();
-
-  const allProducts = useMemo(() => [
-    { id: 'iphone14-256gb', name: 'Apple iPhone 14 Pro Max [256GB]', category: 'iPhone', image: '/path/to/iphone14.jpg', discountedPrice: 111500.00 },
-    { id: 'iphone13pro-256gb', name: 'Apple iPhone 13 Pro Max [256GB]', category: 'iPhone', image: '/path/to/iphone13pro.jpg', discountedPrice: 91500.00 },
-    { id: 'iphone13promax-128gb', name: 'Apple iPhone 13 Pro Max [128GB]', category: 'iPhone', image: '/path/to/iphone13promax.jpg', discountedPrice: 85500.00 },
-    { id: 'iphone11promax-512gb', name: 'Apple iPhone 11 Pro Max [512GB]', category: 'iPhone', image: '/path/to/iphone11promax.jpg', discountedPrice: 53500.00 },
-    { id: 'galaxy-watch-ultra', name: 'Galaxy Watch Ultra (LTE, 47mm)', category: 'Galaxy Watch', image: '/path/to/galaxywatchultra.jpg', discountedPrice: 691.60 },
-    { id: 'galaxy-buds-3-pro', name: 'Galaxy Buds3 Pro', category: 'Galaxy Buds', image: '/path/to/galaxybuds3pro.jpg', discountedPrice: 250.60 },
-    { id: 'galaxy-buds-3', name: 'Galaxy Buds3', category: 'Galaxy Buds', image: '/path/to/galaxybuds3.jpg', discountedPrice: 180.60 },
-    { id: 'galaxy-watch-7', name: 'Galaxy Watch7 (Bluetooth, 44mm)', category: 'Galaxy Watch', image: '/path/to/galaxywatch7.jpg', discountedPrice: 348.60 }
-  ], []);
-
-  useEffect(() => {
-    if (searchQuery.length > 1) {
-      const recommendations = allProducts.filter(product => 
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase())
-      ).slice(0, 5);
-      setSearchRecommendations(recommendations);
-    } else {
-      setSearchRecommendations([]);
-    }
-  }, [searchQuery, allProducts]);
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (isOpen && navRef.current && !navRef.current.contains(event.target)) {
         setIsOpen(false);
       }
-      if (searchRecommendations.length > 0 && 
-          searchRef.current && 
-          !searchRef.current.contains(event.target)) {
-        setSearchRecommendations([]);
-      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen, searchRecommendations.length]);
+  }, [isOpen]);
 
   useEffect(() => {
     function handleResize() {
@@ -93,27 +61,15 @@ function Navbar() {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchRecommendations.length > 0) {
-      navigate('/search', { state: { query: searchQuery } });
-      setSearchRecommendations([]);
+    if (searchQuery.trim()) {
+      // Navigate to SearchResults page with the search query
+      navigate('/search-results', { state: { query: searchQuery.trim() } });
       setSearchQuery('');
+      setIsOpen(false);
     } else {
-      alert("No products found matching your search.");
+      alert("Please enter a search term.");
     }
   };
-
-  const handleSearchRecommendationClick = (product) => {
-    navigate('/productdetails', { state: { product } });
-    setSearchRecommendations([]);
-    setSearchQuery('');
-    setIsOpen(false);
-  };
-
-  // const handleLogout = () => {
-  //   dispatch(logout());
-  //   localStorage.removeItem('authToken');
-  //   navigate("/login");
-  // };
 
   const isLinkActive = (path) => {
     return location.pathname === path;
@@ -146,7 +102,7 @@ function Navbar() {
       <div className="top-section">
         <div className="logo">MIZAN MOBILE</div>
         
-        <div className="search-container" ref={searchRef}>
+        <div className="search-container">
           <form onSubmit={handleSearchSubmit} className="search-form">
             <input
               type="text"
@@ -159,24 +115,6 @@ function Navbar() {
               <FaSearch />
             </button>
           </form>
-          
-          {searchRecommendations.length > 0 && (
-            <div className="search-recommendations">
-              {searchRecommendations.map((product, index) => (
-                <div 
-                  key={index} 
-                  className="recommendation-item"
-                  onClick={() => handleSearchRecommendationClick(product)}
-                >
-                  <img src={product.image} alt={product.name} className="recommendation-item-img" />
-                  <div className="recommendation-item-text">
-                    <p>{product.name}</p>
-                    <p>NPR {product.discountedPrice.toLocaleString()}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
         
         <div className="right-icons">
@@ -270,8 +208,8 @@ function Navbar() {
           </li>
            <li>
            <RouterLink 
-              to="/bookyourphone" 
-              className={isLinkActive('/bookyourphone') ? 'active-link' : ''}
+              to="/newphonebooking" 
+              className={isLinkActive('/newphonebooking') ? 'active-link' : ''}
               onClick={() => setIsOpen(false)}
             >
               Book Your Phone
