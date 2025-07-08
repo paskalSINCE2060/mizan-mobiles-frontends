@@ -1,0 +1,119 @@
+/* PaymentCancel.css */
+.payment-cancel-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #fef2f2, #fff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.payment-cancel-card {
+  background: #fff;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25), 0 1.5px 3px 0 rgba(0,0,0,0.07);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  width: 100%;
+  max-width: 32rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .payment-cancel-card {
+    padding: 3rem;
+  }
+}
+
+.payment-cancel-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.payment-cancel-icon-wrapper > svg {
+  color: #dc2626;
+  width: 3rem;
+  height: 3rem;
+  background: #fee2e2;
+  padding: 1rem;
+  border-radius: 9999px;
+}
+
+.payment-cancel-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.payment-cancel-message {
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+}
+
+.payment-cancel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: #fff;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0.75rem;
+  transition: background 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.btn-secondary {
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0.75rem;
+  background: transparent;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: #eff6ff;
+}
+
+.payment-cancel-blur-1 {
+  position: absolute;
+  top: -2.5rem;
+  right: -2.5rem;
+  width: 8rem;
+  height: 8rem;
+  background: #fee2e2;
+  border-radius: 9999px;
+  filter: blur(32px);
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.payment-cancel-blur-2 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 4rem;
+  height: 4rem;
+  background: #fecaca;
+  border-radius: 9999px;
+  filter: blur(32px);
+  opacity: 0.4;
+  z-index: 0;
+}

@@ -101,23 +101,34 @@ function GalaxyProductsSection() {
     };
 
     // Function to handle adding items to cart using Redux
-    const handleAddToCart = (product) => {
-        dispatch(addToCartAction({
-            ...product,
-            price: product.discountedPrice,
-            image: product.image
-        }));
-        
-        toast.success("Added to Cart!", {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "light",
-        });
-    };
+const handleAddToCart = (product) => {
+    console.log('Adding Galaxy product to cart:', product); // Debug log
+    
+    dispatch(addToCartAction({
+        _id: product.id,  // ✅ Convert id to _id for Redux action
+        name: product.name,
+        price: product.discountedPrice,
+        image: product.image,
+        quantity: 1,
+        specialOffer: null,
+        originalPrice: product.originalPrice,
+        promoCode: null,
+        // Add any other fields your cart needs
+        brand: product.brand,
+        color: product.color,
+        category: product.category
+    }));
+    
+    toast.success("Added to Cart!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+    });
+};
 
     // Enhanced function to handle wishlist toggle with animations
     const handleWishlistToggle = (product, e) => {
@@ -345,7 +356,7 @@ function GalaxyProductsSection() {
                             <p className="different-equipment price">
                                 NPR {product.discountedPrice.toLocaleString()}
                             </p>
-                            <p className="different-equipment discount">
+                            {/* <p className="different-equipment discount">
                                 {product.originalPrice > product.discountedPrice && (
                                     <>
                                         <del>NPR {product.originalPrice.toLocaleString()}</del> 
@@ -354,7 +365,7 @@ function GalaxyProductsSection() {
                                         </span>
                                     </>
                                 )}
-                            </p>
+                            </p> */}
                             <button 
                                 className="different-equipment add-button"
                                 onClick={(e) => {

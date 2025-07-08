@@ -7,15 +7,69 @@ import ProductCard from '../../components/common/ProductCard ';
 
 const Airpods = () => {
   const [airpods, setAirpods] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    privateInstance.get('/products?category=earphones')
-      .then(res => setAirpods(res.data))
-      .catch(err => console.error('Failed to fetch airpods', err));
+    const fetchAirpods = async () => {
+      try {
+        setLoading(true);
+        const res = await privateInstance.get('/products?category=earphones');
+        
+        // Check if response data is an array
+        if (Array.isArray(res.data)) {
+          setAirpods(res.data);
+        } else if (res.data && Array.isArray(res.data.products)) {
+          // Handle case where data is nested (e.g., { products: [...] })
+          setAirpods(res.data.products);
+        } else if (res.data && Array.isArray(res.data.data)) {
+          // Handle case where data is nested (e.g., { data: [...] })
+          setAirpods(res.data.data);
+        } else {
+          console.error('Unexpected API response structure:', res.data);
+          setError('Unexpected data format from server');
+          setAirpods([]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch airpods', err);
+        setError('Failed to load products');
+        setAirpods([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAirpods();
   }, []);
 
-  const firstRow = airpods.slice(0, 4);
-  const secondRow = airpods.slice(4);
+  // Ensure airpods is always an array before using slice
+  const airpodsArray = Array.isArray(airpods) ? airpods : [];
+  const firstRow = airpodsArray.slice(0, 4);
+  const secondRow = airpodsArray.slice(4);
+
+  if (loading) {
+    return (
+      <div className="airpods-container">
+        <p>Loading products...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="airpods-container">
+        <p>Error: {error}</p>
+      </div>
+    );
+  }
+
+  if (airpodsArray.length === 0) {
+    return (
+      <div className="airpods-container">
+        <p>No airpods found.</p>
+      </div>
+    );
+  }
 
   return (
     <>

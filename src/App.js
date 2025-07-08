@@ -12,6 +12,7 @@ import { loginSuccess, logout } from "./slice/authSlice";
 import { getTokenExpiration } from "./utils/authUtils";
 
 import Navbar from "./components/Navbar/Navbar";
+import PaymentCancel from "./components/PaymentCancel/PaymentCancel";
 import Footer from "./components/Footer/Footer";
 import Homepage from "./components/HomePage/Homepage";
 import CategoryPage from "./components/Category/Category";
@@ -43,6 +44,8 @@ import AdminRouteGuard from "./components/AdminRouteGuard/AdminRouteGuard";
 
 import RequireAuth from "./components/common/RequireAuth";
 import AdminAddOffer from "./components/AdminAddOffer/AdminAddOffer";
+import NewPhoneBookingPage from "./components/NewPhoneBookingPage/NewPhoneBookingPage";
+import SearchResults from "./components/SearchResults/SearchResults";
 
 function AppContent() {
   const [userData, setUserData] = useState(null);
@@ -136,7 +139,9 @@ function AppContent() {
           <Route path="/" element={<Homepage />} />
           <Route path="/products" element={<ProductList />} />
           <Route path="/edit-product/:id" element={<EditProduct />} />
-
+          <Route path="/payment-cancel" element={<PaymentCancel />} />
+          <Route path="/search-results" element={<SearchResults />} />
+          
           {/* Admin protected routes */}
           <Route
             path="/admin/add-product"
@@ -221,7 +226,7 @@ function AppContent() {
           <Route path="/repair" element={<RepairPhones />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/specialoffers" element={<SpecialOffers />} />
-          <Route path="/bookyourphone" element={<BookingPage />} />
+          <Route path="/newphonebooking" element={<NewPhoneBookingPage />} />
           <Route path="/wishlist" element={<Wishlist />} />
         </Routes>
         <Footer />
