@@ -8,9 +8,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify"; 
 import axios from 'axios';
+import './GalaxyProductsSection.css'; // Import your CSS file for styles
 
-// Import your CSS file that contains the styles for this section
-import './Homepage.css'; // or create a separate CSS file
 
 function GalaxyProductsSection() {
     const dispatch = useDispatch();
