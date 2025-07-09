@@ -119,6 +119,7 @@
   margin-bottom: 3rem;
   position: relative;
   z-index: 10;
+  margin-top: 20px;
 }
 
 .results-count {
