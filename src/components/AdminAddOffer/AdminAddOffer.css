@@ -540,3 +540,13 @@
     padding: 20px;
   }
 }
+.status-badge.expired {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.expired-info {
+  font-size: 0.8em;
+  color: #666;
+  margin-left: 8px;
+}

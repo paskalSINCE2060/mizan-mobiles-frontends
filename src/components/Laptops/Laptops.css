@@ -7,7 +7,7 @@
 }
 
 /* Container */
-.Tablets-container {
+.Laptops-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -18,7 +18,7 @@
 }
 
 /* Alternative grid approach that works better for few items */
-.Tablets-container-grid {
+.Laptops-container-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, 280px);
     justify-content: center;
@@ -29,7 +29,7 @@
 }
 
 /* Card */
-.Tablets-card {
+.Laptops-card {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -41,12 +41,12 @@
     flex-shrink: 0; /* Prevent shrinking in flex layout */
 }
 
-.Tablets-card:hover {
+.Laptops-card:hover {
     transform: translateY(-5px);
 }
 
 /* Image */
-.Tablets-image {
+.Laptops-image {
     width: 100%;
     height: 200px;
     object-fit: cover;
@@ -54,27 +54,27 @@
 }
 
 /* Name */
-.Tablets-name {
+.Laptops-name {
     font-size: 1.2rem;
     margin: 10px 0;
     color: #333;
 }
 
 /* Price */
-.Tablets-price {
+.Laptops-price {
     font-size: 1rem;
     font-weight: bold;
     color: #2c3e50;
 }
 
-.Tablets-old-price {
+.Laptops-old-price {
     text-decoration: line-through;
     color: #b2bec3;
     margin-right: 5px;
 }
 
 /* Button */
-.Tablets-btn {
+.Laptops-btn {
     background: #27ae60;
     color: #fff;
     border: none;
@@ -86,26 +86,26 @@
     transition: background 0.3s ease;
 }
 
-.Tablets-btn:hover {
+.Laptops-btn:hover {
     background: #219150;
 }
 
 /* Loading and Error States */
-.Tablets-loading {
+.Laptops-loading {
     text-align: center;
     padding: 40px;
     font-size: 1.2rem;
     color: #666;
 }
 
-.Tablets-error {
+.Laptops-error {
     text-align: center;
     padding: 40px;
     color: #e74c3c;
     font-size: 1.1rem;
 }
 
-.Tablets-empty {
+.Laptops-empty {
     text-align: center;
     padding: 40px;
     color: #666;
@@ -114,34 +114,34 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-    .Tablets-container {
+    .Laptops-container {
         justify-content: center;
         padding: 15px;
         gap: 15px;
     }
     
-    .Tablets-container-grid {
+    .Laptops-container-grid {
         grid-template-columns: repeat(auto-fill, 260px);
         padding: 15px;
         gap: 15px;
     }
     
-    .Tablets-card {
+    .Laptops-card {
         width: 260px;
     }
 }
 
 @media (max-width: 600px) {
-    .Tablets-container {
+    .Laptops-container {
         justify-content: center;
     }
     
-    .Tablets-container-grid {
+    .Laptops-container-grid {
         grid-template-columns: 1fr;
         max-width: 300px;
     }
     
-    .Tablets-card {
+    .Laptops-card {
         width: 100%;
         max-width: 280px;
     }

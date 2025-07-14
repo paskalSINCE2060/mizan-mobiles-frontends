@@ -29,14 +29,14 @@ const Category = () => {
             <a href="/watches" className="category-link">Explore</a>
           </div>
         </div>
-        <div className="category category-tablets">
+        <div className="category category-Laptops">
           <div className="category-image-wrapper">
-            <img src={laptop} alt="Tablets" className="category-image"/>
+            <img src={laptop} alt="Laptops" className="category-image"/>
           </div>
           <div className="category-content">
-            <h2>Tablets</h2>
+            <h2>Laptops</h2>
             <p>Portable computing power</p>
-            <a href="/tablets" className="category-link">Browse</a>
+            <a href="/laptops" className="category-link">Browse</a>
           </div>
         </div>
         <div className="category category-earphones">

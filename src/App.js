@@ -28,7 +28,7 @@ import { CartProvider } from "./context/cartContext";
 import ProductDetails from "./components/ProductDetails/ProductDetails";
 import SmartPhone from "./components/SmartPhone/SmartPhone";
 import Watches from "./components/Watches/Watches";
-import Tablets from "./components/Tablets/Tablets";
+import Laptops from "./components/Laptops/Laptops";
 import Airpods from "./components/Airpods/Airpods";
 import SellYourPhone from "./components/SellYourPhone/SellYourPhone";
 import RepairPhones from "./components/RepairPhones/RepairPhones";
@@ -220,7 +220,7 @@ function AppContent() {
           <Route path="/productdetails" element={<ProductDetails />} />
           <Route path="/smartphone" element={<SmartPhone />} />
           <Route path="/watches" element={<Watches />} />
-          <Route path="/tablets" element={<Tablets />} />
+          <Route path="/laptops" element={<Laptops />} />
           <Route path="/airpods" element={<Airpods />} />
           <Route path="/sellyourphone" element={<SellYourPhone />} />
           <Route path="/repair" element={<RepairPhones />} />

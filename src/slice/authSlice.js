@@ -1,140 +1,137 @@
-// src/slice/authSlice.js
 import { createSlice } from '@reduxjs/toolkit';
+import { loginUser, signupUser } from './authThunk';
 
-// Load auth data from localStorage on init - using consistent keys
-const savedToken = localStorage.getItem('token'); // Changed from 'authToken'
-const savedUser = localStorage.getItem('loggedInUser'); // Changed from 'authUser'
-const savedRefreshToken = localStorage.getItem('refreshToken');
+const safeSaveToStorage = (key, value) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {
+    console.warn("Could not save to localStorage", e);
+  }
+};
 
 const initialState = {
-  token: savedToken || null,
-  refreshToken: savedRefreshToken || null,
-  user: savedUser ? JSON.parse(savedUser) : null,
-  isAuthenticated: !!savedToken,
+  user: JSON.parse(localStorage.getItem('loggedInUser')) || null,
+  token: localStorage.getItem('token') || null,
+  refreshToken: localStorage.getItem('refreshToken') || null,
+  isAuthenticated: !!localStorage.getItem('token'),
   loading: false,
   error: null,
-  signupLoading: false,
   signupError: null,
+  signupLoading: false,
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    loginStart(state) {
-      state.loading = true;
-      state.error = null;
-    },
     loginSuccess(state, action) {
-      state.loading = false;
-      state.token = action.payload.token;
-      state.refreshToken = action.payload.refreshToken;
-      state.user = action.payload.user;
+      const { token, user, refreshToken } = action.payload;
+      state.token = token;
+      state.user = user;
+      state.refreshToken = refreshToken;
       state.isAuthenticated = true;
+      state.error = null;
 
-      // Use consistent keys with App.js
-      localStorage.setItem('token', action.payload.token);
-      localStorage.setItem('refreshToken', action.payload.refreshToken);
-      localStorage.setItem('loggedInUser', JSON.stringify(action.payload.user));
-    },
-    loginFailure(state, action) {
-      state.loading = false;
-      state.error = action.payload;
+      safeSaveToStorage('token', token);
+      safeSaveToStorage('loggedInUser', user);
+      safeSaveToStorage('refreshToken', refreshToken);
     },
 
-    signupStart(state) {
-      state.signupLoading = true;
-      state.signupError = null;
-    },
-    signupSuccess(state, action) {
-      state.signupLoading = false;
-      state.token = action.payload.token;
-      state.refreshToken = action.payload.refreshToken;
-      state.user = action.payload.user;
-      state.isAuthenticated = true;
+    updateUserProfile(state, action) {
+      const updatedUser = action.payload;
+      const mergedUser = {
+        ...state.user,
+        ...updatedUser,
+        id: state.user?.id || updatedUser.id,
+        _id: state.user?._id || updatedUser._id,
+        email: state.user?.email || updatedUser.email,
+        phone: state.user?.phone || updatedUser.phone,
+        number: state.user?.number || updatedUser.number,
+        profileImage: updatedUser.profileImage || state.user?.profileImage,
+        createdAt: state.user?.createdAt,
+        role: state.user?.role,
+        updatedAt: new Date().toISOString(),
+      };
 
-      // Use consistent keys with App.js
-      localStorage.setItem('token', action.payload.token);
-      localStorage.setItem('refreshToken', action.payload.refreshToken);
-      localStorage.setItem('loggedInUser', JSON.stringify(action.payload.user));
-    },
-    signupFailure(state, action) {
-      state.signupLoading = false;
-      state.signupError = action.payload;
+      state.user = mergedUser;
+      safeSaveToStorage('loggedInUser', mergedUser);
     },
 
     logout(state) {
-      console.log("Redux logout reducer called");
       state.token = null;
-      state.refreshToken = null;
       state.user = null;
+      state.refreshToken = null;
       state.isAuthenticated = false;
       state.loading = false;
       state.error = null;
+      state.signupError = null;
 
-      // Clear all possible localStorage keys
       localStorage.removeItem('token');
-      localStorage.removeItem('loggedInUser');
       localStorage.removeItem('refreshToken');
-      localStorage.removeItem('authToken'); // Clean up old key if exists
-      localStorage.removeItem('authUser'); // Clean up old key if exists
-      localStorage.removeItem('cartItems'); // Optional: clear cart on logout
-      localStorage.removeItem('wishlistItems'); // Optional: clear wishlist on logout
+      localStorage.removeItem('loggedInUser');
     },
 
     clearAuthError(state) {
       state.error = null;
       state.signupError = null;
     },
-
-    setToken(state, action) {
-      state.token = action.payload;
-      localStorage.setItem('token', action.payload);
-    },
-
-    setUser(state, action) {
-      state.user = action.payload;
-      localStorage.setItem('loggedInUser', JSON.stringify(action.payload));
-    },
-
-    // FIXED: Update user profile action
-    updateUserProfile(state, action) {
-      console.log('Updating user profile in Redux:', action.payload);
-      
-      // Handle both direct user object and nested response structure
-      let updatedUserData;
-      
-      if (action.payload.user) {
-        // If the payload has a nested user object (from login/signup responses)
-        updatedUserData = action.payload.user;
-      } else {
-        // If the payload is the user object directly (from profile update)
-        updatedUserData = action.payload;
-      }
-      
-      // Merge the updated profile data with existing user data
-      state.user = { ...state.user, ...updatedUserData };
-      
-      // Update localStorage with the new user data
-      localStorage.setItem('loggedInUser', JSON.stringify(state.user));
-      
-      console.log('Updated user in Redux store:', state.user);
-    },
   },
+
+  extraReducers: (builder) => {
+    builder
+      // Login Thunk
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.token = action.payload.token;
+        state.refreshToken = action.payload.refreshToken;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+        state.error = null;
+
+        safeSaveToStorage('token', action.payload.token);
+        safeSaveToStorage('refreshToken', action.payload.refreshToken);
+        safeSaveToStorage('loggedInUser', action.payload.user);
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Login failed';
+      })
+
+      // Signup Thunk
+      .addCase(signupUser.pending, (state) => {
+        state.signupLoading = true;
+        state.signupError = null;
+      })
+      .addCase(signupUser.fulfilled, (state, action) => {
+        state.signupLoading = false;
+        state.token = action.payload.token;
+        state.refreshToken = action.payload.refreshToken;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+        state.signupError = null;
+
+        safeSaveToStorage('token', action.payload.token);
+        safeSaveToStorage('refreshToken', action.payload.refreshToken);
+        safeSaveToStorage('loggedInUser', action.payload.user);
+      })
+      .addCase(signupUser.rejected, (state, action) => {
+        state.signupLoading = false;
+        state.signupError = action.payload || 'Signup failed';
+      });
+
+    // ✅ Do NOT add refreshTokenThunk to extraReducers because it's not a createAsyncThunk
+  }
 });
 
 export const {
-  loginStart,
   loginSuccess,
-  loginFailure,
-  signupStart,
-  signupSuccess,
-  signupFailure,
+  updateUserProfile,
   logout,
   clearAuthError,
-  setToken,
-  setUser,
-  updateUserProfile, // Export the updated action
 } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,46 +1,7 @@
-import React, { useState } from 'react';
-import { FaFacebook, FaTwitter, FaInstagram, FaMapMarkerAlt, FaEnvelope, FaPhone, FaPaperPlane } from "react-icons/fa";
 import './ContactUs.css';
+import { FaFacebook, FaTwitter, FaInstagram, FaMapMarkerAlt, FaEnvelope, FaPhone, FaMobile, FaLaptop, FaTools } from "react-icons/fa";
 
 const ContactUs = () => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    message: '',
-    agreeToPolicy: false
-  });
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      alert('Message sent successfully!');
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        message: '',
-        agreeToPolicy: false
-      });
-    }, 2000);
-  };
-
   return (
     <div className="contact-us">
       {/* Background Elements */}
@@ -53,9 +14,13 @@ const ContactUs = () => {
       <div className="contact-container">
         {/* Header */}
         <div className="contact-header">
-          <h1 className="main-title">Get In Touch</h1>
-          <p className="subtitle">
-            Ready to start your next project? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+          <h1 className="main-title">Find Our Store</h1>
+          <p className="subtitles">
+            <FaMobile className="header-icons" />
+            <FaLaptop className="header-icons" />
+            <FaTools className="header-icons" />
+            <br />
+            Your trusted partner for mobile phones, laptops, buying, selling, and professional repair services. Visit us today for all your tech needs!
           </p>
         </div>
 
@@ -75,7 +40,7 @@ const ContactUs = () => {
                   </div>
                   <div className="contact-text">
                     <h3>Visit us</h3>
-                    <p>67 Wisteria Way, Croydon South<br />VIC 3136, Australia</p>
+                    <p>Al Karama Road, Near LuLu Hypermarket, <br />Shop No 6, Ajman-U.A.E</p>
                   </div>
                 </div>
 
@@ -86,7 +51,7 @@ const ContactUs = () => {
                   <div className="contact-text">
                     <h3>Email us</h3>
                     <p>Our friendly team is here to help</p>
-                    <a href="mailto:mizanmobile@gmail.com">mizanmobile@gmail.com</a>
+                    <a href="mailto:mizanmobile999@gmail.com">mizanmobile999@gmail.com</a>
                   </div>
                 </div>
 
@@ -97,7 +62,7 @@ const ContactUs = () => {
                   <div className="contact-text">
                     <h3>Call us</h3>
                     <p>Mon-Fri from 8am to 5pm</p>
-                    <a href="tel:+995555555555">(+995) 555-55-55-55</a>
+                    <a href="tel:+97165206327">(+971) 06 520 6327</a>
                   </div>
                 </div>
               </div>
@@ -120,106 +85,31 @@ const ContactUs = () => {
             </div>
           </div>
 
-          {/* Contact Form */}
-          <div className="contact-form-section">
-            <div className="contact-form-card">
-              <div className="form-container">
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>First Name *</label>
-                    <input
-                      type="text"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Enter your first name"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Last Name *</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Enter your last name"
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label>Email Address *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Enter your email address"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Phone Number</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="Enter your phone number"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Message</label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    rows={5}
-                    placeholder="Tell us what we can help you with"
-                  ></textarea>
-                </div>
-
-                <div className="checkbox-container">
-                  <input
-                    type="checkbox"
-                    name="agreeToPolicy"
-                    id="agreeToPolicy"
-                    checked={formData.agreeToPolicy}
-                    onChange={handleInputChange}
-                  />
-                  <label htmlFor="agreeToPolicy">
-                    I'd like to receive more information about the company. I understand and agree to the{' '}
-                    <a href="/">Privacy Policy</a>.
-                  </label>
-                </div>
-
-                <button
-                  type="submit"
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
-                  className={`submit-btn ${isSubmitting ? 'submitting' : ''}`}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="loading-spinner"></div>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <FaPaperPlane />
-                      Send Message
-                    </>
-                  )}
-                </button>
+          {/* Map Section */}
+          <div className="map-section">
+            <div className="map-card">
+              <h2 className="section-title">
+                <span className="title-accent"></span>
+                Our Location
+              </h2>
+              <div className="map-container">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.4193087832!2d55.4647!3d25.4052!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ef5f9e3e1e0e5e5%3A0x7f8f9e3e1e0e5e5!2sAl%20Karama%20Road%2C%20Ajman%20-%20United%20Arab%20Emirates!5e0!3m2!1sen!2sus!4v1690000000000!5m2!1sen!2sus"
+                  width="100%"
+                  height="500"
+                  style={{ border: 0, borderRadius: '12px' }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Mizan Mobile Shop Location"
+                ></iframe>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+
     </div>
   );
 };

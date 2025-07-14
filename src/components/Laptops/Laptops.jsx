@@ -1,51 +1,51 @@
 import React, { useEffect, useState } from 'react';
-import './Tablets.css';
-import ProductCard from '../../components/common/ProductCard '; 
+import './Laptops.css';
+import ProductCard from '../common/ProductCard '; 
 import privateInstance from '../../services/axiosInstance';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Tablets = () => {
-  const [tablets, setTablets] = useState([]);
+const Laptops = () => {
+  const [Laptops, setLaptops] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    privateInstance.get('/products?category=tablet')
+    privateInstance.get('/products?category=Laptop')
       .then(res => {
         console.log('API Response:', res.data); // Debug log
         
         // Handle different response structures
         const data = res.data;
         if (Array.isArray(data)) {
-          setTablets(data);
+          setLaptops(data);
         } else if (data && Array.isArray(data.products)) {
-          setTablets(data.products);
+          setLaptops(data.products);
         } else if (data && Array.isArray(data.data)) {
-          setTablets(data.data);
+          setLaptops(data.data);
         } else {
           console.error('Unexpected response format:', data);
           setError('Unexpected response format');
-          setTablets([]);
+          setLaptops([]);
         }
       })
       .catch(err => {
-        console.error('Failed to fetch tablets', err);
-        setError('Failed to fetch tablets');
-        setTablets([]);
+        console.error('Failed to fetch Laptops', err);
+        setError('Failed to fetch Laptops');
+        setLaptops([]);
       })
       .finally(() => {
         setLoading(false);
       });
   }, []);
 
-  // Ensure tablets is always an array before rendering
-  const safeTablets = Array.isArray(tablets) ? tablets : [];
-  const firstRow = safeTablets.slice(0, 4);
-  const secondRow = safeTablets.slice(4);
+  // Ensure Laptops is always an array before rendering
+  const safeLaptops = Array.isArray(Laptops) ? Laptops : [];
+  const firstRow = safeLaptops.slice(0, 4);
+  const secondRow = safeLaptops.slice(4);
 
   if (loading) {
-    return <div>Loading tablets...</div>;
+    return <div>Loading Laptops...</div>;
   }
 
   if (error) {
@@ -56,9 +56,9 @@ const Tablets = () => {
     <>
       <ToastContainer />
       {[firstRow, secondRow].map((row, idx) => (
-        <div className="Tablets-container" key={idx}>
+        <div className="Laptops-container" key={idx}>
           {row.map(item => (
-            <ProductCard key={item._id || item.id} product={item} classPrefix="Tablets-" />
+            <ProductCard key={item._id || item.id} product={item} classPrefix="Laptops-" />
           ))}
         </div>
       ))}
@@ -66,4 +66,4 @@ const Tablets = () => {
   );
 };
 
-export default Tablets;
+export default Laptops;

@@ -2,9 +2,9 @@ import React from 'react';
 import './Repair.css'
 import repair from "../../assets/repair.jpeg"
 import repair2 from "../../assets/repair2.jpg"
-import repair3 from "../../assets/repair3.jpeg"
-import repair4 from "../../assets/repair4.jpeg"
-import bannerrepair from "../../assets/repairbanner.jpeg"
+import repair3 from "../../assets/repair3.jpg"
+import repair4 from "../../assets/repair4.jpg"
+import bannerrepair from "../../assets/repairbanner.jpg"
 
 const RepairPhones = () => {
     const repairServices = [

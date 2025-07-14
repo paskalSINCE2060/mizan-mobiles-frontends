@@ -83,9 +83,13 @@
   text-align: center;
   margin-bottom: 4rem;
 }
-
+.header-icons{
+  font-size: 3rem;
+  color: #60a5fa;
+  margin-right: 0.5rem;
+}
 .main-title {
-  font-size: clamp(3rem, 8vw, 6rem);
+  font-size: clamp(2rem, 5vw, 4rem);
   font-weight: 800;
   color: white;
   margin-bottom: 1.5rem;
@@ -132,10 +136,6 @@
   height: fit-content;
 }
 
-.contact-info-card:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-5px);
-}
 
 .section-title {
   font-size: 1.875rem;
@@ -349,6 +349,8 @@
   resize: none;
   min-height: 120px;
 }
+
+
 
 /* Checkbox */
 .checkbox-container {

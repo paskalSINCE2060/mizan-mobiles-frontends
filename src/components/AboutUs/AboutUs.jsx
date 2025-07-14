@@ -7,7 +7,7 @@ const AboutUs = () => {
       
       {/* Header Section */}
       <div className="header-section">
-        <h1 className="main-title">About Mizan</h1>
+        <h1 className="main-titles">About Mizan</h1>
         <p className="main-subtitle">
           Your trusted partner in technology solutions, bringing you the latest gadgets 
           and exceptional service since 2019.
