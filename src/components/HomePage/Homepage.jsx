@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import './Homepage.css';
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify"; 
 // Import product images
@@ -11,7 +10,6 @@ import buylaptops from '../../assets/BuyLaptops.webp'
 import buyPhone from '../../assets/buyPhone.webp'
 import buySmartWatches from '../../assets/BuySmartWatches.webp'
 import findnewphone from '../../assets/FindNewPhone.webp'
-import nearbystore from '../../assets/NearbyStores.webp'
 import recycle from '../../assets/Recycle.webp'
 import repairphone from '../../assets/RepairPhone.webp'
 import repairLaptop from '../../assets/RepairLaptop.webp'
@@ -483,7 +481,6 @@ function HomePage() {
                             { img: repairphone, text: 'Repair Phone' },
                             { img: repairLaptop, text: 'Repair Laptop' },
                             { img: findnewphone, text: 'Find New Phone' },
-                            { img: nearbystore, text: 'Nearby Stores' },
                             { img: buySmartWatches, text: 'Buy Smartwatches' },
                             { img: recycle, text: 'Recycle' }
                         ].map((service, index) => (
@@ -530,7 +527,7 @@ function HomePage() {
                             </div>                        
                         </a>
                         
-                        <a href="/tablets" className="category">
+                        <a href="/laptops" className="category">
                             <div className="category">
                                 <h2>MacBooks + Laptops</h2>
                                 <div className="product-image">

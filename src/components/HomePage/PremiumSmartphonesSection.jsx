@@ -10,8 +10,6 @@ import { ToastContainer } from "react-toastify";
 import axios from 'axios';
 import './PremiumSmartphonesSection.css'; // Import your CSS file for styles
 
-
-
 function PremiumSmartphonesSection() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -95,29 +93,29 @@ function PremiumSmartphonesSection() {
     };
 
     // Function to handle adding items to cart using Redux
-const handleAddToCart = (product) => {
-    dispatch(addToCartAction({
-        _id: product.id,  // ✅ Convert id back to _id for the Redux action
-        name: product.name,
-        price: product.discountedPrice,
-        image: product.image,
-        quantity: 1,
-        // Add other fields if needed
-        specialOffer: null,
-        originalPrice: product.originalPrice,
-        promoCode: null
-    }));
-    
-    toast.success("Added to Cart!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-    });
-};
+    const handleAddToCart = (product) => {
+        dispatch(addToCartAction({
+            _id: product.id,  // ✅ Convert id back to _id for the Redux action
+            name: product.name,
+            price: product.discountedPrice,
+            image: product.image,
+            quantity: 1,
+            // Add other fields if needed
+            specialOffer: null,
+            originalPrice: product.originalPrice,
+            promoCode: null
+        }));
+        
+        toast.success("Added to Cart!", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+        });
+    };
 
     // Enhanced function to handle wishlist toggle with animations
     const handleWishlistToggle = (product, e) => {
@@ -152,13 +150,13 @@ const handleAddToCart = (product) => {
         
         return (
             <button 
-                className={`wishlist-btn ${isWishlisted ? 'active' : ''} ${isClicked ? 'clicked' : ''} ${animationClass} ${className}`}
+                className={`premium-wishlist-btn ${isWishlisted ? 'active' : ''} ${isClicked ? 'clicked' : ''} ${animationClass} ${className}`}
                 onClick={(e) => handleWishlistToggle(product, e)}
                 title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
                 aria-label={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
             >
                 {isWishlisted ? <FaHeart /> : <FaRegHeart />}
-                <span className="wishlist-ripple"></span>
+                <span className="premium-wishlist-ripple"></span>
             </button>
         );
     };
@@ -176,20 +174,12 @@ const handleAddToCart = (product) => {
     // Loading component
     if (loading) {
         return (
-            <section className="carts-item container">
-                <h2 className="carts-item" >Premium PreLoved Smartphones</h2>
-                <div className="loading-container" style={{ textAlign: 'center', padding: '2rem' }}>
+            <section className="premium-smartphones-container">
+                <h2 className="premium-smartphones-title">Premium PreLoved Smartphones</h2>
+                <div className="premium-loading-container">
                     <p>Loading premium smartphones...</p>
-                    <div style={{ marginTop: '1rem' }}>
-                        <div className="spinner" style={{
-                            border: '4px solid #f3f3f3',
-                            borderTop: '4px solid #3498db',
-                            borderRadius: '50%',
-                            width: '30px',
-                            height: '30px',
-                            animation: 'spin 2s linear infinite',
-                            margin: '0 auto'
-                        }}></div>
+                    <div className="premium-spinner-container">
+                        <div className="premium-spinner"></div>
                     </div>
                 </div>
             </section>
@@ -199,21 +189,13 @@ const handleAddToCart = (product) => {
     // Error component
     if (error) {
         return (
-            <section className="carts-item container">
-                <h2 className="carts-item">Premium PreLoved Smartphones</h2>
-                <div className="error-container" style={{ textAlign: 'center', padding: '2rem' }}>
-                    <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>
+            <section className="premium-smartphones-container">
+                <h2 className="premium-smartphones-title">Premium PreLoved Smartphones</h2>
+                <div className="premium-error-container">
+                    <p className="premium-error-message">{error}</p>
                     <button 
                         onClick={handleRefresh}
-                        style={{ 
-                            padding: '0.5rem 1rem', 
-                            marginTop: '1rem',
-                            backgroundColor: '#007bff',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer'
-                        }}
+                        className="premium-retry-btn"
                     >
                         Retry
                     </button>
@@ -225,22 +207,14 @@ const handleAddToCart = (product) => {
     // No products found
     if (products.length === 0) {
         return (
-            <section className="carts-item container">
-                <h2 className="carts-item">Premium PreLoved Smartphones</h2>
-                <div className="no-products-container" style={{ textAlign: 'center', padding: '2rem' }}>
+            <section className="premium-smartphones-container">
+                <h2 className="premium-smartphones-title">Premium PreLoved Smartphones</h2>
+                <div className="premium-no-products-container">
                     <p>No premium smartphones available at the moment.</p>
                     <p>Please check back later!</p>
                     <button 
                         onClick={handleRefresh}
-                        style={{ 
-                            padding: '0.5rem 1rem', 
-                            marginTop: '1rem',
-                            backgroundColor: '#28a745',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '4px',
-                            cursor: 'pointer'
-                        }}
+                        className="premium-refresh-btn"
                     >
                         Refresh
                     </button>
@@ -255,92 +229,61 @@ const handleAddToCart = (product) => {
         <>
             <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
             
-            <section className="carts-item container">
-                <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                    <h2 className="carts-item" style={{ textAlign: 'center' }}>Premium PreLoved Smartphones</h2>
+            <section className="premium-smartphones-container">
+                <div className="premium-section-header">
+                    <h2 className="premium-smartphones-title">Premium PreLoved Smartphones</h2>
                     {products.length > 4 && (
                         <button 
-                            className="view-all-btn"
+                            className="premium-view-all-btn"
                             onClick={handleViewToggle}
-                            style={{
-                                padding: '0.5rem 1rem',
-                                backgroundColor: 'transparent',
-                                color: 'white',
-                                border: '1px solid white',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                                fontSize: '0.9rem',
-                                transition: 'all 0.3s ease'
-                            }}
-                            onMouseOver={(e) => {
-                                e.target.style.backgroundColor = '#007bff';
-                                e.target.style.borderColor = '#007bff';
-                            }}
-                            onMouseOut={(e) => {
-                                e.target.style.backgroundColor = 'transparent';
-                                e.target.style.borderColor = 'white';
-                            }}
                         >
                             {showAll ? 'View Less' : `View All (${products.length})`}
                         </button>
                     )}
                 </div>
                 
-                <div className="carts-item product-grid">
+                <div className="premium-smartphones-grid">
                     {displayProducts.map((product) => (
                         <div 
                             key={product.id} 
-                            className="carts-item product"
+                            className="premium-smartphone-card"
                             onClick={() => handleProductClick(product)}
-                            style={{ cursor: 'pointer' }}
                         >
-                            <div className="product-image-container" style={{ position: 'relative' }}>
+                            <div className="premium-product-image-container">
                                 <img 
                                     src={product.image} 
                                     alt={product.name} 
-                                    className="carts-item"
+                                    className="premium-product-image"
                                     onError={(e) => {
                                         e.target.src = '/path/to/default-phone-image.jpg'; // Add a default image
                                         e.target.alt = 'Product image not available';
                                     }}
                                 />
-                                <WishlistButton product={product} className="wishlist-button" />
+                                <WishlistButton product={product} className="premium-wishlist-button" />
                                 {!product.inStock && (
-                                    <div className="out-of-stock-overlay" style={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        backgroundColor: 'rgba(0,0,0,0.7)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        color: 'white',
-                                        fontWeight: 'bold'
-                                    }}>
+                                    <div className="premium-out-of-stock-overlay">
                                         Out of Stock
                                     </div>
                                 )}
                             </div>
-                            <h3 className="carts-item">{product.name}</h3>
+                            <h3 className="premium-product-name">{product.name}</h3>
                             {product.brand && (
-                                <p className="product-brand" style={{ fontSize: '0.9rem', color: '#666', margin: '0.25rem 0' }}>
+                                <p className="premium-product-brand">
                                     {product.brand}
                                 </p>
                             )}
-                            <p className="carts-item price">
+                            <p className="premium-product-price">
                                 {product.originalPrice > product.discountedPrice && (
-                                    <del style={{ color: '#999', marginRight: '0.5rem' }}>
+                                    <del className="premium-original-price">
                                         NPR {product.originalPrice.toLocaleString()}
                                     </del>
                                 )}
-                                <span style={{ color: '#e74c3c', fontWeight: 'bold' }}>
+                                <span className="premium-discounted-price">
                                     NPR {product.discountedPrice.toLocaleString()}
                                 </span>
                             </p>
                             <button 
-                                className="carts-item add-to-cart-btn" 
+                                className={`premium-add-to-cart-btn ${!product.inStock ? 'premium-disabled' : ''}`}
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     if (product.inStock) {
@@ -353,10 +296,6 @@ const handleAddToCart = (product) => {
                                     }
                                 }}
                                 disabled={!product.inStock}
-                                style={{
-                                    opacity: product.inStock ? 1 : 0.6,
-                                    cursor: product.inStock ? 'pointer' : 'not-allowed'
-                                }}
                             >
                                 {product.inStock ? 'Add to Cart' : 'Out of Stock'}
                             </button>
@@ -365,19 +304,10 @@ const handleAddToCart = (product) => {
                 </div>
                 
                 {showAll && products.length > 4 && (
-                    <div className="show-less-container" style={{ textAlign: 'center', marginTop: '2rem' }}>
+                    <div className="premium-show-less-container">
                         <button 
-                            className="show-less-btn"
+                            className="premium-show-less-btn"
                             onClick={handleViewToggle}
-                            style={{
-                                padding: '0.75rem 2rem',
-                                backgroundColor: '#6c757d',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                                fontSize: '1rem'
-                            }}
                         >
                             Show Less
                         </button>

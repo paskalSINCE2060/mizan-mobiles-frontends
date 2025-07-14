@@ -1,5 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { toast } from 'react-toastify';
 import './AdminAddOffer.css';
+
+// Move predefinedCategories outside component to prevent re-creation on each render
+const predefinedCategories = [
+  'All Brands',
+  'Apple',
+  'Samsung',
+  'OnePlus',
+  'Xiaomi',
+  'Google',
+  'Huawei',
+  'Accessories',
+  'Gaming Phones',
+  'Budget Phones',
+  'Flagship Phones'
+];
 
 const AdminAddOffer = () => {
   const [formData, setFormData] = useState({
@@ -26,49 +42,20 @@ const AdminAddOffer = () => {
     targetProducts: []
   });
 
-  const [products, setProducts] = useState([]); // Initialize as empty array
+  const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [existingOffers, setExistingOffers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [messageType, setMessageType] = useState('');
   const [editingOffer, setEditingOffer] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
   const [fetchError, setFetchError] = useState('');
 
-  // Predefined categories (you can also fetch from your products)
-  const predefinedCategories = [
-    'All Brands',
-    'Apple',
-    'Samsung',
-    'OnePlus',
-    'Xiaomi',
-    'Google',
-    'Huawei',
-    'Accessories',
-    'Gaming Phones',
-    'Budget Phones',
-    'Flagship Phones'
-  ];
-
-  useEffect(() => {
-    initializeData();
-  }, []);
-
-  const initializeData = async () => {
-    setCategories(predefinedCategories);
-    await Promise.all([
-      fetchProducts(),
-      fetchExistingOffers()
-    ]);
-  };
-
-  const fetchProducts = async () => {
+  // Memoize fetch functions to prevent unnecessary re-renders
+  const fetchProducts = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:5000/api/products');
       if (response.ok) {
         const data = await response.json();
-        // Ensure data is an array
         setProducts(Array.isArray(data) ? data : []);
       } else {
         console.warn('Products API not available, using empty array');
@@ -76,17 +63,19 @@ const AdminAddOffer = () => {
       }
     } catch (error) {
       console.error('Error fetching products:', error);
-      setProducts([]); // Set empty array on error
+      setProducts([]);
       setFetchError('Could not load products. Product selection will be limited.');
     }
-  };
+  }, []);
 
-  const fetchExistingOffers = async () => {
+  const fetchExistingOffers = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:5000/api/special-offers');
       if (response.ok) {
         const data = await response.json();
-        setExistingOffers(Array.isArray(data) ? data : []);
+        // Handle both array response and object with offers property
+        const offers = Array.isArray(data) ? data : (data.offers || []);
+        setExistingOffers(offers);
       } else {
         console.warn('Special offers API returned error:', response.status);
         setExistingOffers([]);
@@ -94,11 +83,23 @@ const AdminAddOffer = () => {
     } catch (error) {
       console.error('Error fetching offers:', error);
       setExistingOffers([]);
-      if (!fetchError) { // Only set error if not already set by products
+      if (!fetchError) {
         setFetchError('Could not load existing offers.');
       }
     }
-  };
+  }, [fetchError]);
+
+  useEffect(() => {
+    const initializeData = async () => {
+      setCategories(predefinedCategories);
+      await Promise.all([
+        fetchProducts(),
+        fetchExistingOffers()
+      ]);
+    };
+
+    initializeData();
+  }, [fetchProducts, fetchExistingOffers]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -130,7 +131,7 @@ const AdminAddOffer = () => {
 
     // Calculate discounted price when discount changes
     if (name === 'discountValue' || name === 'productDetails.originalPrice') {
-      setTimeout(() => calculateDiscountedPrice(), 0); // Use setTimeout to ensure state is updated
+      setTimeout(() => calculateDiscountedPrice(), 0);
     }
   };
 
@@ -160,16 +161,14 @@ const AdminAddOffer = () => {
     if (file) {
       // Validate file size (5MB limit)
       if (file.size > 5 * 1024 * 1024) {
-        setMessage('Image file size must be less than 5MB');
-        setMessageType('error');
+        toast.error('Image file size must be less than 5MB');
         return;
       }
 
       // Validate file type
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
       if (!allowedTypes.includes(file.type)) {
-        setMessage('Please select a valid image file (JPEG, PNG, GIF, or WebP)');
-        setMessageType('error');
+        toast.error('Please select a valid image file (JPEG, PNG, GIF, or WebP)');
         return;
       }
 
@@ -232,8 +231,7 @@ const AdminAddOffer = () => {
     const missing = required.filter(field => !formData[field]);
     
     if (missing.length > 0) {
-      setMessage(`Please fill in all required fields: ${missing.join(', ')}`);
-      setMessageType('error');
+      toast.error(`Please fill in all required fields: ${missing.join(', ')}`);
       return false;
     }
 
@@ -243,21 +241,18 @@ const AdminAddOffer = () => {
     const now = new Date();
 
     if (validFrom >= validUntil) {
-      setMessage('Valid Until date must be after Valid From date');
-      setMessageType('error');
+      toast.error('Valid Until date must be after Valid From date');
       return false;
     }
 
     if (validUntil <= now && !editingOffer) {
-      setMessage('Valid Until date must be in the future');
-      setMessageType('error');
+      toast.error('Valid Until date must be in the future');
       return false;
     }
 
     // Validate discount value
     if (!formData.discountValue || parseFloat(formData.discountValue) <= 0) {
-      setMessage('Please enter a valid discount value');
-      setMessageType('error');
+      toast.error('Please enter a valid discount value');
       return false;
     }
 
@@ -272,7 +267,6 @@ const AdminAddOffer = () => {
     }
 
     setIsLoading(true);
-    setMessage('');
 
     try {
       const formDataToSend = new FormData();
@@ -302,22 +296,24 @@ const AdminAddOffer = () => {
       });
 
       if (response.ok) {
-        const result = await response.json();
-        setMessage(editingOffer ? 'Special offer updated successfully!' : 'Special offer created successfully!');
-        setMessageType('success');
+        await response.json();
         
-        if (!editingOffer) {
+        if (editingOffer) {
+          toast.success('Special offer updated successfully! 🎉');
+        } else {
+          toast.success('Special offer created successfully! 🎉');
           resetForm();
         }
-        await fetchExistingOffers(); // Refresh the offers list
+        
+        // Refresh the offers list to show the new/updated offer
+        await fetchExistingOffers();
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to save special offer');
       }
     } catch (error) {
       console.error('Submit error:', error);
-      setMessage(`Error: ${error.message}`);
-      setMessageType('error');
+      toast.error(`Error: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -349,8 +345,6 @@ const AdminAddOffer = () => {
     });
     setImagePreview('');
     setEditingOffer(null);
-    setMessage('');
-    setMessageType('');
   };
 
   const handleEdit = (offer) => {
@@ -371,6 +365,7 @@ const AdminAddOffer = () => {
       }
     });
     setImagePreview(offer.image || '');
+    toast.info('Offer loaded for editing');
   };
 
   const handleDelete = async (offerId) => {
@@ -381,16 +376,14 @@ const AdminAddOffer = () => {
         });
 
         if (response.ok) {
-          setMessage('Special offer deleted successfully!');
-          setMessageType('success');
+          toast.success('Special offer deleted successfully!');
           await fetchExistingOffers();
         } else {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Failed to delete special offer');
         }
       } catch (error) {
-        setMessage(`Error: ${error.message}`);
-        setMessageType('error');
+        toast.error(`Error: ${error.message}`);
       }
     }
   };
@@ -406,17 +399,31 @@ const AdminAddOffer = () => {
       });
 
       if (response.ok) {
-        setMessage('Offer status updated successfully!');
-        setMessageType('success');
+        toast.success(`Offer ${!currentStatus ? 'activated' : 'deactivated'} successfully!`);
         await fetchExistingOffers();
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to update offer status');
       }
     } catch (error) {
-      setMessage(`Error: ${error.message}`);
-      setMessageType('error');
+      toast.error(`Error: ${error.message}`);
     }
+  };
+
+  const getOfferRealStatus = (offer) => {
+    const currentDate = new Date();
+    const isTimeValid = new Date(offer.validUntil) >= currentDate;
+    const isManuallyActive = offer.isActive;
+    
+    if (!isManuallyActive) {
+      return { status: 'inactive', reason: 'Manually deactivated' };
+    }
+    
+    if (!isTimeValid) {
+      return { status: 'expired', reason: 'Expired' };
+    }
+    
+    return { status: 'active', reason: 'Active' };
   };
 
   return (
@@ -436,11 +443,6 @@ const AdminAddOffer = () => {
         </div>
       )}
 
-      {message && (
-        <div className={`message ${messageType}`}>
-          {message}
-        </div>
-      )}
       <form onSubmit={handleSubmit} className="offer-form">
         <div className="form-grid">
           {/* Basic Information */}
@@ -778,12 +780,21 @@ const AdminAddOffer = () => {
           <div className="offers-grid">
             {existingOffers.map(offer => (
               <div key={offer._id} className={`offer-card ${!offer.isActive ? 'inactive' : ''}`}>
+                
                 <div className="offer-header">
                   <h4>{offer.title}</h4>
                   <div className="offer-status">
-                    <span className={`status-badge ${offer.isActive ? 'active' : 'inactive'}`}>
-                      {offer.isActive ? 'Active' : 'Inactive'}
-                    </span>
+                    {(() => {
+                      const offerStatus = getOfferRealStatus(offer);
+                      return (
+                        <>
+                          <span className={`status-badge ${offerStatus.status}`}>
+                            {offerStatus.reason}
+                          </span>
+
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
                 

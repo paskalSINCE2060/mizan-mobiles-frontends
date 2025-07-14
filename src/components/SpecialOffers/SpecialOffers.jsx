@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { addToCart } from '../../slice/cartSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -18,11 +18,8 @@ const SpecialOffers = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    fetchOffers();
-  }, []);
-
-  const fetchOffers = async () => {
+  // Wrap fetchOffers in useCallback to make it stable
+  const fetchOffers = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -33,15 +30,24 @@ const SpecialOffers = () => {
       }
 
       const data = await response.json();
-      const fetchedOffers = data.offers || [];  // <-- FIX: get offers array from response
+      
+      // FIX: Handle both array response and object with offers property (same as AdminAddOffer.js)
+      const fetchedOffers = Array.isArray(data) ? data : (data.offers || []);
+      
+      console.log('Fetched offers from API:', fetchedOffers); // Debug log
 
-      // Filter only active offers and those that haven't expired
-      const currentDate = new Date();
+      // Filter only active offers that are not expired
+      const now = new Date();
       const activeOffers = fetchedOffers.filter(offer => {
-        const isActive = offer.isActive;
-        const isValid = new Date(offer.validUntil) >= currentDate;
-        return isActive && isValid;
+        const isManuallyActive = offer.isActive === true;
+        const isNotExpired = new Date(offer.validUntil) > now;
+        
+        console.log(`Offer "${offer.title}": isActive=${offer.isActive}, isNotExpired=${isNotExpired}, validUntil=${offer.validUntil}`); // Debug log
+        
+        return isManuallyActive && isNotExpired;
       });
+
+      console.log('Active offers after filtering:', activeOffers); // Debug log
 
       // Transform the API data to match your existing frontend structure
       const transformedOffers = activeOffers.map(offer => ({
@@ -50,7 +56,7 @@ const SpecialOffers = () => {
         description: offer.description,
         discount: offer.discount,
         validUntil: offer.validUntil,
-        image: offer.image || getDefaultImage(offer.category), // Use API image or fallback
+        image: offer.image ? `http://localhost:5000${offer.image}` : getDefaultImage(offer.category), // Fix image path
         category: offer.category,
         promoCode: offer.promoCode,
         redemptionSteps: offer.redemptionSteps || [
@@ -79,6 +85,8 @@ const SpecialOffers = () => {
         }
       }));
 
+      console.log('Transformed offers:', transformedOffers); // Debug log
+
       setOffers(transformedOffers);
       setFilteredOffers(transformedOffers);
     } catch (err) {
@@ -89,7 +97,7 @@ const SpecialOffers = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []); // Empty dependency array since fetchOffers doesn't depend on any props or state
 
   // Helper function to calculate discounted price
   const calculateDiscountedPrice = (originalPrice, discountType, discountValue) => {
@@ -139,6 +147,11 @@ const SpecialOffers = () => {
       return { description: specsString };
     }
   };
+
+  // useEffect to fetch offers when component mounts
+  useEffect(() => {
+    fetchOffers();
+  }, [fetchOffers]); // Now fetchOffers is included in the dependency array
 
   useEffect(() => {
     if (activeFilter === 'All Offers') {

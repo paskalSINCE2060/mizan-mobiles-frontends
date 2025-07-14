@@ -188,7 +188,7 @@ const handleAddToCart = (product) => {
         return (
             <section className="different-equipment container">
                 <h2 className="different-equipment">Multi Buy Offer</h2>
-                <p className="different-equipment offer-text">Get up to 30% off selected Galaxy products on selected Watches, Tablets, Buds and more</p>
+                <p className="different-equipment offer-text">Get up to 30% off selected Galaxy products on selected Watches, Laptops, Buds and more</p>
                 <div className="loading-container" style={{ textAlign: 'center', padding: '2rem' }}>
                     <p>Loading Galaxy products...</p>
                     <div style={{ marginTop: '1rem' }}>
@@ -212,7 +212,7 @@ const handleAddToCart = (product) => {
         return (
             <section className="different-equipment container">
                 <h2 className="different-equipment">Multi Buy Offer</h2>
-                <p className="different-equipment offer-text">Get up to 30% off selected Galaxy products on selected Watches, Tablets, Buds and more</p>
+                <p className="different-equipment offer-text">Get up to 30% off selected Galaxy products on selected Watches, Laptops, Buds and more</p>
                 <div className="error-container" style={{ textAlign: 'center', padding: '2rem' }}>
                     <p style={{ color: 'red', marginBottom: '1rem' }}>{error}</p>
                     <button 
@@ -239,7 +239,7 @@ const handleAddToCart = (product) => {
         return (
             <section className="different-equipment container">
                 <h2 className="different-equipment">Multi Buy Offer</h2>
-                <p className="different-equipment offer-text">Get up to 30% off selected Galaxy products on selected Watches, Tablets, Buds and more</p>
+                <p className="different-equipment offer-text">Get up to 30% off selected Galaxy products on selected Watches, Laptops, Buds and more</p>
                 <div className="no-products-container" style={{ textAlign: 'center', padding: '2rem' }}>
                     <p>No Galaxy products available at the moment.</p>
                     <p>Please check back later!</p>
@@ -272,7 +272,7 @@ const handleAddToCart = (product) => {
                 <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                     <div>
                         <h2 className="different-equipment">Multi Buy Offer</h2>
-                        <p className="different-equipment offer-text">Get up to 30% off selected Galaxy products on selected Watches, Tablets, Buds and more</p>
+                        <p className="different-equipment offer-text">Get up to 30% off selected Galaxy products on selected Watches, Laptops, Buds and more</p>
                     </div>
                     {products.length > 4 && (
                         <button 
@@ -310,7 +310,10 @@ const handleAddToCart = (product) => {
                             onClick={() => handleProductClick(product)}
                             style={{ cursor: 'pointer' }}
                         >
-                            <div className="product-image-container" style={{ position: 'relative' }}>
+                            {/* Wishlist button now positioned relative to the product card */}
+                            <WishlistButton product={product} className="wishlist-button-card" />
+                            
+                            <div className="product-image-container">
                                 <img 
                                     src={product.image} 
                                     alt={product.name} 
@@ -320,7 +323,6 @@ const handleAddToCart = (product) => {
                                         e.target.alt = 'Product image not available';
                                     }}
                                 />
-                                <WishlistButton product={product} className="wishlist-button" />
                                 {!product.inStock && (
                                     <div className="out-of-stock-overlay" style={{
                                         position: 'absolute',

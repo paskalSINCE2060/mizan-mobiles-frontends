@@ -1,4 +1,4 @@
-// Updated Profile.jsx - Email and Phone fields disabled in edit mode
+// Fixed Profile.jsx - Proper data persistence and error handling
 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -29,19 +29,30 @@ const Profile = () => {
       navigate("/login");
     } else {
       console.log('User data from Redux:', user);
-      setFormData({
+      const initialFormData = {
         fullName: user.fullName || "",
         email: user.email || "",
         phone: user.phone || user.number || "",
-        // Format date properly for input field
         dateOfBirth: user.dateOfBirth ? 
           (user.dateOfBirth.includes('T') ? 
             user.dateOfBirth.split('T')[0] : user.dateOfBirth) : "",
         location: user.location || "",
         bio: user.bio || "",
-        gender: user.gender || ""      });
+        gender: user.gender || ""
+      };
+      setFormData(initialFormData);
     }
   }, [isAuthenticated, user, navigate]);
+
+    useEffect(() => {
+    console.log('=== PROFILE DEBUG ===');
+    console.log('Redux user:', user);
+    console.log('localStorage user:', JSON.parse(localStorage.getItem('loggedInUser') || '{}'));
+    console.log('Current formData:', formData);
+    console.log('isAuthenticated:', isAuthenticated);
+    console.log('token:', token);
+    console.log('========================');
+  }, [user, formData, isAuthenticated, token]);
 
   // Helper function to generate username safely
   const generateUsername = (fullName) => {
@@ -93,6 +104,9 @@ const Profile = () => {
         const updatedUser = { ...user, profileImage: result.profileImage };
         dispatch(updateUserProfile(updatedUser));
         
+        // IMPORTANT: Also update localStorage to persist the change
+        localStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
+        
         setMessage("Profile image updated successfully!");
         setTimeout(() => setMessage(""), 3000);
       } else {
@@ -127,20 +141,21 @@ const Profile = () => {
     try {
       console.log('Submitting form data:', formData);
       
-      // IMPORTANT: Don't send email and phone in the update request
-      // since they should remain unchanged from signup
-      const cleanedFormData = {
-        fullName: formData.fullName?.trim() || "",
-        // Remove email and phone from update payload
-        // email: formData.email?.trim() || "",
-        // phone: formData.phone?.trim() || "",
-        dateOfBirth: formData.dateOfBirth?.trim() || "",
-        location: formData.location?.trim() || "",
-        bio: formData.bio?.trim() || "",
-        gender: formData.gender?.trim() || ""
-            };
+      // Validate required fields
+      if (!formData.fullName || formData.fullName.trim() === '') {
+        throw new Error('Full name is required');
+      }
 
-      console.log('Cleaned form data being sent:', cleanedFormData);
+      // Prepare data for API call - only send the fields that can be updated
+      const updatePayload = {
+        fullName: formData.fullName.trim(),
+        dateOfBirth: formData.dateOfBirth || "",
+        location: formData.location || "",
+        bio: formData.bio || "",
+        gender: formData.gender || ""
+      };
+
+      console.log('Update payload being sent:', updatePayload);
       
       // API call to update profile
       const response = await fetch(`${API_BASE_URL}/api/users/${user.id || user._id}`, {
@@ -149,15 +164,46 @@ const Profile = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(cleanedFormData)
+        body: JSON.stringify(updatePayload)
       });
 
+      const responseData = await response.json();
+      console.log('API response:', responseData);
+
       if (response.ok) {
-        const updatedUser = await response.json();
-        console.log('Profile update response:', updatedUser);
+        console.log('Profile update successful:', responseData);
         
-        // Update Redux store with the complete updated user data
+        // CRITICAL FIX: Create the complete updated user object
+        const updatedUser = {
+          ...user, // Keep all existing user data
+          ...responseData, // Apply the updates from the response
+          // Explicitly preserve critical fields that shouldn't change
+          id: user.id || user._id,
+          _id: user._id || user.id,
+          email: user.email, // Email should never change
+          phone: user.phone || user.number, // Phone should never change
+          profileImage: user.profileImage // Keep existing profile image
+        };
+        
+        console.log('Complete updated user object:', updatedUser);
+        
+        // Update Redux store
         dispatch(updateUserProfile(updatedUser));
+        
+        // CRITICAL FIX: Update localStorage immediately to persist changes
+        localStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
+        
+        // Update local form data to reflect the changes
+        setFormData(prev => ({
+          ...prev,
+          fullName: updatedUser.fullName,
+          dateOfBirth: updatedUser.dateOfBirth ? 
+            (updatedUser.dateOfBirth.includes('T') ? 
+              updatedUser.dateOfBirth.split('T')[0] : updatedUser.dateOfBirth) : "",
+          location: updatedUser.location || "",
+          bio: updatedUser.bio || "",
+          gender: updatedUser.gender || ""
+        }));
         
         setIsEditing(false);
         setMessage("Profile updated successfully!");
@@ -165,9 +211,8 @@ const Profile = () => {
         // Clear message after 3 seconds
         setTimeout(() => setMessage(""), 3000);
       } else {
-        const errorData = await response.json();
-        console.error('Update failed:', errorData);
-        throw new Error(errorData.error || 'Failed to update profile');
+        console.error('Update failed:', responseData);
+        throw new Error(responseData.error || 'Failed to update profile');
       }
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -191,9 +236,23 @@ const Profile = () => {
       location: user.location || "",
       bio: user.bio || "",
       gender: user.gender || ""
-        });
+    });
     setIsEditing(false);
     setMessage("");
+  };
+
+  // Format date for display
+  const formatDateForDisplay = (dateString) => {
+    if (!dateString) return "Not provided";
+    
+    try {
+      if (dateString.includes('T')) {
+        return new Date(dateString).toLocaleDateString();
+      }
+      return dateString;
+    } catch (error) {
+      return "Invalid date";
+    }
   };
 
   // Debug: Log current user state
@@ -256,7 +315,7 @@ const Profile = () => {
 
         {/* Message Display */}
         {message && (
-          <div className={`message ${message.includes('Error') ? 'error' : 'success'}`}>
+          <div className={`message ${message.includes('Error') || message.includes('error') ? 'error' : 'success'}`}>
             {message}
           </div>
         )}
@@ -272,7 +331,7 @@ const Profile = () => {
                   type="text"
                   id="fullName"
                   name="fullName"
-                  value={formData.fullName}
+                  value={formData.fullName || ""}
                   onChange={handleInputChange}
                   required
                 />
@@ -285,7 +344,7 @@ const Profile = () => {
                   type="email"
                   id="email"
                   name="email"
-                  value={formData.email}
+                  value={formData.email || ""}
                   disabled
                   className="disabled-field"
                   title="Email cannot be changed after signup"
@@ -300,7 +359,7 @@ const Profile = () => {
                   type="tel"
                   id="phone"
                   name="phone"
-                  value={formData.phone}
+                  value={formData.phone || ""}
                   disabled
                   className="disabled-field"
                   title="Phone number cannot be changed after signup"
@@ -314,7 +373,7 @@ const Profile = () => {
                   type="date"
                   id="dateOfBirth"
                   name="dateOfBirth"
-                  value={formData.dateOfBirth}
+                  value={formData.dateOfBirth || ""}
                   onChange={handleInputChange}
                 />
               </div>
@@ -325,7 +384,7 @@ const Profile = () => {
                   type="text"
                   id="location"
                   name="location"
-                  value={formData.location}
+                  value={formData.location || ""}
                   onChange={handleInputChange}
                   placeholder="City, Country"
                 />
@@ -336,7 +395,7 @@ const Profile = () => {
                 <select
                   id="gender"
                   name="gender"
-                  value={formData.gender}
+                  value={formData.gender || ""}
                   onChange={handleInputChange}
                 >
                   <option value="">Select Gender</option>
@@ -347,13 +406,12 @@ const Profile = () => {
                 </select>
               </div>
 
-
               <div className="form-group full-width">
                 <label htmlFor="bio">Bio</label>
                 <textarea
                   id="bio"
                   name="bio"
-                  value={formData.bio}
+                  value={formData.bio || ""}
                   onChange={handleInputChange}
                   placeholder="Tell us about yourself..."
                   rows="4"
@@ -396,10 +454,7 @@ const Profile = () => {
                   </tr>
                   <tr>
                     <td><strong>Date of Birth:</strong></td>
-                    <td>{user.dateOfBirth ? 
-                      (user.dateOfBirth.includes('T') ? 
-                        new Date(user.dateOfBirth).toLocaleDateString() : user.dateOfBirth) 
-                      : "Not provided"}</td>
+                    <td>{formatDateForDisplay(user.dateOfBirth)}</td>
                   </tr>
                   <tr>
                     <td><strong>Location:</strong></td>

@@ -13,7 +13,6 @@
   font-weight: bold;
   color: #3498db;
   margin-bottom: 15px;
-  text-align: center;
 }
 
 /* Offer text below heading */
@@ -46,12 +45,19 @@
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   border: 1px solid #eaeaea;
   cursor: pointer;
+  position: relative; /* Added for wishlist button positioning */
 }
 
 /* Product hover effect */
 .different-equipment.product:hover {
   transform: translateY(-15px);
   box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+/* Product image container */
+.product-image-container {
+  position: relative;
+  display: inline-block;
 }
 
 /* Product image styling */
@@ -170,59 +176,54 @@
   background: #ccc;
 }
 
-/* Product image container with wishlist button */
-.product-image-container {
-  position: relative;
-  display: inline-block;
-}
-
-/* FIXED: Wishlist button styling - Heart icon now fits properly */
-.product-image-container .wishlist-button {
+/* UPDATED: Wishlist button styling - Now positioned outside the image container */
+.wishlist-button-card {
   position: absolute;
   top: 10px;
-  right: 0px;
+  right: 15px;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   border: 2px solid #ff4757;
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 16px;
+  font-size: 18px;
   color: #ff4757;
   padding: 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  backdrop-filter: blur(5px);
 }
 
 /* Wishlist button hover effect */
-.product-image-container .wishlist-button:hover {
+.wishlist-button-card:hover {
   background-color: rgba(255, 71, 87, 0.1);
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3);
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
 }
 
 /* Active/clicked state - filled with red */
-.product-image-container .wishlist-button.active {
+.wishlist-button-card.active {
   background-color: #ff4757;
   color: white;
   border-color: #ff4757;
 }
 
-.product-image-container .wishlist-button.active:hover {
+.wishlist-button-card.active:hover {
   background-color: #ff3838;
   border-color: #ff3838;
 }
 
 /* Wishlist button animations */
-.wishlist-button.clicked {
+.wishlist-button-card.clicked {
   animation: heartBeat 0.6s ease-in-out;
 }
 
-.wishlist-button.animate {
+.wishlist-button-card.animate {
   animation: wishlistPulse 0.6s ease-in-out;
 }
 
@@ -331,7 +332,6 @@
   transition: all 0.3s ease;
 }
 
-
 /* Show less container */
 .show-less-container {
   text-align: center;
@@ -390,9 +390,11 @@
   }
   
   /* Adjust wishlist button for mobile */
-  .product-image-container .wishlist-button {
-    width: 35px;
-    height: 35px;
-    font-size: 14px;
+  .wishlist-button-card {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    top: 10px;
+    right: 10px;
   }
 }
