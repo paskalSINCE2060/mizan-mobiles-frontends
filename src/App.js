@@ -131,6 +131,22 @@ function AppContent() {
     }
   }, [token, isAuthenticated, dispatch]);
 
+    // Debug token info
+  useEffect(() => {
+    console.log('🔍 Current Redux state:', { token, user, isAuthenticated });
+    console.log('🔍 LocalStorage token:', localStorage.getItem('token'));
+    console.log('🔍 LocalStorage user:', localStorage.getItem('loggedInUser'));
+    
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        console.log('🔍 Token payload:', payload);
+      } catch (e) {
+        console.error('❌ Token is not valid JWT format:', e);
+      }
+    }
+  }, [token, user, isAuthenticated]);
+
   return (
     <CartProvider>
       <Router>

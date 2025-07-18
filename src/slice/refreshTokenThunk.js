@@ -1,23 +1,29 @@
-import axios from 'axios';
-import { loginSuccess, logout } from '../slice/authSlice';
+// src/slice/refreshTokenThunk.js
 
-export const refreshTokenThunk = () => async (dispatch) => {
+import axios from 'axios';
+import { loginSuccess, logout } from './authSlice';
+
+export const refreshTokenThunk = () => async (dispatch, getState) => {
   try {
-    const refreshToken = localStorage.getItem('refreshToken');
+    // 1. Get refresh token from Redux state
+    const state = getState();
+    const refreshToken = state.auth.refreshToken || localStorage.getItem('refreshToken');
+
     if (!refreshToken) throw new Error('No refresh token found');
 
-    const res = await axios.post('/refresh-token', { refreshToken });
+    // 2. Send refresh request to backend
+    const res = await axios.post('http://localhost:5000/api/refresh-token', { refreshToken });
 
     const { token, user, refreshToken: newRefreshToken } = res.data;
 
-    // Save new tokens and user in localStorage with same keys as authSlice expects
-    localStorage.setItem('token', token);
-    localStorage.setItem('loggedInUser', JSON.stringify(user));
-    localStorage.setItem('refreshToken', newRefreshToken);
-
+    // 3. Dispatch loginSuccess to update Redux & localStorage
     dispatch(loginSuccess({ token, user, refreshToken: newRefreshToken }));
+
+    return { token, user, refreshToken: newRefreshToken };
   } catch (error) {
-    console.error('Refresh token failed:', error);
-    dispatch(logout());
+    console.error('🔁 Refresh token failed:', error?.response?.data || error.message);
+
+    dispatch(logout()); // Clear state + localStorage
+    throw error; // Let axiosInstance handle the rejection
   }
 };
