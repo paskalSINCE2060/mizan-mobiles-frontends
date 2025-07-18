@@ -10,32 +10,30 @@ import {
   selectSellPhoneError
 } from '../slice/sellPhoneSlice';
 
-// Import phone orders actions and selectors
 import { fetchPhoneOrders, clearError as clearPhoneOrdersError } from '../slice/phoneOrderSlice';
 
 import SellRequestsTab from './SellRequestsTab';
-import PhoneOrdersManagement from './PhoneOrdersManagement'; // manages user phone orders
+import PhoneOrdersManagement from './PhoneOrdersManagement';
 import ErrorDisplay from '../components/admin/ErrorDisplay';
 import AuthGuard from '../components/admin/AuthGuard';
-import RequestModal from '../components/admin/RequestModal'; // modal for quote/status updates
-import CheckoutOrdersTab from '../components/admin/CheckoutOrdersTab'; // manages checkout orders
+import RequestModal from '../components/admin/RequestModal';
+import CheckoutOrdersTab from '../components/admin/CheckoutOrdersTab';
+
+import api from '../utils/api'; // ✅ Custom axios instance
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
 
-  // Redux selectors for sell phone requests
   const requests = useSelector(selectSellPhoneRequests);
   const pagination = useSelector(selectSellPhonePagination);
   const loading = useSelector(selectSellPhoneLoading);
   const error = useSelector(selectSellPhoneError);
 
-  // Redux selectors for phone orders
   const phoneOrders = useSelector(state => state.phoneOrders);
   const { error: userOrdersError } = phoneOrders;
 
   const token = useSelector((state) => state.auth.token);
 
-  // Local state
   const [activeTab, setActiveTab] = useState('sell-requests');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -52,10 +50,26 @@ const AdminDashboard = () => {
     adminNotes: ''
   });
 
-  // Total products state
   const [totalProducts, setTotalProducts] = useState(0);
 
-  // Fetch Sell Phone Requests on mount & filters
+  // 🔍 DEBUGGING TOKEN INFO
+  useEffect(() => {
+    console.log('🔍 Current token from Redux:', token);
+    console.log('🔍 Current token from localStorage:', localStorage.getItem('authToken'));
+    console.log('🔍 Token type:', typeof token);
+    console.log('🔍 Token length:', token?.length);
+
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        console.log('🔍 Token payload:', payload);
+      } catch (e) {
+        console.error('❌ Token is not valid JWT format:', e);
+      }
+    }
+  }, [token]);
+
+  // 🟢 Fetch Sell Phone Requests
   useEffect(() => {
     if (!token) return;
     dispatch(fetchSellPhoneRequests({
@@ -66,7 +80,7 @@ const AdminDashboard = () => {
     }));
   }, [dispatch, token, statusFilter, searchTerm]);
 
-  // Fetch phone orders when switching to user-orders tab
+  // 🟢 Fetch phone orders if user switches to that tab
   useEffect(() => {
     if (!token) return;
     if (activeTab === 'user-orders') {
@@ -74,29 +88,27 @@ const AdminDashboard = () => {
     }
   }, [dispatch, token, activeTab]);
 
-  // Fetch total products count from backend
+  // 🟢 Fetch total products from backend using API client
   useEffect(() => {
     const fetchTotalProducts = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/admin/dashboard-stats', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!res.ok) throw new Error('Failed to fetch dashboard stats');
-        const data = await res.json();
-        setTotalProducts(data.totalProducts || 0);
+        console.log('🔄 Fetching dashboard stats...');
+        const response = await api.get('/api/admin/dashboard-stats');
+        console.log('📊 Dashboard stats response:', response.data);
+        setTotalProducts(response.data.totalProducts || 0);
       } catch (err) {
-        console.error('Error fetching total products:', err);
+        console.error('❌ Error fetching total products:', err);
+        console.error('Error details:', err.response?.data);
         setTotalProducts(0);
       }
     };
 
-    if (token) fetchTotalProducts();
+    if (token) {
+      fetchTotalProducts();
+    }
   }, [token]);
 
-  // Handle refresh for phone orders
-  // (Removed unused handleRefreshPhoneOrders function)
-
-  // Clear errors
+  // 🧹 Clear errors
   const handleClearError = () => {
     dispatch(clearError());
     dispatch(clearPhoneOrdersError());
@@ -109,7 +121,7 @@ const AdminDashboard = () => {
           Admin Dashboard
         </h1>
 
-        {/* Total products display */}
+        {/* 🔢 Total products count */}
         <div style={{
           marginBottom: 20,
           padding: 20,
@@ -123,52 +135,27 @@ const AdminDashboard = () => {
           Total Products: {totalProducts}
         </div>
 
-        {/* Tabs */}
+        {/* 🔘 Tabs */}
         <div style={{ marginBottom: 20 }}>
-          <button
-            style={{
-              marginRight: 10,
-              padding: '10px 20px',
-              backgroundColor: activeTab === 'sell-requests' ? '#667eea' : '#ccc',
-              color: activeTab === 'sell-requests' ? 'white' : 'black',
-              border: 'none',
-              borderRadius: 6,
-              cursor: 'pointer'
-            }}
-            onClick={() => setActiveTab('sell-requests')}
-          >
-            Sell Phone Requests
-          </button>
-
-          <button
-            style={{
-              marginRight: 10,
-              padding: '10px 20px',
-              backgroundColor: activeTab === 'user-orders' ? '#667eea' : '#ccc',
-              color: activeTab === 'user-orders' ? 'white' : 'black',
-              border: 'none',
-              borderRadius: 6,
-              cursor: 'pointer'
-            }}
-            onClick={() => setActiveTab('user-orders')}
-          >
-            User Orders
-          </button>
-
-          {/* NEW TAB - Checkout Orders */}
-          <button
-            style={{
-              padding: '10px 20px',
-              backgroundColor: activeTab === 'checkout-orders' ? '#667eea' : '#ccc',
-              color: activeTab === 'checkout-orders' ? 'white' : 'black',
-              border: 'none',
-              borderRadius: 6,
-              cursor: 'pointer'
-            }}
-            onClick={() => setActiveTab('checkout-orders')}
-          >
-            Checkout Orders
-          </button>
+          {['sell-requests', 'user-orders', 'checkout-orders'].map(tab => (
+            <button
+              key={tab}
+              style={{
+                marginRight: 10,
+                padding: '10px 20px',
+                backgroundColor: activeTab === tab ? '#667eea' : '#ccc',
+                color: activeTab === tab ? 'white' : 'black',
+                border: 'none',
+                borderRadius: 6,
+                cursor: 'pointer'
+              }}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab === 'sell-requests' && 'Sell Phone Requests'}
+              {tab === 'user-orders' && 'User Orders'}
+              {tab === 'checkout-orders' && 'Checkout Orders'}
+            </button>
+          ))}
         </div>
 
         <ErrorDisplay
@@ -176,7 +163,7 @@ const AdminDashboard = () => {
           clearError={handleClearError}
         />
 
-        {/* Sell Phone Requests Tab */}
+        {/* Tabs content */}
         {activeTab === 'sell-requests' && (
           <SellRequestsTab
             requests={requests}
@@ -211,7 +198,7 @@ const AdminDashboard = () => {
               }
               setShowModal(true);
             }}
-            onUpdateStatus={(id, status) => {
+            onUpdateStatus={() => {
               dispatch(fetchSellPhoneRequests({
                 page: pagination?.currentPage || 1,
                 limit: 20,
@@ -222,17 +209,10 @@ const AdminDashboard = () => {
           />
         )}
 
-        {/* User Orders Tab */}
-        {activeTab === 'user-orders' && (
-          <PhoneOrdersManagement />
-        )}
+        {activeTab === 'user-orders' && <PhoneOrdersManagement />}
+        {activeTab === 'checkout-orders' && <CheckoutOrdersTab />}
 
-        {/* NEW TAB CONTENT - Checkout Orders */}
-        {activeTab === 'checkout-orders' && (
-          <CheckoutOrdersTab />
-        )}
-
-        {/* Modal for Quote/Status Updates */}
+        {/* Modal */}
         {showModal && (
           <RequestModal
             show={showModal}
@@ -243,8 +223,8 @@ const AdminDashboard = () => {
             onClose={() => setShowModal(false)}
             onQuoteFormChange={setQuoteForm}
             onStatusFormChange={setStatusForm}
-            onQuoteSubmit={() => {/* Add your submit logic here */}}
-            onStatusSubmit={() => {/* Add your submit logic here */}}
+            onQuoteSubmit={() => { /* Add submit logic */ }}
+            onStatusSubmit={() => { /* Add submit logic */ }}
           />
         )}
       </div>

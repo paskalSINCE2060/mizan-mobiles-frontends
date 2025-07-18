@@ -1,13 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit'
-import cartReducer from '../slice/cartSlice'
-import wishlistReducer from '../slice/wishlistSlice'
-import authReducer from '../slice/authSlice'
-import sellPhoneReducer from '../slice/sellPhoneSlice'
-import phoneOrderReducer from '../slice/phoneOrderSlice'
-import checkoutOrdersReducer from '../slice/checkoutOrdersSlice'
-import productsReducer from '../slice/productsSlice' // Add the products slice
-import { cartMiddleware } from '../utils/cartMiddleware'
-import { wishlistMiddleware } from '../utils/wishlistMuddleware'
+import { configureStore } from '@reduxjs/toolkit';
+import cartReducer from '../slice/cartSlice';
+import wishlistReducer from '../slice/wishlistSlice';
+import authReducer from '../slice/authSlice';
+import sellPhoneReducer from '../slice/sellPhoneSlice';
+import phoneOrderReducer from '../slice/phoneOrderSlice';
+import checkoutOrdersReducer from '../slice/checkoutOrdersSlice';
+import productsReducer from '../slice/productsSlice';
+import { cartMiddleware } from '../utils/cartMiddleware';
+import { wishlistMiddleware } from '../utils/wishlistMuddleware';
 
 export const store = configureStore({
   reducer: {
@@ -17,8 +17,10 @@ export const store = configureStore({
     sellPhone: sellPhoneReducer,
     phoneOrders: phoneOrderReducer,
     checkoutOrders: checkoutOrdersReducer,
-    products: productsReducer, // Add products reducer
+    products: productsReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(cartMiddleware, wishlistMiddleware),
-})
+    getDefaultMiddleware({
+      serializableCheck: false, // disables redux warning for localStorage
+    }).concat(cartMiddleware, wishlistMiddleware),
+});

@@ -1,19 +1,12 @@
+// my-app/src/slice/authSlice.js
 import { createSlice } from '@reduxjs/toolkit';
-import { loginUser, signupUser } from './authThunk';
-
-const safeSaveToStorage = (key, value) => {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch (e) {
-    console.warn("Could not save to localStorage", e);
-  }
-};
+import { loginUser, signupUser, refreshTokenThunk } from './authThunk';
 
 const initialState = {
-  user: JSON.parse(localStorage.getItem('loggedInUser')) || null,
-  token: localStorage.getItem('token') || null,
-  refreshToken: localStorage.getItem('refreshToken') || null,
-  isAuthenticated: !!localStorage.getItem('token'),
+  user: null,
+  token: null,
+  refreshToken: null,
+  isAuthenticated: false,
   loading: false,
   error: null,
   signupError: null,
@@ -32,9 +25,12 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.error = null;
 
-      safeSaveToStorage('token', token);
-      safeSaveToStorage('loggedInUser', user);
-      safeSaveToStorage('refreshToken', refreshToken);
+      // Save to localStorage
+      localStorage.setItem('token', token);
+      localStorage.setItem('loggedInUser', JSON.stringify(user));
+      if (refreshToken) {
+        localStorage.setItem('refreshToken', refreshToken);
+      }
     },
 
     updateUserProfile(state, action) {
@@ -42,19 +38,13 @@ const authSlice = createSlice({
       const mergedUser = {
         ...state.user,
         ...updatedUser,
-        id: state.user?.id || updatedUser.id,
-        _id: state.user?._id || updatedUser._id,
-        email: state.user?.email || updatedUser.email,
-        phone: state.user?.phone || updatedUser.phone,
-        number: state.user?.number || updatedUser.number,
+        role: updatedUser.role || state.user?.role,
         profileImage: updatedUser.profileImage || state.user?.profileImage,
-        createdAt: state.user?.createdAt,
-        role: state.user?.role,
         updatedAt: new Date().toISOString(),
       };
 
       state.user = mergedUser;
-      safeSaveToStorage('loggedInUser', mergedUser);
+      localStorage.setItem('loggedInUser', JSON.stringify(mergedUser));
     },
 
     logout(state) {
@@ -66,6 +56,7 @@ const authSlice = createSlice({
       state.error = null;
       state.signupError = null;
 
+      // Clear localStorage
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('loggedInUser');
@@ -75,11 +66,35 @@ const authSlice = createSlice({
       state.error = null;
       state.signupError = null;
     },
-  },
 
+    // Add this to initialize state from localStorage
+    initializeAuth(state) {
+      const token = localStorage.getItem('token');
+      const userStr = localStorage.getItem('loggedInUser');
+      const refreshToken = localStorage.getItem('refreshToken');
+
+      if (token && userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          state.token = token;
+          state.user = user;
+          state.refreshToken = refreshToken;
+          state.isAuthenticated = true;
+        } catch (error) {
+          console.error('Error parsing user from localStorage:', error);
+          // Clear corrupted data
+          localStorage.removeItem('token');
+          localStorage.removeItem('loggedInUser');
+          localStorage.removeItem('refreshToken');
+        }
+      }
+    },
+  },
+  
+  // ADD THIS SECTION - extraReducers to handle async thunks
   extraReducers: (builder) => {
     builder
-      // Login Thunk
+      // Handle loginUser thunk
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -87,21 +102,18 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.token = action.payload.token;
-        state.refreshToken = action.payload.refreshToken;
         state.user = action.payload.user;
+        state.refreshToken = action.payload.refreshToken;
         state.isAuthenticated = true;
         state.error = null;
-
-        safeSaveToStorage('token', action.payload.token);
-        safeSaveToStorage('refreshToken', action.payload.refreshToken);
-        safeSaveToStorage('loggedInUser', action.payload.user);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Login failed';
+        state.error = action.payload;
+        state.isAuthenticated = false;
       })
-
-      // Signup Thunk
+      
+      // Handle signupUser thunk
       .addCase(signupUser.pending, (state) => {
         state.signupLoading = true;
         state.signupError = null;
@@ -109,22 +121,34 @@ const authSlice = createSlice({
       .addCase(signupUser.fulfilled, (state, action) => {
         state.signupLoading = false;
         state.token = action.payload.token;
-        state.refreshToken = action.payload.refreshToken;
         state.user = action.payload.user;
+        state.refreshToken = action.payload.refreshToken;
         state.isAuthenticated = true;
         state.signupError = null;
-
-        safeSaveToStorage('token', action.payload.token);
-        safeSaveToStorage('refreshToken', action.payload.refreshToken);
-        safeSaveToStorage('loggedInUser', action.payload.user);
       })
       .addCase(signupUser.rejected, (state, action) => {
         state.signupLoading = false;
-        state.signupError = action.payload || 'Signup failed';
+        state.signupError = action.payload;
+        state.isAuthenticated = false;
+      })
+      
+      // Handle refreshTokenThunk
+      .addCase(refreshTokenThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(refreshTokenThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.token = action.payload.token;
+        state.user = action.payload.user;
+        state.error = null;
+      })
+      .addCase(refreshTokenThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        // Don't automatically logout on refresh token failure
+        // You might want to handle this differently
       });
-
-    // ✅ Do NOT add refreshTokenThunk to extraReducers because it's not a createAsyncThunk
-  }
+  },
 });
 
 export const {
@@ -132,6 +156,7 @@ export const {
   updateUserProfile,
   logout,
   clearAuthError,
+  initializeAuth,
 } = authSlice.actions;
 
 export default authSlice.reducer;
