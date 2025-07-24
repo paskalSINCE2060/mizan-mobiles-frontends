@@ -18,8 +18,12 @@ import ErrorDisplay from '../components/admin/ErrorDisplay';
 import AuthGuard from '../components/admin/AuthGuard';
 import RequestModal from '../components/admin/RequestModal';
 import CheckoutOrdersTab from '../components/admin/CheckoutOrdersTab';
+import AdminAddProduct from '../components/AdminAddProduct/AdminAddProduct';
+import AdminAddOffer from '../components/AdminAddOffer/AdminAddOffer';
+import EditProduct from '../components/EditProduct/EditProduct';
+import ProductList from '../components/ProductList/ProductList'; // ✅ Import your ProductList component
 
-import api from '../utils/api'; // ✅ Custom axios instance
+import api from '../utils/api'; // Custom axios instance
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -52,53 +56,14 @@ const AdminDashboard = () => {
 
   const [totalProducts, setTotalProducts] = useState(0);
 
-  // 🔍 DEBUGGING TOKEN INFO
-  useEffect(() => {
-    console.log('🔍 Current token from Redux:', token);
-    console.log('🔍 Current token from localStorage:', localStorage.getItem('authToken'));
-    console.log('🔍 Token type:', typeof token);
-    console.log('🔍 Token length:', token?.length);
-
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        console.log('🔍 Token payload:', payload);
-      } catch (e) {
-        console.error('❌ Token is not valid JWT format:', e);
-      }
-    }
-  }, [token]);
-
-  // 🟢 Fetch Sell Phone Requests
-  useEffect(() => {
-    if (!token) return;
-    dispatch(fetchSellPhoneRequests({
-      page: 1,
-      limit: 20,
-      status: statusFilter,
-      search: searchTerm
-    }));
-  }, [dispatch, token, statusFilter, searchTerm]);
-
-  // 🟢 Fetch phone orders if user switches to that tab
-  useEffect(() => {
-    if (!token) return;
-    if (activeTab === 'user-orders') {
-      dispatch(fetchPhoneOrders());
-    }
-  }, [dispatch, token, activeTab]);
-
-  // 🟢 Fetch total products from backend using API client
+  // Fetch dashboard stats
   useEffect(() => {
     const fetchTotalProducts = async () => {
       try {
-        console.log('🔄 Fetching dashboard stats...');
         const response = await api.get('/api/admin/dashboard-stats');
-        console.log('📊 Dashboard stats response:', response.data);
         setTotalProducts(response.data.totalProducts || 0);
       } catch (err) {
         console.error('❌ Error fetching total products:', err);
-        console.error('Error details:', err.response?.data);
         setTotalProducts(0);
       }
     };
@@ -108,10 +73,48 @@ const AdminDashboard = () => {
     }
   }, [token]);
 
-  // 🧹 Clear errors
+  // Fetch Sell Phone Requests
+  useEffect(() => {
+    if (!token) return;
+    if (activeTab === 'sell-requests') {
+      dispatch(fetchSellPhoneRequests({
+        page: 1,
+        limit: 20,
+        status: statusFilter,
+        search: searchTerm
+      }));
+    }
+  }, [dispatch, token, activeTab, statusFilter, searchTerm]);
+
+  // Fetch phone orders if user switches to that tab
+  useEffect(() => {
+    if (!token) return;
+    if (activeTab === 'user-orders') {
+      dispatch(fetchPhoneOrders());
+    }
+  }, [dispatch, token, activeTab]);
+
   const handleClearError = () => {
     dispatch(clearError());
     dispatch(clearPhoneOrdersError());
+  };
+
+  const handleProductAdded = async () => {
+    try {
+      const response = await api.get('/api/admin/dashboard-stats');
+      setTotalProducts(response.data.totalProducts || 0);
+    } catch (err) {
+      console.error('❌ Error refreshing total products:', err);
+    }
+  };
+
+  const handleProductUpdated = async () => {
+    try {
+      const response = await api.get('/api/admin/dashboard-stats');
+      setTotalProducts(response.data.totalProducts || 0);
+    } catch (err) {
+      console.error('❌ Error refreshing total products:', err);
+    }
   };
 
   return (
@@ -121,7 +124,6 @@ const AdminDashboard = () => {
           Admin Dashboard
         </h1>
 
-        {/* 🔢 Total products count */}
         <div style={{
           marginBottom: 20,
           padding: 20,
@@ -135,25 +137,33 @@ const AdminDashboard = () => {
           Total Products: {totalProducts}
         </div>
 
-        {/* 🔘 Tabs */}
+        {/* ✅ Tab Buttons */}
         <div style={{ marginBottom: 20 }}>
-          {['sell-requests', 'user-orders', 'checkout-orders'].map(tab => (
+          {[
+            { key: 'sell-requests', label: 'Sell Phone Requests' },
+            { key: 'user-orders', label: 'Booking Orders' },
+            { key: 'checkout-orders', label: 'Checkout Orders' },
+            { key: 'add-product', label: 'Add Product' },
+            { key: 'edit-product', label: 'Edit Product' },
+            { key: 'add-offer', label: 'Add Offer' },
+            { key: 'manage-products', label: 'Manage Products' }, // ✅ NEW TAB
+          ].map(tab => (
             <button
-              key={tab}
+              key={tab.key}
               style={{
                 marginRight: 10,
+                marginBottom: 10,
                 padding: '10px 20px',
-                backgroundColor: activeTab === tab ? '#667eea' : '#ccc',
-                color: activeTab === tab ? 'white' : 'black',
+                backgroundColor: activeTab === tab.key ? '#667eea' : '#ccc',
+                color: activeTab === tab.key ? 'white' : 'black',
                 border: 'none',
                 borderRadius: 6,
-                cursor: 'pointer'
+                cursor: 'pointer',
+                transition: 'background-color 0.3s'
               }}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => setActiveTab(tab.key)}
             >
-              {tab === 'sell-requests' && 'Sell Phone Requests'}
-              {tab === 'user-orders' && 'User Orders'}
-              {tab === 'checkout-orders' && 'Checkout Orders'}
+              {tab.label}
             </button>
           ))}
         </div>
@@ -163,7 +173,7 @@ const AdminDashboard = () => {
           clearError={handleClearError}
         />
 
-        {/* Tabs content */}
+        {/* ✅ Tab Content */}
         {activeTab === 'sell-requests' && (
           <SellRequestsTab
             requests={requests}
@@ -211,6 +221,14 @@ const AdminDashboard = () => {
 
         {activeTab === 'user-orders' && <PhoneOrdersManagement />}
         {activeTab === 'checkout-orders' && <CheckoutOrdersTab />}
+        {activeTab === 'add-product' && (
+          <AdminAddProduct onProductAdded={handleProductAdded} />
+        )}
+        {activeTab === 'edit-product' && (
+          <EditProduct onProductUpdated={handleProductUpdated} />
+        )}
+        {activeTab === 'add-offer' && <AdminAddOffer />}
+        {activeTab === 'manage-products' && <ProductList />} {/* ✅ ProductList tab */}
 
         {/* Modal */}
         {showModal && (
@@ -223,8 +241,8 @@ const AdminDashboard = () => {
             onClose={() => setShowModal(false)}
             onQuoteFormChange={setQuoteForm}
             onStatusFormChange={setStatusForm}
-            onQuoteSubmit={() => { /* Add submit logic */ }}
-            onStatusSubmit={() => { /* Add submit logic */ }}
+            onQuoteSubmit={() => { }}
+            onStatusSubmit={() => { }}
           />
         )}
       </div>

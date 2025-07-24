@@ -78,11 +78,6 @@ const ProductList = () => {
   return (
     <div className="admin-product-list">
       <ToastContainer position="top-right" autoClose={3000} />
-      
-      <div className="page-header">
-        <h1>Product Management</h1>
-        <p className="subtitle">Manage your product inventory</p>
-      </div>
 
       <SearchAndFilters
         searchTerm={searchTerm}
