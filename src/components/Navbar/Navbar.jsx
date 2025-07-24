@@ -17,10 +17,14 @@ function Navbar() {
   const cartCount = useSelector(selectCartItemsCount);
   const wishlistCount = useSelector(selectWishlistCount);
   const userData = useSelector(state => state.auth.user);
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   
   const navigate = useNavigate();
   const location = useLocation();
   const navRef = useRef(null);
+
+  // Check if user is admin
+  const isAdmin = userData && (userData.role === 'admin' || userData.isAdmin === true);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -256,6 +260,19 @@ function Navbar() {
                 Contact
               </RouterLink>
             </li>
+
+            {/* Conditionally render Admin Dashboard link only for admin users */}
+            {isAuthenticated && isAdmin && (
+              <li>
+                <RouterLink 
+                  to="/admin/dashboard" 
+                  className={isLinkActive('/admin/dashboard') ? 'active-link' : ''}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Admin Dashboard
+                </RouterLink>
+              </li>
+            )}
             
             <li className="mobile-only">
               <RouterLink 

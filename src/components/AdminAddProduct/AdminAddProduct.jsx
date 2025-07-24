@@ -3,9 +3,9 @@ import { Upload, Package, Tag, DollarSign, Image, Settings, CheckCircle, AlertCi
 import './AdminAddProduct.css';
 import { useSelector } from 'react-redux';
 import privateInstance from '../../services/axiosInstance';
-import { toast } from 'react-toastify'; // Add this import
+import { toast } from 'react-toastify';
 
-const AdminAddProduct = () => {
+const AdminAddProduct = ({ onProductAdded }) => { // Add onProductAdded prop
   const [productData, setProductData] = useState({
     name: '',
     description: '',
@@ -33,7 +33,6 @@ const AdminAddProduct = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState('basic');
   const [errors, setErrors] = useState({});
-  // Remove the custom toast state since we're using react-toastify
 
   const token = useSelector((state) => state.auth.token);
   const BASE_URL = 'http://localhost:5000';
@@ -121,12 +120,12 @@ const AdminAddProduct = () => {
     e.preventDefault();
     
     if (!validateForm()) {
-      toast.error('Please fix the errors above'); // Use react-toastify
+      toast.error('Please fix the errors above');
       return;
     }
 
     if (!token) {
-      toast.error('Unauthorized. Please login.'); // Use react-toastify
+      toast.error('Unauthorized. Please login.');
       return;
     }
 
@@ -176,7 +175,6 @@ const AdminAddProduct = () => {
       console.log('Product creation response:', response.data);
       
       if (response.data.success) {
-        // Use react-toastify success toast
         toast.success(`Product "${finalProduct.name}" added successfully to ${finalProduct.category} category!`, {
           position: "top-right",
           autoClose: 5000,
@@ -185,6 +183,11 @@ const AdminAddProduct = () => {
           pauseOnHover: true,
           draggable: true,
         });
+        
+        // Call the callback to refresh total products count
+        if (onProductAdded) {
+          onProductAdded();
+        }
         
         // Reset form
         setProductData({
@@ -232,7 +235,6 @@ const AdminAddProduct = () => {
         message = err.message;
       }
 
-      // Use react-toastify error toast
       toast.error(`Error adding product: ${message}`, {
         position: "top-right",
         autoClose: 5000,
@@ -754,8 +756,6 @@ const AdminAddProduct = () => {
           </div>
         </div>
       </div>
-
-      {/* Remove the custom toast JSX since we're using react-toastify */}
     </div>
   );
 };
