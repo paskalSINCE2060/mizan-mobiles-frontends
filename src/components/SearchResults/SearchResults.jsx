@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FaHeart, FaShoppingCart, FaSearch, FaStar } from 'react-icons/fa';
+import { FaHeart, FaShoppingCart, FaSearch } from 'react-icons/fa';
 import { addToCart } from '../../slice/cartSlice';
 import { addToWishlist, removeFromWishlist } from '../../slice/wishlistSlice';
 import { fetchProducts, selectProducts, selectProductsLoading } from '../../slice/productsSlice';
@@ -14,7 +14,7 @@ const SearchResults = () => {
   
   const [searchQuery, setSearchQuery] = useState('');
   
-  const cartItems = useSelector(state => state.cart.items);
+  // const cartItems = useSelector(state => state.cart.items);
   const wishlistItems = useSelector(state => state.wishlist.items);
   
   // Add safety check to ensure products is always an array
@@ -59,14 +59,14 @@ const SearchResults = () => {
     return filtered;
   }, [searchQuery, products]);
 
-  const handleNewSearch = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      // Update the current search without navigating
-      const newQuery = searchQuery.trim();
-      setSearchQuery(newQuery);
-    }
-  };
+  // const handleNewSearch = (e) => {
+  //   e.preventDefault();
+  //   if (searchQuery.trim()) {
+  //     // Update the current search without navigating
+  //     const newQuery = searchQuery.trim();
+  //     setSearchQuery(newQuery);
+  //   }
+  // };
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
@@ -124,9 +124,8 @@ const SearchResults = () => {
   return (
     <div className="search-results-container">
       {/* Header Section */}
-      <div className="search-results-header">
+      {/* <div className="search-results-header">
         <div className="search-header-content">
-          <h1>Search Results</h1>
           <form onSubmit={handleNewSearch} className="search-form-results">
             <div className="search-input-container">
               <FaSearch className="search-icon" />
@@ -143,7 +142,7 @@ const SearchResults = () => {
             </div>
           </form>
         </div>
-      </div>
+      </div> */}
 
       {/* Results Info and Controls */}
       <div className="results-controls">
@@ -205,7 +204,7 @@ const SearchResults = () => {
                     {product.name || 'Unnamed Product'}
                   </h3>
                   
-                  <div className="product-rating">
+                  {/* <div className="product-rating">
                     <div className="stars">
                       {[...Array(5)].map((_, i) => (
                         <FaStar 
@@ -217,7 +216,7 @@ const SearchResults = () => {
                     <span className="rating-text">
                       ({product.reviews || 0} reviews)
                     </span>
-                  </div>
+                  </div> */}
                   
                   <div className="product-price">
                     <span className="discounted-price">

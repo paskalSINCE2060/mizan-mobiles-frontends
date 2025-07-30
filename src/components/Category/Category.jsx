@@ -1,7 +1,7 @@
 import React from 'react';
-import smartphone from '../../assets/sellPhone.webp';
+import smartphone from '../../assets/smartphones.jpg';
 import watch from '../../assets/GalaxyWatch7.jpeg';
-import laptop from '../../assets/iphone13promax.png';
+import laptop from '../../assets/laptops.jpg';
 import earphones from '../../assets/GalaxyBuds3.jpeg'; // Assuming you have a different image for earphones
 import './Category.css';
 

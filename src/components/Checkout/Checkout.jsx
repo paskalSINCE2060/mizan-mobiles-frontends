@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { 
   selectCartItems,
   selectCartSubtotal,
   selectCartTotal,
   selectCartShipping,
-  selectCartTax
+  selectCartTax,
+  clearCart
 } from '../../slice/cartSlice';
 import './Checkout.css';
-import { loadStripe } from '@stripe/stripe-js';
-
-const stripePromise = loadStripe('pk_test_51RZ4zGQ9OmwB8bpp35ErMBnuz09VsSSXsJJdmCUvLUR8MCLOijUNHvcZqCjFwJi5FfMkrQmDjyUNFFCtaHkTtiU5004WSypiWD');
 
 const Checkout = () => {
   const cartItems = useSelector(selectCartItems);
@@ -21,8 +19,21 @@ const Checkout = () => {
   const tax = useSelector(selectCartTax);
   
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState(false);
+  
+  // Form state for customer details
+  const [customerDetails, setCustomerDetails] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    zipCode: '',
+    notes: ''
+  });
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
@@ -32,6 +43,13 @@ const Checkout = () => {
         setShowToast(false);
         navigate('/login');
       }, 3000);
+    } else {
+      // Pre-populate form with user data if available
+      setCustomerDetails(prev => ({
+        ...prev,
+        name: storedUser.name || '',
+        email: storedUser.email || ''
+      }));
     }
   }, [navigate]);
 
@@ -46,45 +64,107 @@ const Checkout = () => {
     );
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCustomerDetails(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const validateForm = () => {
+    const required = ['name', 'email', 'phone', 'address', 'city', 'zipCode'];
+    for (let field of required) {
+      if (!customerDetails[field].trim()) {
+        alert(`Please fill in ${field.charAt(0).toUpperCase() + field.slice(1)}`);
+        return false;
+      }
+    }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(customerDetails.email)) {
+      alert('Please enter a valid email address');
+      return false;
+    }
+    
+    return true;
+  };
+
   const handleCheckout = async () => {
     if (cartItems.length === 0) {
       alert("Your cart is empty!");
       return;
     }
 
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
     try {
-      const stripe = await stripePromise;
-
+      const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      
       // Process images URLs before sending to backend
       const processedCartItems = cartItems.map(item => ({
-        ...item,
-        image: item.image.startsWith('http')
-          ? item.image
-          : `https://mizan.com.np${item.image}`
+        productId: item.id,
+        name: item.name,
+        image: item.image.startsWith('http') 
+          ? item.image 
+          : `https://mizan.com.np${item.image}`,
+        price: item.price,
+        quantity: item.quantity,
+        ...(item.specialOffer && {
+          specialOffer: {
+            id: item.specialOffer.id,
+            title: item.specialOffer.title,
+            discountPercentage: item.discountPercentage
+          }
+        })
       }));
 
-      const response = await fetch('/api/payment/create-checkout-session', {
+      const orderData = {
+        user: storedUser._id || storedUser.id,
+        customerDetails,
+        products: processedCartItems,
+        pricing: {
+          subtotal,
+          shipping,
+          tax,
+          total
+        },
+        paymentMethod: 'cash_on_delivery',
+        paymentStatus: 'pending',
+        orderStatus: 'pending'
+      };
+
+      const response = await fetch('/api/checkout-orders/create', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cartItems: processedCartItems })
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(orderData)
       });
 
       const data = await response.json();
 
-      if (data.id) {
-        const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
-        if (error) {
-          alert(error.message);
-          setLoading(false);
-        }
+      if (response.ok) {
+        // Clear cart after successful order
+        dispatch(clearCart());
+        setOrderSuccess(true);
+        
+        // Show success message and redirect after delay
+        setTimeout(() => {
+          navigate('/orders'); // Redirect to user orders page
+        }, 3000);
       } else {
-        alert("Failed to initiate payment session.");
-        setLoading(false);
+        alert(data.error || "Failed to place order. Please try again.");
       }
     } catch (error) {
       console.error('Checkout error:', error);
       alert("Something went wrong. Please try again.");
+    } finally {
       setLoading(false);
     }
   };
@@ -102,20 +182,205 @@ const Checkout = () => {
     );
   }
 
+  if (orderSuccess) {
+    return (
+      <div className="Checkout-page">
+        <div className="Checkout-page-container" style={{ textAlign: 'center', padding: '50px' }}>
+          <div style={{ fontSize: '48px', marginBottom: '20px' }}>✅</div>
+          <h2 style={{ color: '#28a745', marginBottom: '20px' }}>Order Placed Successfully!</h2>
+          <p style={{ marginBottom: '10px' }}>Thank you for your order. We'll contact you soon to confirm delivery details.</p>
+          <p style={{ marginBottom: '20px', color: '#666' }}>Order Total: NPR {total.toLocaleString()}</p>
+          <p style={{ color: '#666' }}>Payment Method: Cash on Delivery</p>
+          <div style={{ marginTop: '30px' }}>
+            <p>Redirecting to your orders page...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="Checkout-page">
       <Toast message="Please login to checkout!" show={showToast} />
 
-      <header className="Checkout-page-header">
-        <div className="Checkout-page-container">
-          <h1>Checkout</h1>
-        </div>
-      </header>
-
       <div className="Checkout-page-container" id="checkout-container">
         <div className="Checkout-page-checkout-content">
+          
+          {/* Customer Details Form */}
+          <div className="checkout-form" style={{ flex: '2', marginRight: '30px' }}>
+            <h3 style={{ marginBottom: '20px' }}>Delivery Information</h3>
+            
+            <form style={{ display: 'grid', gap: '15px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={customerDetails.name}
+                    onChange={handleInputChange}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '14px'
+                    }}
+                  />
+                </div>
+                
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={customerDetails.email}
+                    onChange={handleInputChange}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '14px'
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={customerDetails.phone}
+                  onChange={handleInputChange}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    fontSize: '14px'
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Delivery Address *
+                </label>
+                <textarea
+                  name="address"
+                  value={customerDetails.address}
+                  onChange={handleInputChange}
+                  required
+                  rows="3"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    fontSize: '14px',
+                    resize: 'vertical'
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                    City *
+                  </label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={customerDetails.city}
+                    onChange={handleInputChange}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '14px'
+                    }}
+                  />
+                </div>
+                
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                    ZIP Code *
+                  </label>
+                  <input
+                    type="text"
+                    name="zipCode"
+                    value={customerDetails.zipCode}
+                    onChange={handleInputChange}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '10px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '14px'
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Order Notes (Optional)
+                </label>
+                <textarea
+                  name="notes"
+                  value={customerDetails.notes}
+                  onChange={handleInputChange}
+                  rows="2"
+                  placeholder="Any special instructions for delivery..."
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    fontSize: '14px',
+                    resize: 'vertical'
+                  }}
+                />
+              </div>
+            </form>
+
+            {/* Payment Method Info */}
+            <div style={{ 
+              marginTop: '30px', 
+              padding: '20px', 
+              backgroundColor: '#f8f9fa', 
+              borderRadius: '8px',
+              border: '1px solid #e9ecef'
+            }}>
+              <h4 style={{ marginBottom: '10px', color: '#495057' }}>Payment Method</h4>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '24px' }}>💵</span>
+                <div>
+                  <strong>Cash on Delivery</strong>
+                  <p style={{ margin: '5px 0 0 0', fontSize: '14px', color: '#666' }}>
+                    Pay when your order is delivered to your doorstep
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Order Summary */}
-          <div className="Checkout-page-summary">
+          <div className="Checkout-page-summary" style={{ flex: '1' }}>
             <div className="Checkout-page-summary-header">
               <h3>Order Summary</h3>
             </div>
@@ -196,10 +461,10 @@ const Checkout = () => {
                 className="Checkout-page-btn Checkout-page-btn-submit"
                 style={{ width: '100%' }}
               >
-                {loading ? 'Processing...' : 'Proceed to Payment'}
+                {loading ? 'Placing Order...' : 'Place Order (Cash on Delivery)'}
               </button>
               <p style={{ fontSize: '12px', textAlign: 'center', marginTop: '10px', color: '#666' }}>
-                You'll be redirected to Stripe to complete your payment securely
+                You will pay when the order is delivered to your address
               </p>
             </div>
           </div>

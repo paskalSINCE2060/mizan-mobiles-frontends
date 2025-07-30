@@ -46,6 +46,7 @@ import RequireAuth from "./components/common/RequireAuth";
 import AdminAddOffer from "./components/AdminAddOffer/AdminAddOffer";
 import NewPhoneBookingPage from "./components/NewPhoneBookingPage/NewPhoneBookingPage";
 import SearchResults from "./components/SearchResults/SearchResults";
+import UserOrders from "./components/UserOrders.jsx/UserOrders";
 
 function AppContent() {
   const [userData, setUserData] = useState(null);
@@ -244,6 +245,7 @@ function AppContent() {
           <Route path="/specialoffers" element={<SpecialOffers />} />
           <Route path="/newphonebooking" element={<NewPhoneBookingPage />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/orders" element={<UserOrders />} />
         </Routes>
         <Footer />
         <ToastContainer

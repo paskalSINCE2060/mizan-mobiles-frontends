@@ -1,4 +1,4 @@
-// Fixed Profile.jsx - Proper data persistence and error handling
+// Updated Profile.jsx - Added "Your Orders" button
 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -58,6 +58,11 @@ const Profile = () => {
   const generateUsername = (fullName) => {
     if (!fullName) return "user";
     return fullName.replace(/\s+/g, "_").toLowerCase();
+  };
+
+  // Handle navigation to orders page
+  const handleViewOrders = () => {
+    navigate('/orders');
   };
 
   // Handle profile image upload
@@ -302,14 +307,25 @@ const Profile = () => {
             <p className="profile-details-username">
               @{generateUsername(user.fullName)}
             </p>
-            {!isEditing && (
-              <button 
-                className="edit-profile-btn"
-                onClick={() => setIsEditing(true)}
-              >
-                Edit Profile
-              </button>
-            )}
+            <div className="profile-action-buttons">
+              {!isEditing && (
+                <>
+                  <button 
+                    className="edit-profile-btn"
+                    onClick={() => setIsEditing(true)}
+                  >
+                    Edit Profile
+                  </button>
+                  <button 
+                    className="orders-btn"
+                    onClick={handleViewOrders}
+                    title="View your order history"
+                  >
+                    📦 Your Orders
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
 

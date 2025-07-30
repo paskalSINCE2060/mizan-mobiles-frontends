@@ -27,31 +27,12 @@ const NewPhoneBookingPage = () => {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const phoneModels = [
-    { name: 'iPhone 15 Pro Max', price: 1199, colors: ['Natural Titanium', 'Blue Titanium', 'White Titanium', 'Black Titanium'], storage: ['256GB', '512GB', '1TB'] },
-    { name: 'iPhone 15 Pro', price: 999, colors: ['Natural Titanium', 'Blue Titanium', 'White Titanium', 'Black Titanium'], storage: ['128GB', '256GB', '512GB', '1TB'] },
-    { name: 'iPhone 15', price: 799, colors: ['Pink', 'Yellow', 'Green', 'Blue', 'Black'], storage: ['128GB', '256GB', '512GB'] },
-    { name: 'Samsung Galaxy S25 Ultra', price: 1299, colors: ['Titanium Black', 'Titanium Gray', 'Titanium Violet', 'Titanium Yellow'], storage: ['256GB', '512GB', '1TB'] },
-    { name: 'Samsung Galaxy S25+', price: 999, colors: ['Phantom Black', 'Cream', 'Violet', 'Green'], storage: ['256GB', '512GB'] },
-    { name: 'Samsung Galaxy S25', price: 799, colors: ['Phantom Black', 'Cream', 'Violet', 'Green'], storage: ['128GB', '256GB', '512GB'] },
-    { name: 'Google Pixel 9 Pro', price: 999, colors: ['Obsidian', 'Porcelain', 'Hazel', 'Rose Quartz'], storage: ['128GB', '256GB', '512GB'] },
-    { name: 'Google Pixel 9', price: 699, colors: ['Obsidian', 'Porcelain', 'Wintergreen', 'Peony'], storage: ['128GB', '256GB'] }
-  ];
-
-  const selectedPhone = phoneModels.find(phone => phone.name === formData.model);
-  const basePrice = selectedPhone ? selectedPhone.price : 0;
-
-  const priorityExtra = formData.priority === 'express' ? 50 : formData.priority === 'urgent' ? 100 : 0;
-  const deliveryCharge = formData.deliveryMethod === 'delivery' ? 20 : 0;
-  const totalPrice = (basePrice * formData.quantity) + priorityExtra + deliveryCharge;
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     setFormData(prevState => ({
       ...prevState,
-      [name]: value,
-      ...(name === 'model' && { color: '', storage: '' })
+      [name]: value
     }));
 
     // Clear submit error when user starts typing
@@ -64,7 +45,7 @@ const NewPhoneBookingPage = () => {
     e.preventDefault();
 
     // Basic validation
-    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.model || !formData.color || !formData.storage) {
+    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.model.trim() || !formData.color.trim() || !formData.storage.trim()) {
       // You might want to add a local error state for validation errors
       return;
     }
@@ -92,8 +73,7 @@ const NewPhoneBookingPage = () => {
       preferredTime: formData.deliveryMethod === 'pickup' ? formData.preferredTime : '',
       message: formData.message,
       budget: formData.budget,
-      priority: formData.priority,
-      totalPrice,
+      priority: formData.priority
     };
 
     console.log('📤 Sending phone booking data:', orderData);
@@ -145,7 +125,6 @@ const NewPhoneBookingPage = () => {
             <p><strong>Color:</strong> {formData.color}</p>
             <p><strong>Storage:</strong> {formData.storage}</p>
             <p><strong>Quantity:</strong> {formData.quantity}</p>
-            <p><strong>Total Price:</strong> <span className="price">${totalPrice.toLocaleString()}</span></p>
             <p><strong>Payment:</strong> {formData.paymentMethod === 'full' ? 'Full Payment' : 'Installment Plan'}</p>
             <p><strong>Delivery:</strong> {formData.deliveryMethod === 'pickup' ? 'Store Pickup' : 'Home Delivery'}</p>
             {formData.deliveryMethod === 'pickup' && (
@@ -155,6 +134,9 @@ const NewPhoneBookingPage = () => {
               <p><strong>Delivery Address:</strong> {formData.address}</p>
             )}
             <p><strong>Priority:</strong> {formData.priority.charAt(0).toUpperCase() + formData.priority.slice(1)}</p>
+            {formData.budget && (
+              <p><strong>Budget:</strong> {formData.budget}</p>
+            )}
           </div>
 
           <div className="new-phone-booking-next-steps">
@@ -252,90 +234,67 @@ const NewPhoneBookingPage = () => {
             <div className="new-phone-booking-grid">
               <div className="new-phone-booking-form-group">
                 <label htmlFor="model" className="new-phone-booking-label">Phone Model *</label>
-                <select
+                <input
                   id="model"
+                  type="text"
                   name="model"
                   value={formData.model}
                   onChange={handleChange}
                   required
+                  placeholder="Enter phone model (e.g., iPhone 15 Pro Max, Samsung Galaxy S24 Ultra)"
                   disabled={submitLoading}
-                  className="new-phone-booking-select"
-                >
-                  <option value="">Select a phone model</option>
-                  {phoneModels.map((phone, index) => (
-                    <option key={index} value={phone.name}>
-                      {phone.name} - ${phone.price.toLocaleString()}
-                    </option>
-                  ))}
-                </select>
+                  className="new-phone-booking-input"
+                />
               </div>
 
-              {selectedPhone && (
-                <div className="new-phone-booking-form-group">
-                  <label htmlFor="color" className="new-phone-booking-label">Color *</label>
-                  <select
-                    id="color"
-                    name="color"
-                    value={formData.color}
-                    onChange={handleChange}
-                    required
-                    disabled={submitLoading}
-                    className="new-phone-booking-select"
-                  >
-                    <option value="">Select color</option>
-                    {selectedPhone.colors.map((color, index) => (
-                      <option key={index} value={color}>{color}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              <div className="new-phone-booking-form-group">
+                <label htmlFor="color" className="new-phone-booking-label">Color *</label>
+                <input
+                  id="color"
+                  type="text"
+                  name="color"
+                  value={formData.color}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter phone color (e.g., Space Black, Rose Gold)"
+                  disabled={submitLoading}
+                  className="new-phone-booking-input"
+                />
+              </div>
             </div>
 
-            {selectedPhone && (
-              <div className="new-phone-booking-grid small">
-                <div className="new-phone-booking-form-group">
-                  <label htmlFor="storage" className="new-phone-booking-label">Storage *</label>
-                  <select
-                    id="storage"
-                    name="storage"
-                    value={formData.storage}
-                    onChange={handleChange}
-                    required
-                    disabled={submitLoading}
-                    className="new-phone-booking-select"
-                  >
-                    <option value="">Select storage</option>
-                    {selectedPhone.storage.map((storage, index) => (
-                      <option key={index} value={storage}>{storage}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="new-phone-booking-form-group">
-                  <label htmlFor="quantity" className="new-phone-booking-label">Quantity *</label>
-                  <input
-                    id="quantity"
-                    type="number"
-                    name="quantity"
-                    value={formData.quantity}
-                    onChange={handleChange}
-                    min="1"
-                    max="10"
-                    required
-                    disabled={submitLoading}
-                    className="new-phone-booking-input"
-                  />
-                </div>
+            <div className="new-phone-booking-grid small">
+              <div className="new-phone-booking-form-group">
+                <label htmlFor="storage" className="new-phone-booking-label">Storage *</label>
+                <input
+                  id="storage"
+                  type="text"
+                  name="storage"
+                  value={formData.storage}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter storage capacity (e.g., 128GB, 256GB, 512GB)"
+                  disabled={submitLoading}
+                  className="new-phone-booking-input"
+                />
               </div>
-            )}
 
-            {totalPrice > 0 && (
-              <div className="new-phone-booking-price-display" aria-live="polite">
-                <h4 className="new-phone-booking-total-price">
-                  💰 Total: ${totalPrice.toLocaleString()}
-                </h4>
+              <div className="new-phone-booking-form-group">
+                <label htmlFor="quantity" className="new-phone-booking-label">Quantity *</label>
+                <input
+                  id="quantity"
+                  type="number"
+                  name="quantity"
+                  value={formData.quantity}
+                  onChange={handleChange}
+                  min="1"
+                  max="10"
+                  required
+                  disabled={submitLoading}
+                  className="new-phone-booking-input"
+                />
               </div>
-            )}
+            </div>
           </section>
 
           {/* Payment & Delivery Section */}
@@ -370,8 +329,8 @@ const NewPhoneBookingPage = () => {
                   disabled={submitLoading}
                   className="new-phone-booking-select"
                 >
-                  <option value="pickup">🏪 Store Pickup (Free)</option>
-                  <option value="delivery">🚚 Home Delivery (+$20)</option>
+                  <option value="pickup">🏪 Store Pickup</option>
+                  <option value="delivery">🚚 Home Delivery</option>
                 </select>
               </div>
             </div>
@@ -432,6 +391,20 @@ const NewPhoneBookingPage = () => {
             <h3 className="new-phone-booking-section-title">📝 Additional Information</h3>
 
             <div className="new-phone-booking-form-group">
+              <label htmlFor="budget" className="new-phone-booking-label">Budget Range (Optional)</label>
+              <input
+                id="budget"
+                type="text"
+                name="budget"
+                value={formData.budget}
+                onChange={handleChange}
+                placeholder="Enter your budget range (e.g., $800-$1200)"
+                disabled={submitLoading}
+                className="new-phone-booking-input"
+              />
+            </div>
+
+            <div className="new-phone-booking-form-group">
               <label htmlFor="message" className="new-phone-booking-label">Special Requests or Questions</label>
               <textarea
                 id="message"
@@ -456,8 +429,8 @@ const NewPhoneBookingPage = () => {
                 className="new-phone-booking-select priority"
               >
                 <option value="standard">📅 Standard (3-5 business days)</option>
-                <option value="express">⚡ Express (1-2 business days) +$50</option>
-                <option value="urgent">🚀 Urgent (Same day) +$100</option>
+                <option value="express">⚡ Express (1-2 business days)</option>
+                <option value="urgent">🚀 Urgent (Same day)</option>
               </select>
             </div>
           </section>

@@ -39,10 +39,18 @@ export const fetchCheckoutOrders = createAsyncThunk(
 // Async thunk for updating order status
 export const updateOrderStatus = createAsyncThunk(
   'checkoutOrders/updateOrderStatus',
-  async ({ orderId, orderStatus, adminNotes }, { getState, rejectWithValue }) => {
+  async ({ orderId, orderStatus, adminNotes, paymentStatus  }, { getState, rejectWithValue }) => {
     try {
       const { auth } = getState();
       const token = auth.token;
+
+      // Build the request body - include paymentStatus if provided
+      const requestBody = { orderStatus, adminNotes };
+      
+      // Only include paymentStatus if it's provided
+      if (paymentStatus !== undefined && paymentStatus !== null) {
+        requestBody.paymentStatus = paymentStatus;
+      }
 
       const response = await fetch(`/api/checkout-orders/admin/orders/${orderId}/status`, {
         method: 'PUT',
@@ -50,7 +58,7 @@ export const updateOrderStatus = createAsyncThunk(
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ orderStatus, adminNotes }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {

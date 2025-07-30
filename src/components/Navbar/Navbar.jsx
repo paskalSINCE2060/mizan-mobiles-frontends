@@ -293,7 +293,7 @@ function Navbar() {
               </RouterLink>
             </li>
             
-            {userData && (
+            {/* {userData && (
               <li className="mobile-only">
                 <button 
                   onClick={handleLogoutClick}
@@ -302,7 +302,7 @@ function Navbar() {
                   Logout
                 </button>
               </li>
-            )}
+            )} */}
           </ul>
         </div>
       </nav>

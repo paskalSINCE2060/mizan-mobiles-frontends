@@ -18,11 +18,13 @@ const CheckoutOrdersTab = () => {
   const error = useSelector(selectCheckoutOrdersError);
 
   const [statusFilter, setStatusFilter] = useState('all');
+  const [paymentMethodFilter, setPaymentMethodFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [statusForm, setStatusForm] = useState({
     orderStatus: '',
+    paymentStatus: '',
     adminNotes: '',
   });
 
@@ -48,6 +50,7 @@ const CheckoutOrdersTab = () => {
     setSelectedOrder(order);
     setStatusForm({
       orderStatus: order.orderStatus,
+      paymentStatus: order.paymentStatus,
       adminNotes: order.adminNotes || '',
     });
     setShowModal(true);
@@ -58,10 +61,18 @@ const CheckoutOrdersTab = () => {
       await dispatch(updateOrderStatus({
         orderId: selectedOrder._id,
         orderStatus: statusForm.orderStatus,
+        paymentStatus: statusForm.paymentStatus,
         adminNotes: statusForm.adminNotes,
       }));
       setShowModal(false);
       setSelectedOrder(null);
+      // Refresh the orders list
+      dispatch(fetchCheckoutOrders({
+        page: pagination.currentPage,
+        limit: 20,
+        status: statusFilter,
+        search: searchTerm,
+      }));
     } catch (error) {
       console.error('Error updating order status:', error);
     }
@@ -75,6 +86,24 @@ const CheckoutOrdersTab = () => {
       case 'delivered': return '#10b981';
       case 'cancelled': return '#ef4444';
       default: return '#6b7280';
+    }
+  };
+
+  const getPaymentStatusColor = (status) => {
+    switch (status) {
+      case 'pending': return '#f59e0b';
+      case 'paid': return '#10b981';
+      case 'failed': return '#ef4444';
+      case 'refunded': return '#6b7280';
+      default: return '#6b7280';
+    }
+  };
+
+  const getPaymentMethodIcon = (method) => {
+    switch (method) {
+      case 'cash_on_delivery': return '💵';
+      case 'card': return '💳';
+      default: return '💰';
     }
   };
 
@@ -102,12 +131,69 @@ const CheckoutOrdersTab = () => {
 
   return (
     <div>
-      <h2 style={{ marginBottom: '20px', color: '#333' }}>Checkout Orders Management</h2>
+      <h2 style={{ marginBottom: '20px', color: '#333' }}>Orders Management</h2>
+
+      {/* Stats Summary */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+        gap: '15px', 
+        marginBottom: '25px' 
+      }}>
+        <div style={{ 
+          padding: '15px', 
+          backgroundColor: '#f8f9fa', 
+          borderRadius: '8px', 
+          textAlign: 'center',
+          border: '1px solid #e9ecef'
+        }}>
+          <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#495057' }}>
+            {orders.length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#6c757d' }}>Total Orders</div>
+        </div>
+        <div style={{ 
+          padding: '15px', 
+          backgroundColor: '#fff3cd', 
+          borderRadius: '8px', 
+          textAlign: 'center',
+          border: '1px solid #ffeaa7'
+        }}>
+          <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#856404' }}>
+            {orders.filter(o => o.orderStatus === 'pending').length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#856404' }}>Pending</div>
+        </div>
+        <div style={{ 
+          padding: '15px', 
+          backgroundColor: '#d1ecf1', 
+          borderRadius: '8px', 
+          textAlign: 'center',
+          border: '1px solid #bee5eb'
+        }}>
+          <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#0c5460' }}>
+            {orders.filter(o => o.paymentMethod === 'cash_on_delivery').length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#0c5460' }}>COD Orders</div>
+        </div>
+        <div style={{ 
+          padding: '15px', 
+          backgroundColor: '#d4edda', 
+          borderRadius: '8px', 
+          textAlign: 'center',
+          border: '1px solid #c3e6cb'
+        }}>
+          <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#155724' }}>
+            {orders.filter(o => o.orderStatus === 'delivered').length}
+          </div>
+          <div style={{ fontSize: '14px', color: '#155724' }}>Delivered</div>
+        </div>
+      </div>
 
       {/* Filters */}
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '15px', alignItems: 'center' }}>
+      <div style={{ marginBottom: '20px', display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
         <div>
-          <label style={{ marginRight: '10px', fontWeight: 'bold' }}>Status:</label>
+          <label style={{ marginRight: '10px', fontWeight: 'bold' }}>Order Status:</label>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -127,10 +213,28 @@ const CheckoutOrdersTab = () => {
           </select>
         </div>
 
-        <div style={{ flex: 1 }}>
+        <div>
+          <label style={{ marginRight: '10px', fontWeight: 'bold' }}>Payment Method:</label>
+          <select
+            value={paymentMethodFilter}
+            onChange={(e) => setPaymentMethodFilter(e.target.value)}
+            style={{
+              padding: '8px 12px',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              minWidth: '120px',
+            }}
+          >
+            <option value="all">All Methods</option>
+            <option value="cash_on_delivery">Cash on Delivery</option>
+            <option value="card">Card Payment</option>
+          </select>
+        </div>
+
+        <div style={{ flex: 1, minWidth: '300px' }}>
           <input
             type="text"
-            placeholder="Search by customer name, email, or session ID..."
+            placeholder="Search by customer name, email, phone, or order number..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
@@ -149,7 +253,7 @@ const CheckoutOrdersTab = () => {
           <thead>
             <tr style={{ backgroundColor: '#f8f9fa' }}>
               <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
-                Order ID
+                Order Details
               </th>
               <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
                 Customer
@@ -158,7 +262,7 @@ const CheckoutOrdersTab = () => {
                 Products
               </th>
               <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
-                Total
+                Payment
               </th>
               <th style={{ padding: '12px', textAlign: 'left', borderBottom: '2px solid #dee2e6' }}>
                 Status
@@ -175,8 +279,13 @@ const CheckoutOrdersTab = () => {
             {orders.map((order) => (
               <tr key={order._id} style={{ borderBottom: '1px solid #dee2e6' }}>
                 <td style={{ padding: '12px' }}>
-                  <div style={{ fontFamily: 'monospace', fontSize: '12px' }}>
-                    {order._id.slice(-8)}
+                  <div>
+                    <div style={{ fontFamily: 'monospace', fontSize: '12px', fontWeight: 'bold' }}>
+                      {order.orderNumber || order._id.slice(-8)}
+                    </div>
+                    <div style={{ fontSize: '11px', color: '#666', marginTop: '2px' }}>
+                      ID: {order._id.slice(-8)}
+                    </div>
                   </div>
                 </td>
                 <td style={{ padding: '12px' }}>
@@ -184,6 +293,12 @@ const CheckoutOrdersTab = () => {
                     <strong>{order.customerDetails.name}</strong>
                     <br />
                     <small style={{ color: '#666' }}>{order.customerDetails.email}</small>
+                    {order.customerDetails.phone && (
+                      <>
+                        <br />
+                        <small style={{ color: '#666' }}>📞 {order.customerDetails.phone}</small>
+                      </>
+                    )}
                   </div>
                 </td>
                 <td style={{ padding: '12px' }}>
@@ -203,7 +318,31 @@ const CheckoutOrdersTab = () => {
                   </div>
                 </td>
                 <td style={{ padding: '12px' }}>
-                  <strong>{formatCurrency(order.pricing.total)}</strong>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '4px' }}>
+                      <span>{getPaymentMethodIcon(order.paymentMethod)}</span>
+                      <span style={{ fontSize: '12px' }}>
+                        {order.paymentMethod === 'cash_on_delivery' ? 'COD' : 'Card'}
+                      </span>
+                    </div>
+                    <div>
+                      <strong>{formatCurrency(order.pricing.total)}</strong>
+                    </div>
+                    <div>
+                      <span
+                        style={{
+                          padding: '2px 6px',
+                          borderRadius: '8px',
+                          fontSize: '10px',
+                          fontWeight: 'bold',
+                          color: 'white',
+                          backgroundColor: getPaymentStatusColor(order.paymentStatus),
+                        }}
+                      >
+                        {order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1)}
+                      </span>
+                    </div>
+                  </div>
                 </td>
                 <td style={{ padding: '12px' }}>
                   <span
@@ -235,7 +374,7 @@ const CheckoutOrdersTab = () => {
                       fontSize: '12px',
                     }}
                   >
-                    Update Status
+                    Update
                   </button>
                 </td>
               </tr>
@@ -299,16 +438,13 @@ const CheckoutOrdersTab = () => {
             backgroundColor: 'white',
             padding: '30px',
             borderRadius: '8px',
-            maxWidth: '500px',
+            maxWidth: '600px',
             width: '90%',
             maxHeight: '80vh',
             overflowY: 'auto',
           }}>
             <h3 style={{ marginBottom: '20px', color: '#333' }}>
-                Update Order Status - {selectedOrder?._id.slice(-8)}
-            </h3>
-            <h3 style={{ marginBottom: '20px', color: '#333' }}>
-              Update Order Status - {selectedOrder?._id.slice(-8)}
+              Update Order - {selectedOrder?.orderNumber || selectedOrder?._id.slice(-8)}
             </h3>
 
             {/* Order Details */}
@@ -325,7 +461,17 @@ const CheckoutOrdersTab = () => {
                   <strong>Phone:</strong> {selectedOrder?.customerDetails.phone || 'N/A'}
                 </div>
                 <div>
+                  <strong>Payment Method:</strong> 
+                  <span style={{ marginLeft: '5px' }}>
+                    {getPaymentMethodIcon(selectedOrder?.paymentMethod)} 
+                    {selectedOrder?.paymentMethod === 'cash_on_delivery' ? 'Cash on Delivery' : 'Card Payment'}
+                  </span>
+                </div>
+                <div>
                   <strong>Total:</strong> {formatCurrency(selectedOrder?.pricing.total)}
+                </div>
+                <div>
+                  <strong>Order Date:</strong> {formatDate(selectedOrder?.createdAt)}
                 </div>
               </div>
               
@@ -335,23 +481,27 @@ const CheckoutOrdersTab = () => {
                 <div style={{ marginTop: '5px' }}>
                   {selectedOrder?.products.map((product, index) => (
                     <div key={index} style={{ fontSize: '12px', marginBottom: '2px' }}>
-                      • {product.name} x{product.quantity} - {formatCurrency(product.price)}
+                      • {product.name} x{product.quantity} - {formatCurrency(product.price * product.quantity)}
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Shipping Address */}
-              {selectedOrder?.shippingAddress && (
+              {/* Delivery Address */}
+              <div style={{ marginTop: '15px' }}>
+                <strong>Delivery Address:</strong>
+                <div style={{ fontSize: '12px', marginTop: '5px' }}>
+                  {selectedOrder?.customerDetails.address}<br />
+                  {selectedOrder?.customerDetails.city}, {selectedOrder?.customerDetails.zipCode}
+                </div>
+              </div>
+
+              {/* Customer Notes */}
+              {selectedOrder?.customerDetails.notes && (
                 <div style={{ marginTop: '15px' }}>
-                  <strong>Shipping Address:</strong>
-                  <div style={{ fontSize: '12px', marginTop: '5px' }}>
-                    {selectedOrder.shippingAddress.line1}<br />
-                    {selectedOrder.shippingAddress.line2 && (
-                      <>{selectedOrder.shippingAddress.line2}<br /></>
-                    )}
-                    {selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} {selectedOrder.shippingAddress.postal_code}<br />
-                    {selectedOrder.shippingAddress.country}
+                  <strong>Customer Notes:</strong>
+                  <div style={{ fontSize: '12px', marginTop: '5px', fontStyle: 'italic' }}>
+                    "{selectedOrder.customerDetails.notes}"
                   </div>
                 </div>
               )}
@@ -359,27 +509,56 @@ const CheckoutOrdersTab = () => {
 
             {/* Status Update Form */}
             <div style={{ marginBottom: '20px' }}>
-              <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-                  Order Status:
-                </label>
-                <select
-                  value={statusForm.orderStatus}
-                  onChange={(e) => setStatusForm({ ...statusForm, orderStatus: e.target.value })}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    border: '1px solid #ddd',
-                    borderRadius: '4px',
-                    fontSize: '14px',
-                  }}
-                >
-                  <option value="pending">Pending</option>
-                  <option value="processing">Processing</option>
-                  <option value="shipped">Shipped</option>
-                  <option value="delivered">Delivered</option>
-                  <option value="cancelled">Cancelled</option>
-                </select>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                    Order Status:
+                  </label>
+                  <select
+                    value={statusForm.orderStatus}
+                    onChange={(e) => setStatusForm({ ...statusForm, orderStatus: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '14px',
+                    }}
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                    Payment Status:
+                  </label>
+                  <select
+                    value={statusForm.paymentStatus}
+                    onChange={(e) => setStatusForm({ ...statusForm, paymentStatus: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      border: '1px solid #ddd',
+                      borderRadius: '4px',
+                      fontSize: '14px',
+                    }}
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="paid">Paid</option>
+                    <option value="failed">Failed</option>
+                    <option value="refunded">Refunded</option>
+                  </select>
+                  {selectedOrder?.paymentMethod === 'cash_on_delivery' && (
+                    <small style={{ color: '#666', fontSize: '11px' }}>
+                      Mark as 'Paid' when cash is collected
+                    </small>
+                  )}
+                </div>
               </div>
 
               <div style={{ marginBottom: '15px' }}>
@@ -432,7 +611,7 @@ const CheckoutOrdersTab = () => {
                   cursor: 'pointer',
                 }}
               >
-                Update Status
+                Update Order
               </button>
             </div>
           </div>
@@ -460,11 +639,12 @@ const CheckoutOrdersTab = () => {
           padding: '50px',
           color: '#666',
         }}>
+          <div style={{ fontSize: '48px', marginBottom: '20px' }}>📦</div>
           <h3>No orders found</h3>
           <p>
             {statusFilter !== 'all' || searchTerm 
               ? 'No orders match your current filters.' 
-              : 'No checkout orders have been placed yet.'}
+              : 'No orders have been placed yet.'}
           </p>
         </div>
       )}

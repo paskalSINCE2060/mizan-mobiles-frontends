@@ -20,7 +20,6 @@ import RequestModal from '../components/admin/RequestModal';
 import CheckoutOrdersTab from '../components/admin/CheckoutOrdersTab';
 import AdminAddProduct from '../components/AdminAddProduct/AdminAddProduct';
 import AdminAddOffer from '../components/AdminAddOffer/AdminAddOffer';
-import EditProduct from '../components/EditProduct/EditProduct';
 import ProductList from '../components/ProductList/ProductList'; // ✅ Import your ProductList component
 
 import api from '../utils/api'; // Custom axios instance
@@ -108,15 +107,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleProductUpdated = async () => {
-    try {
-      const response = await api.get('/api/admin/dashboard-stats');
-      setTotalProducts(response.data.totalProducts || 0);
-    } catch (err) {
-      console.error('❌ Error refreshing total products:', err);
-    }
-  };
-
   return (
     <AuthGuard>
       <div style={{ maxWidth: 1200, margin: 'auto', padding: 20 }}>
@@ -144,7 +134,6 @@ const AdminDashboard = () => {
             { key: 'user-orders', label: 'Booking Orders' },
             { key: 'checkout-orders', label: 'Checkout Orders' },
             { key: 'add-product', label: 'Add Product' },
-            { key: 'edit-product', label: 'Edit Product' },
             { key: 'add-offer', label: 'Add Offer' },
             { key: 'manage-products', label: 'Manage Products' }, // ✅ NEW TAB
           ].map(tab => (
@@ -224,9 +213,7 @@ const AdminDashboard = () => {
         {activeTab === 'add-product' && (
           <AdminAddProduct onProductAdded={handleProductAdded} />
         )}
-        {activeTab === 'edit-product' && (
-          <EditProduct onProductUpdated={handleProductUpdated} />
-        )}
+
         {activeTab === 'add-offer' && <AdminAddOffer />}
         {activeTab === 'manage-products' && <ProductList />} {/* ✅ ProductList tab */}
 
