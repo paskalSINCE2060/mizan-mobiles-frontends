@@ -306,6 +306,42 @@ const SpecialOffers = () => {
       <div className="offers-header">
         <h1>Special Offers</h1>
         <p>Exclusive deals on mobile phones and accessories</p>
+        
+        {/* UAE Cities Special Discount Highlight */}
+        <div style={{
+          backgroundColor: '#ff6b35',
+          color: 'white',
+          padding: '15px 20px',
+          margin: '20px 0',
+          borderRadius: '8px',
+          border: '2px solid #e55b2b',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+          textAlign: 'center',
+          fontWeight: 'bold',
+          fontSize: '16px'
+        }}>
+          🏙️ <strong>SPECIAL UAE CITIES DISCOUNT!</strong> 
+          <br />
+          Extra savings available for customers in: Rassal Camp, Umal Queen, Phojera, Alan, Abu Dhabi, Dubai, Sharjah, and Ajman. Don't miss out on these exclusive regional offers! 🛍️
+        </div>
+
+        {/* iPhone Special Discount Highlight */}
+        <div style={{
+          backgroundColor: '#007aff',
+          color: 'white',
+          padding: '15px 20px',
+          margin: '20px 0',
+          borderRadius: '8px',
+          border: '2px solid #0056cc',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+          textAlign: 'center',
+          fontWeight: 'bold',
+          fontSize: '16px'
+        }}>
+          📱 <strong>SPECIAL iPHONE DISCOUNTS!</strong>
+          <br />
+          Get amazing discounts on every iPhone model! From the latest iPhone 15 series to previous generations - special pricing on all Apple devices. Limited time offers available! 🍎
+        </div>
       </div>
 
       <div className="offers-filter-container">
