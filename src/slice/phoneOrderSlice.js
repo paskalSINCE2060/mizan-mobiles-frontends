@@ -15,7 +15,7 @@ export const fetchPhoneOrders = createAsyncThunk(
   'phoneOrders/fetchPhoneOrders',
   async (_, { rejectWithValue, getState }) => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/phone-orders', {
+      const response = await fetch('https://mizan-mobile-backend-mizan.up.railway.app/api/admin/phone-orders', {
         method: 'GET',
         headers: getAuthHeaders(getState)
       })
@@ -43,7 +43,7 @@ export const createPhoneOrder = createAsyncThunk(
         status: orderData.status || 'pending'
       };
 
-      const response = await fetch('http://localhost:5000/api/admin/phone-orders', {
+      const response = await fetch('https://mizan-mobile-backend-mizan.up.railway.app/api/admin/phone-orders', {
         method: 'POST',
         headers: getAuthHeaders(getState),
         body: JSON.stringify(orderWithStatus),
@@ -67,7 +67,7 @@ export const updatePhoneOrderStatus = createAsyncThunk(
   'phoneOrders/updatePhoneOrderStatus',
   async ({ orderId, status }, { rejectWithValue, getState }) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/admin/phone-orders/${orderId}`, {
+      const response = await fetch(`https://mizan-mobile-backend-mizan.up.railway.app/api/admin/phone-orders/${orderId}`, {
         method: 'PUT',
         headers: getAuthHeaders(getState),
         body: JSON.stringify({ status }),

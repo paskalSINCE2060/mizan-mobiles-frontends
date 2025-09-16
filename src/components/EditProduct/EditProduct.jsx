@@ -25,7 +25,7 @@ const EditProduct = () => {
   const inputRef = useRef(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/products/${id}`)
+    fetch(`https://mizan-mobile-backend-mizan.up.railway.app/api/products/${id}`)
       .then((res) => res.json())
       .then((data) => setProduct(data))
       .catch((err) => {
@@ -100,7 +100,7 @@ const EditProduct = () => {
     formData.append("image", selectedFile);
 
     try {
-      const res = await fetch("http://localhost:5000/api/upload/upload", {
+      const res = await fetch("https://mizan-mobile-backend-mizan.up.railway.app/api/upload/upload", {
         method: "POST",
         body: formData,
       });
@@ -132,7 +132,7 @@ const EditProduct = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const res = await fetch(`https://mizan-mobile-backend-mizan.up.railway.app/api/products/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(product),

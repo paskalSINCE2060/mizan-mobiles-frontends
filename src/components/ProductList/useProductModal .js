@@ -215,7 +215,7 @@ export const useProductModal = (token, products, fetchProducts) => {
       console.log('Current price:', updateData.price, typeof updateData.price);
       console.log('Old price:', updateData.oldPrice, typeof updateData.oldPrice);
       
-      const response = await fetch(`http://localhost:5000/api/products/${editProduct._id}`, {
+      const response = await fetch(`https://mizan-mobile-backend-mizan.up.railway.app/api/products/${editProduct._id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

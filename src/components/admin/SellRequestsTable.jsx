@@ -164,7 +164,7 @@ const SellRequestsTable = () => {
   const getImageUrl = (imagePath) => {
   if (!imagePath) return null;
   if (imagePath.startsWith('http')) return imagePath;
-  const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const baseUrl = process.env.REACT_APP_API_URL || 'https://mizan-mobile-backend-mizan.up.railway.app';
   return `${baseUrl}${imagePath}`;
 };
 

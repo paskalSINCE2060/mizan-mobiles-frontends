@@ -28,7 +28,7 @@ function PremiumSmartphonesSection() {
     const [wishlistAnimations, setWishlistAnimations] = useState({});
 
     // Base URL for API
-    const BASE_URL = 'http://localhost:5000';
+    const BASE_URL = 'https://mizan-mobile-backend-mizan.up.railway.app';
 
     // Fetch Premium Smartphones from API
     useEffect(() => {

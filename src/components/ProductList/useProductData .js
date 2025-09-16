@@ -26,7 +26,7 @@ export const useProductData = (token) => {
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:5000/api/products", {
+      const response = await fetch("https://mizan-mobile-backend-mizan.up.railway.app/api/products", {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ export const useProductData = (token) => {
     if (!window.confirm(`Are you sure you want to permanently delete "${productName}"? This action cannot be undone.`)) return;
     
     try {
-      const res = await fetch(`http://localhost:5000/api/products/${id}`, { 
+      const res = await fetch(`https://mizan-mobile-backend-mizan.up.railway.app/api/products/${id}`, { 
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

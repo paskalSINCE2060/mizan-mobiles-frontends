@@ -53,7 +53,7 @@ const AdminAddOffer = () => {
   // Memoize fetch functions to prevent unnecessary re-renders
   const fetchProducts = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products');
+      const response = await fetch('https://mizan-mobile-backend-mizan.up.railway.app/api/products');
       if (response.ok) {
         const data = await response.json();
         setProducts(Array.isArray(data) ? data : []);
@@ -70,7 +70,7 @@ const AdminAddOffer = () => {
 
   const fetchExistingOffers = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/special-offers');
+      const response = await fetch('https://mizan-mobile-backend-mizan.up.railway.app/api/special-offers');
       if (response.ok) {
         const data = await response.json();
         // Handle both array response and object with offers property
@@ -285,8 +285,8 @@ const AdminAddOffer = () => {
       });
 
       const url = editingOffer 
-        ? `http://localhost:5000/api/special-offers/${editingOffer._id}`
-        : 'http://localhost:5000/api/special-offers';
+        ? `https://mizan-mobile-backend-mizan.up.railway.app/api/special-offers/${editingOffer._id}`
+        : 'https://mizan-mobile-backend-mizan.up.railway.app/api/special-offers';
       
       const method = editingOffer ? 'PUT' : 'POST';
 
@@ -371,7 +371,7 @@ const AdminAddOffer = () => {
   const handleDelete = async (offerId) => {
     if (window.confirm('Are you sure you want to delete this special offer?')) {
       try {
-        const response = await fetch(`http://localhost:5000/api/special-offers/${offerId}`, {
+        const response = await fetch(`https://mizan-mobile-backend-mizan.up.railway.app/api/special-offers/${offerId}`, {
           method: 'DELETE',
         });
 
@@ -390,7 +390,7 @@ const AdminAddOffer = () => {
 
   const toggleOfferStatus = async (offerId, currentStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/special-offers/${offerId}/toggle-status`, {
+      const response = await fetch(`https://mizan-mobile-backend-mizan.up.railway.app/api/special-offers/${offerId}/toggle-status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -800,7 +800,7 @@ const AdminAddOffer = () => {
                 
                 {offer.image && (
                   <div className="offer-image">
-                    <img src={`http://localhost:5000${offer.image}`} alt={offer.title} />
+                    <img src={`https://mizan-mobile-backend-mizan.up.railway.app${offer.image}`} alt={offer.title} />
                   </div>
                 )}
                 

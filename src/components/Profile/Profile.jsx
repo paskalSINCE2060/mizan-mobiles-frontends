@@ -21,7 +21,7 @@ const Profile = () => {
   const [imageLoading, setImageLoading] = useState(false);
 
   // Backend URL - change this to your actual backend URL
-  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://mizan-mobile-backend-mizan.up.railway.app';
 
   // Update form data when user changes in Redux store
   useEffect(() => {

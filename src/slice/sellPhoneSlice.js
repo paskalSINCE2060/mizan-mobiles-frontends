@@ -6,7 +6,7 @@ export const submitSellPhoneRequest = createAsyncThunk(
   'sellPhone/submitRequest',
   async (formData, { rejectWithValue }) => {
     try {
-      const response = await fetch('http://localhost:5000/api/sell-phone/request', {
+      const response = await fetch('https://mizan-mobile-backend-mizan.up.railway.app/api/sell-phone/request', {
         method: 'POST',
         body: formData, // FormData object
       });
@@ -37,7 +37,7 @@ export const fetchSellPhoneRequests = createAsyncThunk(
         ...(search && { search })
       });
 
-      const response = await fetch(`http://localhost:5000/api/sell-phone/requests?${queryParams}`, {
+      const response = await fetch(`https://mizan-mobile-backend-mizan.up.railway.app/api/sell-phone/requests?${queryParams}`, {
         headers: {
           'Authorization': `Bearer ${auth.token}`,
           'Content-Type': 'application/json'
@@ -63,7 +63,7 @@ export const updateRequestStatus = createAsyncThunk(
   async ({ id, status, adminNotes }, { rejectWithValue, getState }) => {
     try {
       const { auth } = getState();
-      const response = await fetch(`http://localhost:5000/api/sell-phone/request/${id}/status`, {
+      const response = await fetch(`https://mizan-mobile-backend-mizan.up.railway.app/api/sell-phone/request/${id}/status`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${auth.token}`,
@@ -91,7 +91,7 @@ export const updateRequestQuote = createAsyncThunk(
   async ({ id, estimatedPrice, adminNotes, status }, { rejectWithValue, getState }) => {
     try {
       const { auth } = getState();
-      const response = await fetch(`http://localhost:5000/api/sell-phone/request/${id}/quote`, {
+      const response = await fetch(`https://mizan-mobile-backend-mizan.up.railway.app/api/sell-phone/request/${id}/quote`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${auth.token}`,
@@ -119,7 +119,7 @@ export const deleteRequest = createAsyncThunk(
   async (id, { rejectWithValue, getState }) => {
     try {
       const { auth } = getState();
-      const response = await fetch(`http://localhost:5000/api/sell-phone/request/${id}`, {
+      const response = await fetch(`https://mizan-mobile-backend-mizan.up.railway.app/api/sell-phone/request/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${auth.token}`,

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { store } from '../store';
 import { logout } from '../slice/authSlice';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://mizan-mobile-backend-mizan.up.railway.app';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

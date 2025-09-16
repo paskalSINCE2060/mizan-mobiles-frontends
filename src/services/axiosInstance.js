@@ -6,7 +6,7 @@ import { refreshTokenThunk } from '../slice/refreshTokenThunk'; // Make sure thi
 import { logout } from '../slice/authSlice';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://mizan-mobile-backend-mizan.up.railway.app/api',
 });
 
 // 🔐 REQUEST INTERCEPTOR: Attach token before every request

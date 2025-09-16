@@ -27,11 +27,11 @@ export const refreshTokenThunk = () => async (dispatch, getState) => {
     console.log('🔑 Refresh Token (first 20 chars):', refreshToken.substring(0, 20) + '...');
 
     // 2. Send refresh request to backend
-    console.log('📡 Sending refresh request to: http://localhost:5000/api/refresh-token');
+    console.log('📡 Sending refresh request to: https://mizan-mobile-backend-mizan.up.railway.app/api/refresh-token');
     console.log('📤 Request payload:', { refreshToken: refreshToken.substring(0, 20) + '...' });
     
     const startTime = Date.now();
-    const res = await axios.post('http://localhost:5000/api/refresh-token', { 
+    const res = await axios.post('https://mizan-mobile-backend-mizan.up.railway.app/api/refresh-token', { 
       refreshToken 
     });
     const endTime = Date.now();

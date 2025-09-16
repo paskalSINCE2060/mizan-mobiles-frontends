@@ -35,7 +35,7 @@ const AdminAddProduct = ({ onProductAdded }) => { // Add onProductAdded prop
   const [errors, setErrors] = useState({});
 
   const token = useSelector((state) => state.auth.token);
-  const BASE_URL = 'http://localhost:5000';
+  const BASE_URL = 'https://mizan-mobile-backend-mizan.up.railway.app';
 
   const validCategories = ['smartphone', 'laptop', 'watch', 'earphones', 'premiumsmartphones', 'galaxyproducts'];
 

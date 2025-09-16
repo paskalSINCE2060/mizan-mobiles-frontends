@@ -24,7 +24,7 @@ const SpecialOffers = () => {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch('http://localhost:5000/api/special-offers');
+      const response = await fetch('https://mizan-mobile-backend-mizan.up.railway.app/api/special-offers');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -56,7 +56,7 @@ const SpecialOffers = () => {
         description: offer.description,
         discount: offer.discount,
         validUntil: offer.validUntil,
-        image: offer.image ? `http://localhost:5000${offer.image}` : getDefaultImage(offer.category), // Fix image path
+        image: offer.image ? `https://mizan-mobile-backend-mizan.up.railway.app${offer.image}` : getDefaultImage(offer.category), // Fix image path
         category: offer.category,
         promoCode: offer.promoCode,
         redemptionSteps: offer.redemptionSteps || [
